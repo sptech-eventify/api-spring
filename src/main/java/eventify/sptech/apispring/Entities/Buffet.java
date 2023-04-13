@@ -93,15 +93,6 @@ public class Buffet {
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
-
-    public Double getPrecoMediaDiaria() {
-        return precoMedioDiaria;
-    }
-
-    public void setPrecoMediaDiaria(Double precoMediaDiaria) {
-        this.precoMedioDiaria = precoMediaDiaria;
-    }
-
     public Integer getQtdPessoas() {
         return qtdPessoas;
     }

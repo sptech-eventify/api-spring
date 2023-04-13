@@ -60,10 +60,10 @@ public class MensagemController {
     @GetMapping("/buffet/{idBuffet}")
     public ResponseEntity<List<MensagemDto>> listarPorBuffet(@PathVariable int idBuffet) {
         List<MensagemDto> mensagems = mensagemServices.listarMensagemPorBuffet(idBuffet);
-        if (mensagems.isEmpty()) {
-            return ResponseEntity.status(204).build();
+        if (mensagems != null && !mensagems.isEmpty()) {
+            return ResponseEntity.status(200).body(mensagems);
         }
-        return ResponseEntity.status(200).body(mensagems);
+        return ResponseEntity.status(204).build();
     }
 
     @GetMapping("/chat/{idUsuario}/{idBuffet}")

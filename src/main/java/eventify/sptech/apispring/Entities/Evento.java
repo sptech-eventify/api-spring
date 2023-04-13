@@ -18,8 +18,10 @@ public class Evento {
     private String status;
     private String motivoNaoAceito;
     @ManyToOne
+    @JoinColumn(name = "id_buffet")
     private Buffet buffet;
     @OneToOne
+    @JoinColumn(name = "id_pagamento")
     private Pagamento pagamento;
 
     public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento) {
