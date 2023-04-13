@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 public class Proprietario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String cnpj;
     @OneToOne

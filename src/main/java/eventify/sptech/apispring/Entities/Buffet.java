@@ -1,18 +1,21 @@
 package eventify.sptech.apispring.Entities;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Buffet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String nome;
     private String descricao;
     private String tamanho;
-    private Double precoMediaDiaria;
+    private Double precoMedioDiaria;
     private Integer qtdPessoas;
     private String caminhoComprovante;
     private boolean residenciaComprovada;
@@ -22,27 +25,33 @@ public class Buffet {
     @OneToOne
     private Endereco endereco;
     @ManyToMany
-    private List<FaixaEtaria> faixaEtaria;
+    @JoinTable(name = "buffet_faixa_etaria",
+            joinColumns = @JoinColumn(name = "id_buffet"),
+            inverseJoinColumns = @JoinColumn(name = "id_faixa_etaria"))
+    private Set<FaixaEtaria> faixaEtarias = new HashSet<>();
     @ManyToMany
-    private List<TipoEvento> tipoEvento;
+    @JoinTable(name = "buffet_tipo_evento",
+            joinColumns = @JoinColumn(name = "id_buffet"),
+            inverseJoinColumns = @JoinColumn(name = "id_tipo_evento"))
+    private Set<TipoEvento> tiposEventos = new HashSet<>();
     @ManyToMany
-    private List<Servico> servico;
+    @JoinTable(name = "buffet_servico",
+            joinColumns = @JoinColumn(name = "id_buffet"),
+            inverseJoinColumns = @JoinColumn(name = "id_servico"))
+    private Set<Servico> servicos = new HashSet<>();
 
     public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMediaDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, Proprietario proprietario, Endereco endereco, List<FaixaEtaria> faixaEtarias, List<TipoEvento> tipoEventos, List<Servico> servicos) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.tamanho = tamanho;
-        this.precoMediaDiaria = precoMediaDiaria;
+        this.precoMedioDiaria = precoMediaDiaria;
         this.qtdPessoas = qtdPessoas;
         this.caminhoComprovante = caminhoComprovante;
         this.residenciaComprovada = residenciaComprovada;
         this.isVisivel = isVisivel;
         this.proprietario = proprietario;
         this.endereco = endereco;
-        this.faixaEtaria = faixaEtarias;
-        this.tipoEvento = tipoEventos;
-        this.servico = servicos;
     }
 
     public Buffet() {
@@ -81,11 +90,11 @@ public class Buffet {
     }
 
     public Double getPrecoMediaDiaria() {
-        return precoMediaDiaria;
+        return precoMedioDiaria;
     }
 
     public void setPrecoMediaDiaria(Double precoMediaDiaria) {
-        this.precoMediaDiaria = precoMediaDiaria;
+        this.precoMedioDiaria = precoMediaDiaria;
     }
 
     public Integer getQtdPessoas() {
@@ -136,27 +145,36 @@ public class Buffet {
         this.endereco = endereco;
     }
 
-    public List<FaixaEtaria> getFaixaEtarias() {
-        return faixaEtaria;
+
+    public Double getPrecoMedioDiaria() {
+        return precoMedioDiaria;
     }
 
-    public void setFaixaEtarias(List<FaixaEtaria> faixaEtarias) {
-        this.faixaEtaria = faixaEtarias;
+    public void setPrecoMedioDiaria(Double precoMedioDiaria) {
+        this.precoMedioDiaria = precoMedioDiaria;
     }
 
-    public List<TipoEvento> getTipoEventos() {
-        return tipoEvento;
+    public Set<FaixaEtaria> getFaixaEtarias() {
+        return faixaEtarias;
     }
 
-    public void setTipoEventos(List<TipoEvento> tipoEventos) {
-        this.tipoEvento = tipoEventos;
+    public void setFaixaEtarias(Set<FaixaEtaria> faixaEtarias) {
+        this.faixaEtarias = faixaEtarias;
     }
 
-    public List<Servico> getServicos() {
-        return servico;
+    public Set<TipoEvento> getTiposEventos() {
+        return tiposEventos;
     }
 
-    public void setServicos(List<Servico> servicos) {
-        this.servico = servicos;
+    public void setTiposEventos(Set<TipoEvento> tiposEventos) {
+        this.tiposEventos = tiposEventos;
+    }
+
+    public Set<Servico> getServicos() {
+        return servicos;
+    }
+
+    public void setServicos(Set<Servico> servicos) {
+        this.servicos = servicos;
     }
 }

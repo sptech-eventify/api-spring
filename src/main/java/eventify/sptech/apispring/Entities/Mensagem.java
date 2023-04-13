@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class Mensagem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String mensagem;
     private LocalDateTime data;

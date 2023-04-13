@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Contratante {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String cpf;
     @OneToOne

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Orcamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private Double valorOrcado;
     private boolean isAceitoProprietario;

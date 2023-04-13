@@ -7,7 +7,7 @@ import java.util.List;
 public class Chat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private boolean isApagado;
     @OneToOne
