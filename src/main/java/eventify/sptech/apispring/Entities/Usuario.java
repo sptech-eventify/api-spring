@@ -19,10 +19,11 @@ public class Usuario {
     private Integer tipoUsuario;
     private boolean isAtivo;
     private boolean isBanido;
+    private String cpf;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 
-    public Usuario(Integer id, String nome, String email, String senha, Integer tipoUsuario, boolean isAtivo, boolean isBanido, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
+    public Usuario(Integer id, String nome, String email, String senha, Integer tipoUsuario, boolean isAtivo, boolean isBanido, String cpfCnpj, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -30,6 +31,7 @@ public class Usuario {
         this.tipoUsuario = tipoUsuario;
         this.isAtivo = isAtivo;
         this.isBanido = isBanido;
+        this.cpf = cpfCnpj;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
     }
@@ -107,5 +109,13 @@ public class Usuario {
 
     public void setUltimoLogin(LocalDateTime ultimoLogin) {
         this.ultimoLogin = ultimoLogin;
+    }
+
+    public String getCpfCnpj() {
+        return cpf;
+    }
+
+    public void setCpfCnpj(String cpfCnpj) {
+        this.cpf = cpfCnpj;
     }
 }

@@ -11,25 +11,22 @@ public class Mensagem {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
     private String mensagem;
+    private boolean mandadoPor;
     private LocalDateTime data;
-    private Integer remetente;
-    private Integer destinatario;
     @ManyToOne
-    private Contratante contratante;
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
     @ManyToOne
-    private Proprietario proprietario;
-    @ManyToOne
-    private Chat chat;
+    @JoinColumn(name = "id_buffet")
+    private Buffet buffet;
 
-    public Mensagem(Integer id, String mensagem, LocalDateTime data, Integer remetente, Integer destinatario, Contratante contratante, Proprietario proprietario, Chat chat) {
+    public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet) {
         this.id = id;
         this.mensagem = mensagem;
+        this.mandadoPor = mandadoPor;
         this.data = data;
-        this.remetente = remetente;
-        this.destinatario = destinatario;
-        this.contratante = contratante;
-        this.proprietario = proprietario;
-        this.chat = chat;
+        this.usuario = usuario;
+        this.buffet = buffet;
     }
 
     public Mensagem() {
@@ -51,6 +48,14 @@ public class Mensagem {
         this.mensagem = mensagem;
     }
 
+    public boolean isMandadoPor() {
+        return mandadoPor;
+    }
+
+    public void setMandadoPor(boolean mandadoPor) {
+        this.mandadoPor = mandadoPor;
+    }
+
     public LocalDateTime getData() {
         return data;
     }
@@ -59,43 +64,19 @@ public class Mensagem {
         this.data = data;
     }
 
-    public Integer getRemetente() {
-        return remetente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setRemetente(Integer remetente) {
-        this.remetente = remetente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
-    public Integer getDestinatario() {
-        return destinatario;
+    public Buffet getBuffet() {
+        return buffet;
     }
 
-    public void setDestinatario(Integer destinatario) {
-        this.destinatario = destinatario;
-    }
-
-    public Contratante getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(Contratante contratante) {
-        this.contratante = contratante;
-    }
-
-    public Proprietario getProprietario() {
-        return proprietario;
-    }
-
-    public void setProprietario(Proprietario proprietario) {
-        this.proprietario = proprietario;
-    }
-
-    public Chat getChat() {
-        return chat;
-    }
-
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setBuffet(Buffet buffet) {
+        this.buffet = buffet;
     }
 }

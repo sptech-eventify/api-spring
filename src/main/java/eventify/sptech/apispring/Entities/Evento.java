@@ -15,19 +15,20 @@ public class Evento {
     private Double preco;
     private String avalicacao;
     private Double nota;
+    private String status;
+    private String motivoNaoAceito;
     @ManyToOne
     private Buffet buffet;
-    @OneToOne
-    private Contratante contratante;
 
-    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, Buffet buffet, Contratante contratante) {
+    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet) {
         this.id = id;
         this.data = data;
         this.preco = preco;
         this.avalicacao = avalicacao;
         this.nota = nota;
+        this.status = status;
+        this.motivoNaoAceito = motivoNaoAceito;
         this.buffet = buffet;
-        this.contratante = contratante;
     }
 
     public Evento() {
@@ -73,19 +74,27 @@ public class Evento {
         this.nota = nota;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getMotivoNaoAceito() {
+        return motivoNaoAceito;
+    }
+
+    public void setMotivoNaoAceito(String motivoNaoAceito) {
+        this.motivoNaoAceito = motivoNaoAceito;
+    }
+
     public Buffet getBuffet() {
         return buffet;
     }
 
     public void setBuffet(Buffet buffet) {
         this.buffet = buffet;
-    }
-
-    public Contratante getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(Contratante contratante) {
-        this.contratante = contratante;
     }
 }

@@ -8,14 +8,14 @@ public class Notificacao {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
-    private String informacao;
+    private String descricao;
     @ManyToOne
-    private Proprietario proprietario;
+    private Usuario usuario;
 
-    public Notificacao(Integer id, String informacao, Proprietario proprietario) {
+    public Notificacao(Integer id, String descricao, Usuario usuario) {
         this.id = id;
-        this.informacao = informacao;
-        this.proprietario = proprietario;
+        this.descricao = descricao;
+        this.usuario = usuario;
     }
 
     public Notificacao() {
@@ -29,19 +29,19 @@ public class Notificacao {
         this.id = id;
     }
 
-    public String getInformacao() {
-        return informacao;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setInformacao(String informacao) {
-        this.informacao = informacao;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
-    public Proprietario getProprietario() {
-        return proprietario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setProprietario(Proprietario proprietario) {
-        this.proprietario = proprietario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

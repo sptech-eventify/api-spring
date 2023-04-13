@@ -11,6 +11,7 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
+    private boolean isValidado;
     private String logradouro;
     private Integer numero;
     private String bairro;
@@ -19,8 +20,9 @@ public class Endereco {
     private Double latitude;
     private Double longitude;
 
-    public Endereco(Integer id, String logradouro, Integer numero, String bairro, String uf, String cep, Double latitude, Double longitude) {
+    public Endereco(Integer id, boolean isValidado, String logradouro, Integer numero, String bairro, String uf, String cep, Double latitude, Double longitude) {
         this.id = id;
+        this.isValidado = isValidado;
         this.logradouro = logradouro;
         this.numero = numero;
         this.bairro = bairro;
@@ -39,6 +41,14 @@ public class Endereco {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isValidado() {
+        return isValidado;
+    }
+
+    public void setValidado(boolean validado) {
+        isValidado = validado;
     }
 
     public String getLogradouro() {

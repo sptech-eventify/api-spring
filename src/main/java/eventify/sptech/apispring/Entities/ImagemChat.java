@@ -16,18 +16,18 @@ public class ImagemChat {
     private boolean isAtivo;
     private LocalDateTime dataUpload;
     @ManyToOne
-    private Chat chat;
+    private Mensagem mensagem;
     @ManyToOne
     private Usuario usuario;
 
-    public ImagemChat(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload, Chat chat, Usuario usuario) {
+    public ImagemChat(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload, Mensagem mensagem, Usuario usuario) {
         this.id = id;
         this.caminho = caminho;
         this.nome = nome;
         this.tipo = tipo;
         this.isAtivo = isAtivo;
         this.dataUpload = dataUpload;
-        this.chat = chat;
+        this.mensagem = mensagem;
         this.usuario = usuario;
     }
 
@@ -82,12 +82,12 @@ public class ImagemChat {
         this.dataUpload = dataUpload;
     }
 
-    public Chat getChat() {
-        return chat;
+    public Mensagem getMensagem() {
+        return mensagem;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setMensagem(Mensagem mensagem) {
+        this.mensagem = mensagem;
     }
 
     public Usuario getUsuario() {

@@ -20,9 +20,8 @@ public class Buffet {
     private String caminhoComprovante;
     private boolean residenciaComprovada;
     private boolean isVisivel;
-    @ManyToOne
-    private Proprietario proprietario;
     @OneToOne
+    @JoinColumn(name = "id_endereco")
     private Endereco endereco;
     @ManyToMany
     @JoinTable(name = "buffet_faixa_etaria",
@@ -39,19 +38,25 @@ public class Buffet {
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_servico"))
     private Set<Servico> servicos = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
-    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMediaDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, Proprietario proprietario, Endereco endereco, List<FaixaEtaria> faixaEtarias, List<TipoEvento> tipoEventos, List<Servico> servicos) {
+    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
         this.tamanho = tamanho;
-        this.precoMedioDiaria = precoMediaDiaria;
+        this.precoMedioDiaria = precoMedioDiaria;
         this.qtdPessoas = qtdPessoas;
         this.caminhoComprovante = caminhoComprovante;
         this.residenciaComprovada = residenciaComprovada;
         this.isVisivel = isVisivel;
-        this.proprietario = proprietario;
         this.endereco = endereco;
+        this.faixaEtarias = faixaEtarias;
+        this.tiposEventos = tiposEventos;
+        this.servicos = servicos;
+        this.usuario = usuario;
     }
 
     public Buffet() {
@@ -129,14 +134,6 @@ public class Buffet {
         isVisivel = visivel;
     }
 
-    public Proprietario getProprietario() {
-        return proprietario;
-    }
-
-    public void setProprietario(Proprietario proprietario) {
-        this.proprietario = proprietario;
-    }
-
     public Endereco getEndereco() {
         return endereco;
     }
@@ -176,5 +173,13 @@ public class Buffet {
 
     public void setServicos(Set<Servico> servicos) {
         this.servicos = servicos;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

@@ -13,7 +13,8 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
             "INNER JOIN buffet_tipo_evento " +
             "ON buffet.id = buffet_tipo_evento.id_buffet " +
             "INNER JOIN tipo_evento " +
-            "on tipo_evento.id = buffet_tipo_evento.id_tipo_evento", nativeQuery = true)
+            "on tipo_evento.id = buffet_tipo_evento.id_tipo_evento " +
+            "INNER JOIN usuario on buffet.id_usuario = usuario.id", nativeQuery = true)
     public List<Buffet> findAllBuffet();
 
 }
