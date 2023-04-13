@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 public class Agenda {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDateTime data;
     @ManyToOne

@@ -1,14 +1,17 @@
 package eventify.sptech.apispring.Entities;
 
+import eventify.sptech.apispring.Entities.Dto.ImagemChatDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Mensagem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String mensagem;
     private boolean mandadoPor;
@@ -19,6 +22,18 @@ public class Mensagem {
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
+    @OneToMany
+    private List<ImagemChat> imagens = new ArrayList<>();
+
+    public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet, List<ImagemChat> imagens) {
+        this.id = id;
+        this.mensagem = mensagem;
+        this.mandadoPor = mandadoPor;
+        this.data = data;
+        this.usuario = usuario;
+        this.buffet = buffet;
+        this.imagens = imagens;
+    }
 
     public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet) {
         this.id = id;
@@ -78,5 +93,19 @@ public class Mensagem {
 
     public void setBuffet(Buffet buffet) {
         this.buffet = buffet;
+    }
+
+    public List<ImagemChat> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<ImagemChat> imagens) {
+        this.imagens = imagens;
+    }
+
+    public List<ImagemChatDto> getImagensDto() {
+        return imagens.stream()
+                .map(i -> new ImagemChatDto(i.getId(),i.getCaminho(),i.getNome(),i.getTipo(),i.isAtivo(),i.getDataUpload()))
+                .toList();
     }
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class FaixaEtaria {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String descricao;
 

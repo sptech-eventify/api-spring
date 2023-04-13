@@ -1,5 +1,7 @@
 package eventify.sptech.apispring.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import eventify.sptech.apispring.Entities.Dto.MensagemDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +10,7 @@ import java.time.LocalDateTime;
 public class ImagemChat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String caminho;
     private String nome;
@@ -16,9 +18,8 @@ public class ImagemChat {
     private boolean isAtivo;
     private LocalDateTime dataUpload;
     @ManyToOne
+    @JoinColumn(name = "id_mensagem")
     private Mensagem mensagem;
-    @ManyToOne
-    private Usuario usuario;
 
     public ImagemChat(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload, Mensagem mensagem, Usuario usuario) {
         this.id = id;
@@ -27,8 +28,6 @@ public class ImagemChat {
         this.tipo = tipo;
         this.isAtivo = isAtivo;
         this.dataUpload = dataUpload;
-        this.mensagem = mensagem;
-        this.usuario = usuario;
     }
 
     public ImagemChat() {
@@ -88,13 +87,5 @@ public class ImagemChat {
 
     public void setMensagem(Mensagem mensagem) {
         this.mensagem = mensagem;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 }

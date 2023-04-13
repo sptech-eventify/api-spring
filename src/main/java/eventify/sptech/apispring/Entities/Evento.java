@@ -9,7 +9,7 @@ import java.time.LocalDate;
 public class Evento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private LocalDate data;
     private Double preco;
@@ -19,8 +19,10 @@ public class Evento {
     private String motivoNaoAceito;
     @ManyToOne
     private Buffet buffet;
+    @OneToOne
+    private Pagamento pagamento;
 
-    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet) {
+    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento) {
         this.id = id;
         this.data = data;
         this.preco = preco;
@@ -29,6 +31,7 @@ public class Evento {
         this.status = status;
         this.motivoNaoAceito = motivoNaoAceito;
         this.buffet = buffet;
+        this.pagamento = pagamento;
     }
 
     public Evento() {
@@ -96,5 +99,13 @@ public class Evento {
 
     public void setBuffet(Buffet buffet) {
         this.buffet = buffet;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
     }
 }

@@ -1,33 +1,23 @@
-package eventify.sptech.apispring.Entities;
-import jakarta.persistence.*;
+package eventify.sptech.apispring.Entities.Dto;
 
 import java.time.LocalDateTime;
 
-@Entity
-public class Imagem {
+public class ImagemChatDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String caminho;
     private String nome;
     private String tipo;
     private boolean isAtivo;
     private LocalDateTime dataUpload;
-    @ManyToOne
-    private Buffet buffet;
 
-    public Imagem(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload, Buffet buffet) {
+    public ImagemChatDto(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload) {
         this.id = id;
         this.caminho = caminho;
         this.nome = nome;
         this.tipo = tipo;
         this.isAtivo = isAtivo;
         this.dataUpload = dataUpload;
-        this.buffet = buffet;
-    }
-
-    public Imagem() {
     }
 
     public Integer getId() {
@@ -76,13 +66,5 @@ public class Imagem {
 
     public void setDataUpload(LocalDateTime dataUpload) {
         this.dataUpload = dataUpload;
-    }
-
-    public Buffet getBuffet() {
-        return buffet;
-    }
-
-    public void setBuffet(Buffet buffet) {
-        this.buffet = buffet;
     }
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Endereco {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private boolean isValidado;
     private String logradouro;

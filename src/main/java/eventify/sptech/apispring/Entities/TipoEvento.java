@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class TipoEvento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String descricao;
 
