@@ -1,4 +1,4 @@
-package Services;
+package eventify.sptech.apispring.service;
 
 import org.springframework.stereotype.Service;
 
