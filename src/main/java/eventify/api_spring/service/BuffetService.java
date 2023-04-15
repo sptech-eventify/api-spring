@@ -5,6 +5,7 @@ import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.TipoEvento;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
+import eventify.api_spring.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class BuffetService {
     private BuffetRepository buffetRepository;
     @Autowired
     private EventoRepository eventoRepository;
+    @Autowired
+    private ImagemRepository imagemRepository;
 
     public List<String> getTipoEventos() {
         List<Buffet> buffets = buffetRepository.findAll();
@@ -41,6 +44,15 @@ public class BuffetService {
                     .mapToDouble(Evento::getNota)
                     .average()
                     .orElse(0.0);
+        }
+        return null;
+    }
+
+    public String pegarCaminhoImagem(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isPresent()) {
+            Buffet buffet = buffetOpt.get();
+            return imagemRepository.findByBuffet(buffet);
         }
         return null;
     }

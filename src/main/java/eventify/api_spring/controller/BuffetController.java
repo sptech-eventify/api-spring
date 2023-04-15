@@ -3,6 +3,7 @@ package eventify.api_spring.controller;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,11 @@ public class BuffetController {
     @GetMapping("/{idBuffet}/avaliacao")
     public ResponseEntity<Double> listarAvaliacoesEvento(@PathVariable int idBuffet) {
         return ResponseEntity.status(200).body(buffetService.getAvaliacaoEvento(idBuffet));
+    }
+
+    @GetMapping("/{idBuffet}/imagem")
+    public ResponseEntity<String> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
+        return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet));
     }
 
 }

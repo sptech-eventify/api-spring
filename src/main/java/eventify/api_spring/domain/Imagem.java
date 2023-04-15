@@ -14,7 +14,8 @@ public class Imagem {
     private String tipo;
     private boolean isAtivo;
     private LocalDateTime dataUpload;
-    @ManyToOne
+    @ManyToOne()
+    @JoinColumn(name = "id_buffet")
     private Buffet buffet;
 
     public Imagem(Integer id, String caminho, String nome, String tipo, boolean isAtivo, LocalDateTime dataUpload, Buffet buffet) {
