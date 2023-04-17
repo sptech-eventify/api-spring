@@ -3,6 +3,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Endereco {
@@ -15,6 +16,7 @@ public class Endereco {
     private Integer numero;
     private String bairro;
     private String uf;
+    @NotBlank
     private String cep;
     private Double latitude;
     private Double longitude;

@@ -1,5 +1,8 @@
 package eventify.api_spring.domain;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,10 +13,17 @@ public class Buffet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank
     private String nome;
+    @NotBlank
     private String descricao;
+    @NotBlank
     private String tamanho;
+
+    @DecimalMin("0.0")
     private Double precoMedioDiaria;
+
+    @Min(1)
     private Integer qtdPessoas;
     private String caminhoComprovante;
     private boolean residenciaComprovada;
