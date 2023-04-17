@@ -11,14 +11,13 @@ import java.util.Optional;
 // Classe que executa toda regra de negócio e retorna os resultados para Controller
 public class UsuarioService {
 
-    @Autowired
-    private static UsuarioRepository repository;
-    public static Optional<Usuario> exibir(Integer id){
+
+    public static Optional<Usuario> exibir(Integer id, UsuarioRepository repository){
         return repository.findById(id);
     }
 
-    public static Usuario cadastrar(Usuario usuario){
-        repository.save(usuario);
-        return usuario;
+    public static Usuario cadastrar(Usuario usuario, UsuarioRepository repository){
+        Usuario usuarioCadastrado = repository.save(usuario);
+        return usuarioCadastrado;
     }
 }

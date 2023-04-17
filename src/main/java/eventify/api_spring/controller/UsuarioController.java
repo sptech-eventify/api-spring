@@ -15,19 +15,24 @@ import java.util.Optional;
 // Controller recebe as requisições e as encaminha para o Service
 public class UsuarioController {
 
+
+    @Autowired
+    private UsuarioRepository repository;
+
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Usuario>> exibir(@PathVariable Integer id) {
-        Optional<Usuario> resposta = UsuarioService.exibir(id);
+        Optional<Usuario> resposta = UsuarioService.exibir(id, repository);
 
         if (resposta.isEmpty())
-            return ResponseEntity.status(409).build();
+            return ResponseEntity.status(204).build();
 
         return ResponseEntity.status(200).body(resposta);
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario){
-        return ResponseEntity.status(201).body(UsuarioService.cadastrar(usuario));
+    public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody Usuario usuario){
+        Usuario resposta = UsuarioService.cadastrar(usuario, repository);
+        return ResponseEntity.status(201).body(resposta);
     }
 
 }

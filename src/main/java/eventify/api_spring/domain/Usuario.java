@@ -19,29 +19,24 @@ public class Usuario {
     private String email;
     @NotBlank
     private String senha;
-
+    @NotBlank
+    private String cpf;
     private Integer tipoUsuario;
     private boolean isAtivo;
     private boolean isBanido;
-    @NotBlank
-    private String cpf;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 
-    public Usuario(Integer id, String nome, String email, String senha, Integer tipoUsuario, boolean isAtivo, boolean isBanido, String cpfCnpj, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
-        this.id = id;
+    public Usuario(String nome, String email, String senha, String cpf, Integer tipoUsuario, boolean isAtivo, boolean isBanido, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.cpf = cpf;
         this.tipoUsuario = tipoUsuario;
         this.isAtivo = isAtivo;
         this.isBanido = isBanido;
-        this.cpf = cpfCnpj;
         this.dataCriacao = dataCriacao;
         this.ultimoLogin = ultimoLogin;
-    }
-
-    public Usuario() {
     }
 
     public Integer getId() {
@@ -66,6 +61,14 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getSenha() {
@@ -116,11 +119,4 @@ public class Usuario {
         this.ultimoLogin = ultimoLogin;
     }
 
-    public String getCpfCnpj() {
-        return cpf;
-    }
-
-    public void setCpfCnpj(String cpfCnpj) {
-        this.cpf = cpfCnpj;
-    }
 }
