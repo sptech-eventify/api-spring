@@ -25,6 +25,10 @@ public class BuffetService {
     @Autowired
     private ImagemRepository imagemRepository;
 
+    public List<Buffet> listar() {
+        return buffetRepository.findAll();
+    }
+
     public List<String> getTipoEventos() {
         List<Buffet> buffets = buffetRepository.findAll();
         List<String> tipos  = new ArrayList<>();

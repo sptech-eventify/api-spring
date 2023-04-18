@@ -18,14 +18,15 @@ import java.util.List;
 public class BuffetController {
 
     @Autowired
-    private BuffetRepository buffetRepository;
-    @Autowired
     private BuffetService buffetService;
-
 
     @GetMapping
     public ResponseEntity<List<Buffet>> listar() {
-        return ResponseEntity.status(200).body(buffetRepository.findAll());
+        List<Buffet> buffets = buffetService.listar();
+        if (buffets.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(buffets);
     }
 
     @GetMapping("/tipos")

@@ -2,6 +2,7 @@ package eventify.api_spring.controller;
 
 import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.repository.AgendaRepository;
+import eventify.api_spring.service.AgendaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,21 @@ import java.util.List;
 public class AgendaController {
 
     @Autowired
-    private AgendaRepository agendaRepository;
+    AgendaService agendaService;
 
     @GetMapping
     public ResponseEntity<List<Agenda>> exibirAgendas() {
-        List<Agenda> agenda = this.agendaRepository.findAll();
+        List<Agenda> agenda = agendaService.exibirAgendas();
+        if (agenda.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
         return ResponseEntity.status(200).body(agenda);
     }
 
     @PostMapping
     public ResponseEntity<Agenda> criarAgenda(@RequestBody @Valid Agenda a) {
-        Agenda agenda = this.agendaRepository.save(a);
+        agendaService.criarAgenda(a);
         return ResponseEntity.status(201).body(a);
     }
 }
