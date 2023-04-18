@@ -4,7 +4,6 @@ import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

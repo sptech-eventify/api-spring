@@ -1,9 +1,6 @@
 package eventify.api_spring.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Servico {
@@ -12,6 +9,8 @@ public class Servico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String descricao;
+    @ManyToOne
+    private Buffet buffet;
 
     public Servico(Integer id, String descricao) {
         this.id = id;
