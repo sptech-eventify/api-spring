@@ -1,7 +1,16 @@
 package eventify.api_spring.domain;
-import jakarta.persistence.*;
 
+import eventify.api_spring.dto.ImagemChatDto;
+import eventify.api_spring.dto.ImagemDTO;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -10,10 +19,15 @@ public class Buffet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank
     private String nome;
+    @NotBlank
     private String descricao;
+    @NotBlank
     private String tamanho;
+    @DecimalMin("0.0")
     private Double precoMedioDiaria;
+    @Min(1)
     private Integer qtdPessoas;
     private String caminhoComprovante;
     private boolean residenciaComprovada;
@@ -39,6 +53,12 @@ public class Buffet {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "buffet")
+    private List<Imagem> imagens = new ArrayList<>();
+
+    @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY)
+    private List<Agenda> agendas = new ArrayList<>();
 
     public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
@@ -91,6 +111,7 @@ public class Buffet {
     public void setTamanho(String tamanho) {
         this.tamanho = tamanho;
     }
+
     public Integer getQtdPessoas() {
         return qtdPessoas;
     }
@@ -170,5 +191,28 @@ public class Buffet {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+
+    public List<Imagem> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<Imagem> imagens) {
+        imagens = imagens;
+    }
+
+    public List<ImagemDTO> getImagemDto() {
+        return imagens.stream()
+                .map(i -> new ImagemDTO(i.getId(), i.getCaminho(), i.getNome(), i.getTipo(), i.isAtivo(), i.getDataUpload()))
+                .toList();
+    }
+
+    public List<Agenda> getAgendas() {
+        return agendas;
+    }
+
+    public void setAgendas(List<Agenda> agendas) {
+        this.agendas = agendas;
     }
 }

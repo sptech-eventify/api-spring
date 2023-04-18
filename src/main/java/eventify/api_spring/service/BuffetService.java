@@ -73,4 +73,12 @@ public class BuffetService {
         return null;
     }
 
+    public void cadastrar (Buffet buffet) {
+        buffetRepository.save(buffet);
+    }
+
+    public void atualizar (Buffet buffet) {
+        buffetRepository.save(buffet);
+    }
+    
 }
