@@ -21,7 +21,7 @@ public class Mensagem {
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
-    @OneToMany
+    @OneToMany(mappedBy = "mensagem")
     private List<ImagemChat> imagens = new ArrayList<>();
 
     public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet, List<ImagemChat> imagens) {

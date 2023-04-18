@@ -1,6 +1,7 @@
 package eventify.api_spring.controller;
 
 import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
 import org.apache.coyote.Response;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -43,6 +45,11 @@ public class BuffetController {
     @GetMapping("/{idBuffet}/imagem")
     public ResponseEntity<String> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
         return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet));
+    }
+
+    @GetMapping("/datas/{idBuffet}")
+    public ResponseEntity<List<DataDto>> pegarDatasOcupadas(@PathVariable int idBuffet) {
+        return ResponseEntity.status(200).body(buffetService.pegarDatasOcupadas(idBuffet));
     }
 
 }

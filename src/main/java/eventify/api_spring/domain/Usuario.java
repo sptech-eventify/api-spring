@@ -16,8 +16,8 @@ public class Usuario {
     private String email;
     private String senha;
     private Integer tipoUsuario;
-    private boolean isAtivo;
-    private boolean isBanido;
+    private Boolean isAtivo;
+    private Boolean isBanido;
     private String cpf;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;

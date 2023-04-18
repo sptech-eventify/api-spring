@@ -17,7 +17,7 @@ public interface MensagemRepository extends JpaRepository<Mensagem, Integer> {
     @Query("select m from Mensagem m where m.buffet = :buffet and m.mandadoPor = true")
     public List<Mensagem> findAllByBuffet(Buffet buffet);
 
-    @Query("select m from Mensagem m where m.usuario = :usuario and m.buffet = :buffet")
+    @Query("select m from Mensagem m where m.usuario = :usuario and m.buffet = :buffet order by m.id desc")
     public List<Mensagem> findAllByUsuarioBuffet(Usuario usuario, Buffet buffet);
 
 }
