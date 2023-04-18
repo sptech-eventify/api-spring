@@ -193,11 +193,6 @@ public class Buffet {
         this.usuario = usuario;
     }
 
-
-    public List<Imagem> getImagens() {
-        return imagens;
-    }
-
     public void setImagens(List<Imagem> imagens) {
         imagens = imagens;
     }
