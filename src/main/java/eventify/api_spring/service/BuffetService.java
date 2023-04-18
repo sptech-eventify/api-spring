@@ -80,5 +80,5 @@ public class BuffetService {
     public void atualizar (Buffet buffet) {
         buffetRepository.save(buffet);
     }
-    
+
 }

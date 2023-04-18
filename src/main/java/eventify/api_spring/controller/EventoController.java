@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/eventos")
@@ -26,25 +27,9 @@ public class EventoController {
         return ResponseEntity.status(200).body(eventos);
     }
 
-    @GetMapping("/{nome}")
-    public ResponseEntity<Evento> exibirEvento(@PathVariable String nome) {
-        for (Evento evento: eventoRepository.findAll()) {
-            if (evento.getBuffet().getNome().equals(nome)) {
-                return ResponseEntity.status(200).body(evento);
-            }
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @GetMapping("/data/{nome}")
-    public ResponseEntity<List<LocalDate>> exibirDataBuffet(@PathVariable String nome) {
-        List<LocalDate> datas = new ArrayList<>();
-        for (Evento evento: eventoRepository.findAll()) {
-            if (evento.getBuffet().getNome().equals(nome)) {
-                datas.add(evento.getData());
-            }
-        }
-        return ResponseEntity.status(404).build();
+    @GetMapping("/{idEvento}")
+    public ResponseEntity<Evento> exibirEvento(@PathVariable int idEvento) {
+        return ResponseEntity.of(eventoRepository.findById(idEvento));
     }
 
     @PostMapping
