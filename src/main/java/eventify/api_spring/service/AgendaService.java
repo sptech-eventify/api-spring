@@ -3,9 +3,10 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.repository.AgendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class AgendaService {
 
     @Autowired

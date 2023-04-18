@@ -1,7 +1,6 @@
 package eventify.api_spring.controller;
 
 import eventify.api_spring.domain.Agenda;
-import eventify.api_spring.repository.AgendaRepository;
 import eventify.api_spring.service.AgendaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
