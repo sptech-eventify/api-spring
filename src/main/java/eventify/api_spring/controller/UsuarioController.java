@@ -1,7 +1,7 @@
 package eventify.api_spring.controller;
 
 import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.repository.UsuarioRepository;
+import eventify.api_spring.dto.UsuarioCadastrarDTO;
 import eventify.api_spring.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,12 @@ import java.util.Optional;
 // Controller recebe as requisições e as encaminha para o Service
 public class UsuarioController {
 
-
     @Autowired
-    private UsuarioService UsuarioService;
+    private UsuarioService usuarioService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Usuario>> exibir(@PathVariable Integer id) {
-        Optional<Usuario> resposta = UsuarioService.exibir(id);
+        Optional<Usuario> resposta = usuarioService.exibir(id);
 
         if (resposta.isEmpty())
             return ResponseEntity.status(204).build();
@@ -30,8 +29,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody Usuario usuario){
-        Usuario resposta = UsuarioService.cadastrar(usuario);
+    public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody UsuarioCadastrarDTO usuario){
+        Usuario resposta = usuarioService.cadastrar(usuario);
         return ResponseEntity.status(201).body(resposta);
     }
 
