@@ -17,11 +17,11 @@ public class UsuarioController {
 
 
     @Autowired
-    private UsuarioRepository repository;
+    private UsuarioService UsuarioService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Usuario>> exibir(@PathVariable Integer id) {
-        Optional<Usuario> resposta = UsuarioService.exibir(id, repository);
+        Optional<Usuario> resposta = UsuarioService.exibir(id);
 
         if (resposta.isEmpty())
             return ResponseEntity.status(204).build();
@@ -31,7 +31,7 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody Usuario usuario){
-        Usuario resposta = UsuarioService.cadastrar(usuario, repository);
+        Usuario resposta = UsuarioService.cadastrar(usuario);
         return ResponseEntity.status(201).body(resposta);
     }
 

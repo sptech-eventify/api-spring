@@ -1,6 +1,7 @@
 package eventify.api_spring.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -10,7 +11,12 @@ public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotNull
+    @FutureOrPresent
     private LocalDate data;
+
+    @NotNull
+    @DecimalMin("0.01")
     private Double preco;
     private String avalicacao;
     private Double nota;

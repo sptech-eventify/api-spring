@@ -1,5 +1,7 @@
 package eventify.api_spring.domain;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +11,9 @@ public class Agenda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull
+    @FutureOrPresent
     private LocalDateTime data;
     @ManyToOne
     private Buffet buffet;

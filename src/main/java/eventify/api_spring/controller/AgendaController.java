@@ -14,7 +14,7 @@ import java.util.List;
 public class AgendaController {
 
     @Autowired
-    AgendaService agendaService;
+    private AgendaService agendaService;
 
     @GetMapping
     public ResponseEntity<List<Agenda>> exibirAgendas() {
