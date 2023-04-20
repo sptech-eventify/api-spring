@@ -21,7 +21,7 @@ public class ImagemService {
     @Autowired
     ImagemRepository imagemRepository;
 
-    public void salvarImagems(List<MultipartFile> imagens,int idBuffet) {
+    public Boolean salvarImagems(List<MultipartFile> imagens, int idBuffet) {
 
         List<Imagem> imagems = new ArrayList<>();
         String data = LocalDate.now().toString();
@@ -29,9 +29,9 @@ public class ImagemService {
 
         for (MultipartFile m : imagens) {
             try {
-                String fileName = data + nano + "id#" +  idBuffet + ".png";
+                String fileName = data + nano + "id#" + idBuffet + ".png";
                 String userHome = System.getProperty("user.home");
-                Path path = Paths.get(userHome +"\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
+                Path path = Paths.get(userHome + "\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
                 Files.write(path, m.getBytes());
                 Imagem imagem = new Imagem();
                 imagem.setCaminho(path.toString());
@@ -43,7 +43,9 @@ public class ImagemService {
                 imagemRepository.saveAll(imagems);
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        return true;
     }
 }

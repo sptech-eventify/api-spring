@@ -20,7 +20,6 @@ public class EventoController {
 
     @PostMapping
     public ResponseEntity<Evento> criarEvento(@RequestBody @Valid Evento e) {
-
         return ResponseEntity.status(201).body(eventoService.criarEvento(e));
     }
 

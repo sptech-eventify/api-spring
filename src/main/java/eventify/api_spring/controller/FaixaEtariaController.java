@@ -2,6 +2,7 @@ package eventify.api_spring.controller;
 
 import eventify.api_spring.domain.FaixaEtaria;
 import eventify.api_spring.repository.FaixaEtariaRepository;
+import eventify.api_spring.service.FaixaEtariaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,20 @@ import java.util.List;
 public class FaixaEtariaController {
 
     @Autowired
-    private FaixaEtariaRepository faixaEtariaRepository;
+    private FaixaEtariaService faixaEtariaService;
 
     @PostMapping
     public ResponseEntity<FaixaEtaria> criarFaixaEtaria(@RequestBody @Valid FaixaEtaria f) {
-        FaixaEtaria faixaEtaria = this.faixaEtariaRepository.save(f);
+        faixaEtariaService.criarFaixaEtaria(f);
         return ResponseEntity.status(201).body(f);
     }
 
     @GetMapping
     public ResponseEntity<List<FaixaEtaria>> exibirFaixaEtaria() {
-         List<FaixaEtaria> faixaEtaria = this.faixaEtariaRepository.findAll();
+         List<FaixaEtaria> faixaEtaria = this.faixaEtariaService.exibirFaixaEtaria();
+         if (faixaEtaria.isEmpty()) {
+             return ResponseEntity.status(204).build();
+         }
          return ResponseEntity.status(200).body(faixaEtaria);
     }
 }
