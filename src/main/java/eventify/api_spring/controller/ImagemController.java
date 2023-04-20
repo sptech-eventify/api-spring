@@ -19,4 +19,9 @@ public class ImagemController {
     @Autowired
     private ImagemService imagemService;
 
+    @PostMapping
+    public ResponseEntity<Void> salvarImagems(@RequestBody List<MultipartFile> imagens) {
+        imagemService.salvarImagems(imagens, 1);
+        return ResponseEntity.ok().build();
+    }
 }
