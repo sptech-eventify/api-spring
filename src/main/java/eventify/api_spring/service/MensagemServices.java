@@ -61,7 +61,8 @@ public class MensagemServices {
         for (MultipartFile imagem : imagens) {
             try {
                 String fileName = data + nano + "id#" +  idUsuario + ".png";
-                Path path = Paths.get("C:\\Users\\luana\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
+                String userHome = System.getProperty("user.home");
+                Path path = Paths.get(userHome + "\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
                 Files.write(path, imagem.getBytes());
                 ImagemChat imagemChat = new ImagemChat();
                 imagemChat.setCaminho(path.toString());

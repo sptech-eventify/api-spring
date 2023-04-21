@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/eventos")
+@CrossOrigin(origins = "http://localhost:3000")
 public class EventoController {
 
     @Autowired

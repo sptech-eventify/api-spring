@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
+@CrossOrigin(origins = "http://localhost:3000")
 // Controller recebe as requisições e as encaminha para o Service
 public class UsuarioController {
 

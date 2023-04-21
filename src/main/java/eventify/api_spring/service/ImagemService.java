@@ -1,7 +1,6 @@
 package eventify.api_spring.service;
 
 import eventify.api_spring.domain.*;
-import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ImagemService {
 
@@ -31,7 +29,7 @@ public class ImagemService {
             try {
                 String fileName = data + nano + "id#" + idBuffet + ".png";
                 String userHome = System.getProperty("user.home");
-                Path path = Paths.get(userHome + "\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
+                Path path = Paths.get(userHome + "\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\img", fileName);
                 Files.write(path, m.getBytes());
                 Imagem imagem = new Imagem();
                 imagem.setCaminho(path.toString());

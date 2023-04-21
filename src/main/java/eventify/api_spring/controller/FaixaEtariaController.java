@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/faixa-etarias")
+@CrossOrigin(origins = "http://localhost:3000")
 public class FaixaEtariaController {
 
     @Autowired

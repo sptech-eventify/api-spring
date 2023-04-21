@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/agendas")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AgendaController {
 
     @Autowired
