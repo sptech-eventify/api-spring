@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public List<Usuario> listar(){
+        List<Usuario> lista = usuarioRepository.findAll();
+        return lista;
+    }
 
     public Optional<Usuario> exibir(Integer id) {
         return usuarioRepository.findById(id);
@@ -25,5 +31,29 @@ public class UsuarioService {
                 , novoUsuario.tipoUsuario(), true, false, LocalDateTime.now(), LocalDateTime.now()
         );
         return usuarioRepository.save(usuario);
+    }
+
+    public boolean deletar(int id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()){
+            return false;
+        }
+        usuarioRepository.deleteById(id);
+        return true;
+    }
+
+    public UsuarioCadastrarDTO atualizar(int id, Usuario novoUsuario) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+
+        if (usuarioOpt.isPresent()){
+            UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO(novoUsuario.getNome(), novoUsuario.getEmail(), novoUsuario.getSenha(),
+                    novoUsuario.getCpf(), novoUsuario.getTipoUsuario());
+            novoUsuario.setId(id);
+            usuarioRepository.save(novoUsuario);
+            return usuario;
+        } else {
+            return null;
+        }
+
     }
 }
