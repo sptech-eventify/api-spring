@@ -1,4 +1,4 @@
-package eventify.api_spring.dto;
+package eventify.api_spring.dto.usuario;
 public class UsuarioIdDto {
 
     private Integer id;

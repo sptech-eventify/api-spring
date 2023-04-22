@@ -1,7 +1,7 @@
-package eventify.api_spring.service;
+package eventify.api_spring.service.usuario;
 
 import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +25,12 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    public Usuario cadastrar(UsuarioCadastrarDTO novoUsuario) {
+    public void cadastrar(UsuarioCadastrarDTO novoUsuario) {
         Usuario usuario = new Usuario(
                 novoUsuario.nome(), novoUsuario.email(), novoUsuario.senha(), novoUsuario.cpf()
                 , novoUsuario.tipoUsuario(), true, false, LocalDateTime.now(), LocalDateTime.now()
         );
-        return usuarioRepository.save(usuario);
+        this.usuarioRepository.save(usuario);
     }
 
     public boolean deletar(int id) {

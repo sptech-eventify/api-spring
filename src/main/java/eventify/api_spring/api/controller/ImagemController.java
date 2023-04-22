@@ -1,4 +1,4 @@
-package eventify.api_spring.controller;
+package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.service.ImagemService;

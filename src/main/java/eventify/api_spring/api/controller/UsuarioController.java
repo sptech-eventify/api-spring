@@ -1,8 +1,8 @@
-package eventify.api_spring.controller;
+package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.UsuarioCadastrarDTO;
-import eventify.api_spring.service.UsuarioService;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.service.usuario.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +39,9 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> cadastrar(@Valid @RequestBody UsuarioCadastrarDTO usuario){
-        Usuario resposta = usuarioService.cadastrar(usuario);
-        return ResponseEntity.status(201).body(resposta);
+    public ResponseEntity<Void> cadastrar(@Valid @RequestBody UsuarioCadastrarDTO usuario){
+        usuarioService.cadastrar(usuario);
+        return ResponseEntity.status(201).build();
     }
 
     @DeleteMapping
