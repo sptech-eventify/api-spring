@@ -6,9 +6,9 @@ import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 public class UsuarioMapper {
     public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
         Usuario usuario = new Usuario();
-        usuario.setEmail(usuarioCadastrarDTO.email());
-        usuario.setNome(usuarioCadastrarDTO.nome());
-        usuario.setSenha(usuarioCadastrarDTO.senha());
+        usuario.setEmail(usuarioCadastrarDTO.getEmail());
+        usuario.setNome(usuarioCadastrarDTO.getNome());
+        usuario.setSenha(usuarioCadastrarDTO.getSenha());
         return usuario;
     }
 

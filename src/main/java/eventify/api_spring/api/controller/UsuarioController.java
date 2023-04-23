@@ -3,6 +3,8 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.service.usuario.UsuarioService;
+import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
+import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class UsuarioController {
         } return ResponseEntity.status(200).body(lista);
     }
 
-    @GetMapping
+    @GetMapping("/id")
     public ResponseEntity<Optional<Usuario>> exibir(@RequestParam Integer id) {
         Optional<Usuario> resposta = usuarioService.exibir(id);
 
@@ -56,6 +58,12 @@ public class UsuarioController {
         if (usuarioService.atualizar(id, usuario) != null){
             return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuario));
         } return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto){
+        UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
+        return ResponseEntity.status(200).body(usuarioToken);
     }
 
 }

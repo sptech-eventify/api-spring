@@ -3,6 +3,7 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.*;
 import eventify.api_spring.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class ImagemService {
 
     @Autowired
