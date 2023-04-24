@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -61,11 +62,21 @@ public class MensagemServices {
         List<ImagemChat> imagemChats = new ArrayList<>();
         for (MultipartFile imagem : imagens) {
             try {
+                String nomeSistemaOperacional = System.getProperty("os.name");
+
                 String fileName = data + nano + "id#" +  idUsuario + ".png";
                 File currentDirectory = new File(System.getProperty("user.dir"));
                 File diretorioPai = currentDirectory.getParentFile();
                 System.setProperty("user.dir", diretorioPai.getAbsolutePath());
-                String caminho = diretorioPai + "\\web-app\\public\\img";
+
+                String caminho = "";
+
+                if (Objects.equals(nomeSistemaOperacional, "Linux")) {
+                    caminho = diretorioPai + "//web-app//public//img";
+                }
+                else if (Objects.equals(nomeSistemaOperacional, "Windows")) {
+                    caminho = diretorioPai + "\\web-app\\public\\img";
+                }
 
                 Path path = Paths.get(caminho, fileName);
                 Files.write(path, imagem.getBytes());

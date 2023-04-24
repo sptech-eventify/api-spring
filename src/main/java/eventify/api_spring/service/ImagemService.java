@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ImagemService {
@@ -30,11 +31,21 @@ public class ImagemService {
 
         for (MultipartFile m : imagens) {
             try {
+                String nomeSistemaOperacional = System.getProperty("os.name");
+
                 String fileName = data + nano + "id#" + idBuffet + ".png";
                 File currentDirectory = new File(System.getProperty("user.dir"));
                 File diretorioPai = currentDirectory.getParentFile();
                 System.setProperty("user.dir", diretorioPai.getAbsolutePath());
-                String caminho = diretorioPai + "\\web-app\\public\\img-buffet";
+
+                String caminho = "";
+
+                if (Objects.equals(nomeSistemaOperacional, "Linux")) {
+                    caminho = diretorioPai + "//web-app//public//img-buffet";
+                }
+                else if (Objects.equals(nomeSistemaOperacional, "Windows")) {
+                    caminho = diretorioPai + "\\web-app\\public\\img-buffet";
+                }
 
                 Path path = Paths.get(caminho, fileName);
                 Files.write(path, m.getBytes());
