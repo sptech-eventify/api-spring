@@ -77,7 +77,6 @@ public class UsuarioService {
         } else {
             return null;
         }
-
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {

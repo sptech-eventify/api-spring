@@ -8,6 +8,7 @@ public class UsuarioMapper {
         Usuario usuario = new Usuario();
         usuario.setEmail(usuarioCadastrarDTO.getEmail());
         usuario.setNome(usuarioCadastrarDTO.getNome());
+        usuario.setCpf(usuarioCadastrarDTO.getCpf());
         usuario.setSenha(usuarioCadastrarDTO.getSenha());
         return usuario;
     }
