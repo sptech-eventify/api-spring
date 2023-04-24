@@ -3,15 +3,27 @@ package eventify.api_spring.dto.usuario;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.hibernate.validator.constraints.br.CPF;
+
 public class UsuarioCadastrarDTO {
+    @Schema(example = "Gabriel Santos")
     @NotBlank
-    private String nome;
+    String nome;
     @NotBlank
-    private String email;
+    @Schema(example = "gabriel@santos.com")
+    String email;
     @NotBlank
-    private String senha;
+    @Schema(example = "123456")
+    String senha;
+
+    @Schema(example = "49308791811")
     @CPF
     String cpf;
+
+    @Schema(example = "1")
     Integer tipoUsuario;
 
     public String getNome() {

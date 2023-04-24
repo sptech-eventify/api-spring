@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.service.EventoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Optional;
 
+@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/eventos")
 @CrossOrigin(origins = "http://localhost:3000")

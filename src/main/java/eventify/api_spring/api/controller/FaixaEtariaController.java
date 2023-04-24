@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.FaixaEtaria;
 import eventify.api_spring.repository.FaixaEtariaRepository;
 import eventify.api_spring.service.FaixaEtariaService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ public class FaixaEtariaController {
     @Autowired
     private FaixaEtariaService faixaEtariaService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<FaixaEtaria> criarFaixaEtaria(@RequestBody @Valid FaixaEtaria f) {
         faixaEtariaService.criarFaixaEtaria(f);

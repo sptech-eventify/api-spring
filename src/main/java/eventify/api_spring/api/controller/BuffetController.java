@@ -4,6 +4,7 @@ import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,6 +54,7 @@ public class BuffetController {
         return ResponseEntity.status(200).body(buffetService.pegarDatasOcupadas(idBuffet));
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
         buffetService.cadastrar(buffet);
