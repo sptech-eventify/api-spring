@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.Servico;
 import eventify.api_spring.repository.ServicoRepository;
 import eventify.api_spring.service.ServicoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class ServicoController {
     @Autowired
     private ServicoService servicoService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Servico> criarServico(@RequestBody Servico s) {
         Servico servico = this.servicoService.salvar(s);

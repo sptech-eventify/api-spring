@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.TipoEvento;
 import eventify.api_spring.repository.TipoEventoRepository;
 import eventify.api_spring.service.TipoEventoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class TipoEventoController {
     @Autowired
     private TipoEventoService tipoEventoService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<TipoEvento> criarTipoEvento(@RequestBody @Valid TipoEvento t) {
         TipoEvento tipoEvento = this.tipoEventoService.criarTipoEvento(t);

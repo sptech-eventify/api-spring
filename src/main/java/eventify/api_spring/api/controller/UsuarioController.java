@@ -5,10 +5,14 @@ import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.service.usuario.UsuarioService;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +20,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Usuário", description="Controller com os endpoints de usuário")
 // Controller recebe as requisições e as encaminha para o Service
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping
     public ResponseEntity<List<Usuario>> listar(){
         List<Usuario> lista = usuarioService.listar();
@@ -30,6 +36,7 @@ public class UsuarioController {
         } return ResponseEntity.status(200).body(lista);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/id")
     public ResponseEntity<Optional<Usuario>> exibir(@RequestParam Integer id) {
         Optional<Usuario> resposta = usuarioService.exibir(id);
@@ -46,6 +53,7 @@ public class UsuarioController {
         return ResponseEntity.status(201).build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @DeleteMapping
     public ResponseEntity<Void> deletar(int id){
         if (usuarioService.deletar(id)){
@@ -53,6 +61,7 @@ public class UsuarioController {
         } return ResponseEntity.status(404).build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PutMapping
     public ResponseEntity<UsuarioCadastrarDTO> atualizar(int id, @RequestBody Usuario usuario){
         if (usuarioService.atualizar(id, usuario) != null){

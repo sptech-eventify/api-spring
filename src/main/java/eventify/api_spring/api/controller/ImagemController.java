@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.service.ImagemService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/imagem")
 @CrossOrigin(origins = "http://localhost:3000")
