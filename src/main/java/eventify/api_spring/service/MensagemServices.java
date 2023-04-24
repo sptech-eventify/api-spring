@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,8 +62,12 @@ public class MensagemServices {
         for (MultipartFile imagem : imagens) {
             try {
                 String fileName = data + nano + "id#" +  idUsuario + ".png";
-                String userHome = System.getProperty("user.home");
-                Path path = Paths.get(userHome + "\\OneDrive\\Documentos\\Projetos\\web-app\\src\\assets\\imgChats", fileName);
+                File currentDirectory = new File(System.getProperty("user.dir"));
+                File diretorioPai = currentDirectory.getParentFile();
+                System.setProperty("user.dir", diretorioPai.getAbsolutePath());
+                String caminho = diretorioPai + "\\web-app\\public\\img";
+
+                Path path = Paths.get(caminho, fileName);
                 Files.write(path, imagem.getBytes());
                 ImagemChat imagemChat = new ImagemChat();
                 imagemChat.setCaminho(path.toString());
