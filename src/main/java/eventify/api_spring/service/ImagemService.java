@@ -40,10 +40,10 @@ public class ImagemService {
 
                 String caminho = "";
 
-                if (Objects.equals(nomeSistemaOperacional, "Linux")) {
+                if (nomeSistemaOperacional.contains("Linux")) {
                     caminho = diretorioPai + "//web-app//public//img-buffet";
                 }
-                else if (Objects.equals(nomeSistemaOperacional, "Windows")) {
+                else if (nomeSistemaOperacional.contains("Windows")) {
                     caminho = diretorioPai + "\\web-app\\public\\img-buffet";
                 }
 

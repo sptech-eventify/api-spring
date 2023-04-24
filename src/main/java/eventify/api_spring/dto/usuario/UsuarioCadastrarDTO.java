@@ -1,9 +1,16 @@
 package eventify.api_spring.dto.usuario;
 
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CPF;
+
 public class UsuarioCadastrarDTO {
-    String nome;
-    String email;
-    String senha;
+    @NotBlank
+    private String nome;
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String senha;
+    @CPF
     String cpf;
     Integer tipoUsuario;
 

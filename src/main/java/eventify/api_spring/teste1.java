@@ -13,6 +13,8 @@ public class teste1 {
         System.setProperty("user.dir", diretorioPai.getAbsolutePath());
         String caminho = diretorioPai + "\\web-app\\public\\img-buffet";
 
+        System.out.println(caminho);
+
 
     }
 }
