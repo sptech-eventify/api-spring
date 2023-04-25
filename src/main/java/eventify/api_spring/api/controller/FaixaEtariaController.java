@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/faixa-etarias")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Usuário", description="Controller com os endpoints que controlam as configuraçõs de faixa etária do sistema")
+@Tag(name="8. Faixa Etária", description="Controller com os endpoints que controlam as configuraçõs de faixa etária do sistema")
 public class FaixaEtariaController {
     @Autowired
     private FaixaEtariaService faixaEtariaService;

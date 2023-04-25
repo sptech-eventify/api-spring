@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Usuário", description="Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
-// Controller recebe as requisições e as encaminha para o Service
+@Tag(name="1. Usuário", description="Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
 public class UsuarioController {
 
     @Autowired
@@ -63,7 +63,7 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @PutMapping
-    public ResponseEntity<UsuarioCadastrarDTO> atualizar(int id, @RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario){
         if (usuarioService.atualizar(id, usuario) != null){
             return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuario));
         } return ResponseEntity.status(404).build();

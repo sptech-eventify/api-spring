@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/servicos")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Serviço", description="Controller com os endpoints que controlam os serviços do sistema")
+@Tag(name="9. Serviço", description="Controller com os endpoints que controlam os serviços do sistema")
 public class ServicoController {
 
     @Autowired
