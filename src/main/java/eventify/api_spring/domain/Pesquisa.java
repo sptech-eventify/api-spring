@@ -1,16 +1,36 @@
 package eventify.api_spring.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalDate;
 
 public class Pesquisa {
 
+   // 'Vila Madalena', 'SP', '12345678',
+    @Schema(example = "Rua Andrade de Lima, 124, Vila Madalena")
     private String endereco;
-    private Integer faixaEtaria;
+
+    @Schema()
+    private String faixaEtaria;
+    @Schema(example = "300")
     private Integer qtdPessoas;
+
+    @Schema(example = "Casamento")
     private String tipoEvento;
+
+    @Schema(example = "4000")
     private Integer orcamento;
+
+    @Schema(example = "2023-05-14 10:30:00")
     private LocalDate dataEvento;
+
+    @Schema(example = "Decoração")
+    private String servico;
+
+    @Schema(example = "-23.567890")
     private Double latitude;
+
+    @Schema(example = "-46.789012")
     private Double longitude;
 
     public String getEndereco() {
@@ -21,11 +41,19 @@ public class Pesquisa {
         this.endereco = endereco;
     }
 
-    public Integer getFaixaEtaria() {
+    public String getServico() {
+        return servico;
+    }
+
+    public void setServico(String servico) {
+        this.servico = servico;
+    }
+
+    public String getFaixaEtaria() {
         return faixaEtaria;
     }
 
-    public void setFaixaEtaria(Integer faixaEtaria) {
+    public void setFaixaEtaria(String faixaEtaria) {
         this.faixaEtaria = faixaEtaria;
     }
 

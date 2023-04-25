@@ -1,7 +1,6 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Pesquisa;
+import eventify.api_spring.domain.*;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import static org.hibernate.Hibernate.get;
 
 @RestController
 @RequestMapping("/pesquisa")
@@ -26,38 +28,55 @@ public class PesquisaController {
 
         for (int i = 0; i < buffets.size(); i++) {
             boolean isDentro = true;
+            boolean isTipoEvento = false;
+            boolean isFaixaEtaria = false;
+            boolean isServico = false;
 
-            if (!buffets.get(i).getTiposEventos().contains(p.getTipoEvento())) {
-                isDentro = false;
+            for(TipoEvento tp: buffets.get(i).getTiposEventos()){
+                if(tp.getDescricao().equals(p.getTipoEvento())){
+                    isTipoEvento = true;
+                }
             }
 
-            if (!buffets.get(i).getFaixaEtarias().contains(p.getFaixaEtaria())) {
-                isDentro = false;
+            for(FaixaEtaria fe: buffets.get(i).getFaixaEtarias()){
+                if(fe.getDescricao().equals(p.getFaixaEtaria())){
+                    isFaixaEtaria = true;
+                }
+            }
+
+            for(Servico se: buffets.get(i).getServicos()){
+                if(se.getDescricao().equals(p.getServico())){
+                    isServico = true;
+                }
             }
 
             if (calcularDistancia(p.getLatitude(), p.getLongitude(), buffets.get(i).getEndereco().getLatitude(), buffets.get(i).getEndereco().getLongitude()) > 15) {
                 isDentro = false;
             }
 
-            if (isDentro) {
+            if (isDentro && (isTipoEvento && isFaixaEtaria && isServico)) {
                 buffetsFiltrados.add(buffets.get(i));
             }
         }
 
+        if((buffetsFiltrados.size()) == 0){
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().body(buffetsFiltrados);
     }
-    public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
+    public static Double calcularDistancia(Double lat1, Double long1, Double lat2, Double long2) {
         // raio médio da Terra em quilômetros
         double raioTerra = 6371;
 
         // Calcula a diferença de latitude e longitude entre os dois pontos e converte o resultado para radianos.
-        double difLat = Math.toRadians(lat2 - lat1);
-        double difLong = Math.toRadians(long2 - long1);
+        Double difLat = Math.toRadians(lat2 - lat1);
+        Double difLong = Math.toRadians(long2 - long1);
 
         // Esta linha calcula um valor intermediário chamado a usando a fórmula de Haversine
-        double a = Math.sin(difLat / 2) * Math.sin(difLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(difLong / 2) * Math.sin(difLong / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distancia = raioTerra * c;
+        Double a = Math.sin(difLat / 2) * Math.sin(difLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(difLong / 2) * Math.sin(difLong / 2);
+        Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        Double distancia = raioTerra * c;
+
         return distancia;
     }
 }
