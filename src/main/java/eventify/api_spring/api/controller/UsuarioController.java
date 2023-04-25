@@ -21,8 +21,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Usuário", description="Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
-@Order(1)
+@Tag(name="1. Usuário", description="Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
 public class UsuarioController {
 
     @Autowired

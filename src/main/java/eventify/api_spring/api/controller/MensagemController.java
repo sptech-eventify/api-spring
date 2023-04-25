@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mensagems")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
+@Tag(name="6. Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
 public class MensagemController {
 
     @Autowired

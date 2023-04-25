@@ -18,8 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/eventos")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Evento", description="Controller com os endpoints de evento")
-@Order(4)
+@Tag(name="4. Evento", description="Controller com os endpoints de evento")
 public class EventoController {
 
     @Autowired

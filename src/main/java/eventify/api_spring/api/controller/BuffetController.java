@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/buffets")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Buffet", description="Controller com os endpoints de buffet")
+@Tag(name="2. Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
 
     @Autowired

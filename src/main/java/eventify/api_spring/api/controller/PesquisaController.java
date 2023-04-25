@@ -14,8 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pesquisa")
-@Tag(name="Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
-@Order(3)
+@Tag(name="3. Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
 public class PesquisaController {
     @Autowired
     private BuffetService buffetService;
