@@ -58,3 +58,16 @@ INSERT INTO imagem_chat (caminho, nome, tipo, is_ativo, data_upload, id_mensagem
 ('/images/chat1/', 'imagem1', 'jpg', 1, '2023-04-14 09:30:00', 1),
 ('/images/chat2/', 'imagem2', 'png', 1, '2023-04-14 09:30:00', 2),
 ('/images/chat3/', 'imagem3', 'jpg', 1, '2023-04-14 09:30:00', 3);
+
+INSERT INTO buffet_tipo_evento values (1,1);
+INSERT INTO buffet_tipo_evento values (2,1);
+INSERT INTO buffet_tipo_evento values (3,1);
+INSERT INTO buffet_tipo_evento values (1,2);
+
+INSERT INTO buffet_servico values (1,1);
+INSERT INTO buffet_servico values (2,2);
+INSERT INTO buffet_servico values (3,3);
+
+INSERT INTO buffet_faixa_etaria values (1,1);
+INSERT INTO buffet_faixa_etaria values (2,4);
+INSERT INTO buffet_faixa_etaria values (3,5);
