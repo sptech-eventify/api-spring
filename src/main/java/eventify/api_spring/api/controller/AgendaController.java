@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/agendas")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Agenda", description="Controller com os endpoints de reservas dos buffets")
+@Tag(name="5. Agenda", description="Controller com os endpoints de reservas dos buffets")
 public class AgendaController {
 
     @Autowired

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tipo-eventos")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Usuário", description="Controller com os endpoints que controlam os tipos de evento do sistema")
+@Tag(name="Tipo", description="Controller com os endpoints que controlam os tipos de evento do sistema")
 public class TipoEventoController {
     @Autowired
     private TipoEventoService tipoEventoService;

@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/imagem")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name="Imagem", description="Controller com os endpoints que controlam o fluxo de imagens do sistema")
+@Tag(name="7. Imagem", description="Controller com os endpoints que controlam o fluxo de imagens do sistema")
 public class ImagemController {
 
     @Autowired

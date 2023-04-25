@@ -9,13 +9,7 @@ import java.util.List;
 @Repository
 public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
 
-    @Query(value = "SELECT * " +
-            "FROM buffet " +
-            "INNER JOIN buffet_tipo_evento " +
-            "ON buffet.id = buffet_tipo_evento.id_buffet " +
-            "INNER JOIN tipo_evento " +
-            "on tipo_evento.id = buffet_tipo_evento.id_tipo_evento " +
-            "INNER JOIN usuario on buffet.id_usuario = usuario.id", nativeQuery = true)
+    @Query("SELECT b FROM Buffet b")
     public List<Buffet> findAllBuffet();
 
 }
