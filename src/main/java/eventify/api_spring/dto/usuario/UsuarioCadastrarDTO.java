@@ -23,6 +23,10 @@ public class UsuarioCadastrarDTO {
     @Schema(example = "1")
     Integer tipoUsuario;
 
+    private Boolean isAtivo;
+    private Boolean isBanido;
+
+
     public String getNome() {
         return nome;
     }
@@ -61,6 +65,22 @@ public class UsuarioCadastrarDTO {
 
     public void setTipoUsuario(Integer tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
+    }
+
+    public Boolean getAtivo() {
+        return isAtivo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        isAtivo = ativo;
+    }
+
+    public Boolean getBanido() {
+        return isBanido;
+    }
+
+    public void setBanido(Boolean banido) {
+        isBanido = banido;
     }
 }
 

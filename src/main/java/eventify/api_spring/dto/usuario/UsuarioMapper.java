@@ -3,6 +3,8 @@ package eventify.api_spring.dto.usuario;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 
+import java.time.LocalDateTime;
+
 public class UsuarioMapper {
     public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
         Usuario usuario = new Usuario();
@@ -10,8 +12,9 @@ public class UsuarioMapper {
         usuario.setNome(usuarioCadastrarDTO.getNome());
         usuario.setCpf(usuarioCadastrarDTO.getCpf());
         usuario.setSenha(usuarioCadastrarDTO.getSenha());
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
+        usuario.setAtivo(usuarioCadastrarDTO.getAtivo());
+        usuario.setBanido(usuarioCadastrarDTO.getBanido());
+        usuario.setDataCriacao(LocalDateTime.now());
         return usuario;
     }
 

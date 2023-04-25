@@ -3,6 +3,7 @@ package eventify.api_spring.service.usuario;
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.dto.usuario.UsuarioMapper;
 import eventify.api_spring.repository.UsuarioRepository;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
@@ -35,7 +36,7 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> listar(){
+    public List<Usuario> listar() {
         List<Usuario> lista = usuarioRepository.findAll();
         return lista;
     }
@@ -44,17 +45,21 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
-    public void cadastrar(UsuarioCadastrarDTO usuarioCadastrarDTO) {
-        final Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
+    public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuarioCadastrarDTO) {
+        UsuarioDevolverDTO usuarioDevolverDTO = new UsuarioDevolverDTO();
+            Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-
         this.usuarioRepository.save(novoUsuario);
+        usuarioDevolverDTO.setId(novoUsuario.getId());
+        usuarioDevolverDTO.setNome(novoUsuario.getNome());
+        usuarioDevolverDTO.setEmail(novoUsuario.getEmail());
+        return usuarioDevolverDTO;
     }
 
-    public boolean deletar(int id) {
+    public Boolean deletar(int id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isEmpty()){
+        if (usuarioOpt.isEmpty()) {
             return false;
         }
         usuarioRepository.deleteById(id);
@@ -63,35 +68,39 @@ public class UsuarioService {
 
     public UsuarioCadastrarDTO atualizar(int id, Usuario novoUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isPresent()){
-            novoUsuario.setId(id);
-
-            UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO();
-
-//            novoUsuario.setNome(usuarioOpt.get().getNome());
-            usuario.setNome(novoUsuario.getNome());
-
-//            novoUsuario.setCpf(usuarioOpt.get().getCpf());
-            usuario.setCpf(novoUsuario.getCpf());
-
-//            novoUsuario.setTipoUsuario(usuarioOpt.get().getTipoUsuario());
-            usuario.setTipoUsuario(novoUsuario.getTipoUsuario());
-
-//            novoUsuario.setEmail(usuarioOpt.get().getEmail());
-            usuario.setEmail(novoUsuario.getEmail());
-
-//            novoUsuario.setAtivo(usuarioOpt.get().isAtivo());
-            usuario.setSenha(novoUsuario.getSenha());
-
-//            novoUsuario.setBanido(usuarioOpt.get().isBanido());
-            usuarioRepository.save(novoUsuario);
-            return usuario;
+        UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO();
+        if (usuarioOpt.isPresent()) {
+            if (novoUsuario.getNome() != null) {
+                usuario.setNome(novoUsuario.getNome());
+                usuarioOpt.get().setNome(novoUsuario.getNome());
+            }
+            if (novoUsuario.getEmail() != null) {
+                usuario.setEmail(novoUsuario.getEmail());
+                usuarioOpt.get().setEmail(novoUsuario.getEmail());
+            }
+            if (novoUsuario.getCpf() != null) {
+                usuario.setCpf(novoUsuario.getCpf());
+                usuarioOpt.get().setCpf(novoUsuario.getCpf());
+            }
+            if (novoUsuario.getSenha() != null) {
+                usuario.setSenha(novoUsuario.getSenha());
+                usuarioOpt.get().setSenha(novoUsuario.getSenha());
+            }
+                usuarioOpt.get().setAtivo(usuarioOpt.get().isAtivo());
+                usuarioOpt.get().setBanido(usuarioOpt.get().isBanido());
         } else {
-            return null;
+            throw new ResponseStatusException(404, "Usuário não encontrado", null);
         }
+        usuarioRepository.save(usuarioOpt.get());
+        return usuario;
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
+        if (usuario.isPresent()) {
+            usuario.get().setUltimoLogin(LocalDateTime.now());
+            usuarioRepository.save(usuario.get());
+        }
 
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());

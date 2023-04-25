@@ -24,18 +24,6 @@ public class Usuario {
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 
-    public Usuario(String nome, String email, String senha, String cpf, Integer tipoUsuario, Boolean isAtivo, Boolean isBanido, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
-        this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.cpf = cpf;
-        this.tipoUsuario = tipoUsuario;
-        this.isAtivo = isAtivo;
-        this.isBanido = isBanido;
-        this.dataCriacao = dataCriacao;
-        this.ultimoLogin = ultimoLogin;
-    }
-
     public Usuario() {
     }
 
@@ -91,7 +79,7 @@ public class Usuario {
         return isAtivo;
     }
 
-    public void setAtivo(boolean ativo) {
+    public void setAtivo(Boolean ativo) {
         isAtivo = ativo;
     }
 
@@ -99,7 +87,7 @@ public class Usuario {
         return isBanido;
     }
 
-    public void setBanido(boolean banido) {
+    public void setBanido(Boolean banido) {
         isBanido = banido;
     }
 

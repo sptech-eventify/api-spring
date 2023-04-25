@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.service.usuario.UsuarioService;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
@@ -48,9 +49,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Void> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario){
-        usuarioService.cadastrar(usuario);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<UsuarioDevolverDTO> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario){
+        return ResponseEntity.status(201).body(usuarioService.cadastrar(usuario));
     }
 
     @SecurityRequirement(name = "requiredAuth")
