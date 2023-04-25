@@ -24,7 +24,7 @@ public class Usuario {
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 
-    public Usuario(String nome, String email, String senha, String cpf, Integer tipoUsuario, boolean isAtivo, boolean isBanido, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
+    public Usuario(String nome, String email, String senha, String cpf, Integer tipoUsuario, Boolean isAtivo, Boolean isBanido, LocalDateTime dataCriacao, LocalDateTime ultimoLogin) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;

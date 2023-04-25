@@ -63,15 +63,27 @@ public class UsuarioService {
 
     public UsuarioCadastrarDTO atualizar(int id, Usuario novoUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-
         if (usuarioOpt.isPresent()){
-            UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO();
-            usuario.setNome(novoUsuario.getNome());
-            usuario.setCpf(novoUsuario.getCpf());
-            usuario.setTipoUsuario(novoUsuario.getTipoUsuario());
-            usuario.setEmail(novoUsuario.getEmail());
-            usuario.setSenha(novoUsuario.getSenha());
             novoUsuario.setId(id);
+
+            UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO();
+
+//            novoUsuario.setNome(usuarioOpt.get().getNome());
+            usuario.setNome(novoUsuario.getNome());
+
+//            novoUsuario.setCpf(usuarioOpt.get().getCpf());
+            usuario.setCpf(novoUsuario.getCpf());
+
+//            novoUsuario.setTipoUsuario(usuarioOpt.get().getTipoUsuario());
+            usuario.setTipoUsuario(novoUsuario.getTipoUsuario());
+
+//            novoUsuario.setEmail(usuarioOpt.get().getEmail());
+            usuario.setEmail(novoUsuario.getEmail());
+
+//            novoUsuario.setAtivo(usuarioOpt.get().isAtivo());
+            usuario.setSenha(novoUsuario.getSenha());
+
+//            novoUsuario.setBanido(usuarioOpt.get().isBanido());
             usuarioRepository.save(novoUsuario);
             return usuario;
         } else {

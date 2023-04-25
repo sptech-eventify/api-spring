@@ -63,7 +63,7 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @PutMapping
-    public ResponseEntity<UsuarioCadastrarDTO> atualizar(int id, @RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario){
         if (usuarioService.atualizar(id, usuario) != null){
             return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuario));
         } return ResponseEntity.status(404).build();

@@ -2,6 +2,7 @@ package eventify.api_spring.dto.usuario;
 
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CPF;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class UsuarioCadastrarDTO {

@@ -10,6 +10,8 @@ public class UsuarioMapper {
         usuario.setNome(usuarioCadastrarDTO.getNome());
         usuario.setCpf(usuarioCadastrarDTO.getCpf());
         usuario.setSenha(usuarioCadastrarDTO.getSenha());
+        usuario.setAtivo(true);
+        usuario.setBanido(false);
         return usuario;
     }
 
