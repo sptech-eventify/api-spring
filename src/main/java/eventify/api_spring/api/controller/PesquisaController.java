@@ -5,6 +5,7 @@ import eventify.api_spring.domain.Pesquisa;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pesquisa")
 @Tag(name="Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
+@Order(3)
 public class PesquisaController {
     @Autowired
     private BuffetService buffetService;
@@ -42,6 +44,7 @@ public class PesquisaController {
                 buffetsFiltrados.add(buffets.get(i));
             }
         }
+
         return ResponseEntity.ok().body(buffetsFiltrados);
     }
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
