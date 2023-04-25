@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.service.AgendaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/agendas")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Agenda", description="Controller com os endpoints de reservas dos buffets")
 public class AgendaController {
 
     @Autowired

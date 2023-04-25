@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Pesquisa;
 import eventify.api_spring.service.BuffetService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pesquisa")
+@Tag(name="Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
 public class PesquisaController {
     @Autowired
     private BuffetService buffetService;

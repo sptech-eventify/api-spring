@@ -15,7 +15,7 @@ public class UsuarioCadastrarDTO {
     @Schema(example = "123456")
     String senha;
 
-    @Schema(example = "49308791811")
+    @Schema(example = "31509983015")
     @CPF
     String cpf;
 

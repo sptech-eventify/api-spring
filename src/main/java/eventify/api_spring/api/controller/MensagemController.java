@@ -3,6 +3,7 @@ import eventify.api_spring.domain.Mensagem;
 import eventify.api_spring.dto.MensagemDto;
 import eventify.api_spring.service.MensagemServices;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/mensagems")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
 public class MensagemController {
 
     @Autowired

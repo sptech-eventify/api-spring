@@ -5,6 +5,7 @@ import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/buffets")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
 
     @Autowired

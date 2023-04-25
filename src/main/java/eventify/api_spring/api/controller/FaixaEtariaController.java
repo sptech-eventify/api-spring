@@ -4,6 +4,7 @@ import eventify.api_spring.domain.FaixaEtaria;
 import eventify.api_spring.repository.FaixaEtariaRepository;
 import eventify.api_spring.service.FaixaEtariaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/faixa-etarias")
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name="Usuário", description="Controller com os endpoints que controlam as configuraçõs de faixa etária do sistema")
 public class FaixaEtariaController {
-
     @Autowired
     private FaixaEtariaService faixaEtariaService;
 
