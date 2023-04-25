@@ -1,4 +1,5 @@
 package eventify.api_spring.domain;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class TipoEvento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Schema(example = "Evento Empresarial")
     @NotBlank
     private String descricao;
 

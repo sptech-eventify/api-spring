@@ -77,7 +77,7 @@ public class Buffet {
     @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY)
     private List<Agenda> agendas = new ArrayList<>();
 
-    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
+    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel,Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;

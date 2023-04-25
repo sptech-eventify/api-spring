@@ -1,5 +1,6 @@
 package eventify.api_spring.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +9,8 @@ public class Servico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Schema(example = "Estacionamento")
     private String descricao;
     @ManyToOne
     private Buffet buffet;

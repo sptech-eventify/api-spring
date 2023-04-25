@@ -1,4 +1,5 @@
 package eventify.api_spring.domain;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +13,7 @@ public class FaixaEtaria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Schema(example = "30 a 39 anos")
     @NotBlank
     private String descricao;
 

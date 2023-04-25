@@ -16,18 +16,26 @@ public class Endereco {
     @Schema(example = "true")
     private boolean isValidado;
 
-    @Schema(example = "logradouro")
+    @Schema(example = "R. Gualaxo")
     private String logradouro;
 
-    @Schema(example = "235")
+    @Schema(example = "285")
     private Integer numero;
 
-    @Schema(example = "")
+    @Schema(example = "Aclimação")
     private String bairro;
+
+    @Schema(example = "SP")
     private String uf;
+
+    @Schema(example = "01533-010")
     @NotBlank
     private String cep;
+
+    @Schema(example = "-23.574011")
     private Double latitude;
+
+    @Schema(example = "46.6388203")
     private Double longitude;
 
     public Endereco(Integer id, boolean isValidado, String logradouro, Integer numero, String bairro, String uf, String cep, Double latitude, Double longitude) {
