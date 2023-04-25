@@ -1,4 +1,5 @@
 package eventify.api_spring.domain;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,9 +12,17 @@ public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Schema(example = "true")
     private boolean isValidado;
+
+    @Schema(example = "logradouro")
     private String logradouro;
+
+    @Schema(example = "235")
     private Integer numero;
+
+    @Schema(example = "")
     private String bairro;
     private String uf;
     @NotBlank

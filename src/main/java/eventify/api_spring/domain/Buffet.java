@@ -2,6 +2,7 @@ package eventify.api_spring.domain;
 
 import eventify.api_spring.dto.ImagemChatDto;
 import eventify.api_spring.dto.ImagemDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -15,23 +16,39 @@ import java.util.Set;
 
 @Entity
 public class Buffet {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Schema(example = "Buffet da Alegria")
     @NotBlank
     private String nome;
+
+    @Schema(example = "Venha fazer aqui a sua festa mágica que fará momentos da sua vida se tornarem inesquecíveis no melhor Buffet de São Paulo!")
     @NotBlank
     private String descricao;
+
     @NotBlank
+    @Schema(example = "500m2")
     private String tamanho;
+
+    @Schema(example = "2134.00")
     @DecimalMin("0.0")
     private Double precoMedioDiaria;
+
+    @Schema(example = "100")
     @Min(1)
     private Integer qtdPessoas;
+
+    @Schema(example = "assets/files/comprovantes/buffet1_comp1.pdf")
     private String caminhoComprovante;
+
+    @Schema(example = "true")
     private boolean residenciaComprovada;
+
+    @Schema(example = "true")
     private boolean isVisivel;
+
     @OneToOne
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
