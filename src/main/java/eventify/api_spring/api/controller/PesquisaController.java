@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.*;
+import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,10 @@ public class PesquisaController {
     private BuffetService buffetService;
 
     @GetMapping()
-    private ResponseEntity<List<Buffet>> buscarBuffetProximo(@RequestBody Pesquisa p) {
+    private ResponseEntity<List<BuffetDto>> buscarBuffetProximo(@RequestBody Pesquisa p) {
         List<Buffet> buffets = buffetService.listar();
         List<Buffet> buffetsFiltrados = new ArrayList<>();
+        List<BuffetDto> buffetDtos = new ArrayList<>();
 
         for (int i = 0; i < buffets.size(); i++) {
             boolean isDentro = true;
@@ -62,7 +64,27 @@ public class PesquisaController {
         if((buffetsFiltrados.size()) == 0){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(buffetsFiltrados);
+
+        for (Buffet b: buffetsFiltrados) {
+            buffetDtos.add(new BuffetDto(
+                    b.getId(),
+                    b.getNome(),
+                    b.getDescricao(),
+                    b.getTamanho(),
+                    b.getPrecoMedioDiaria(),
+                    b.getQtdPessoas(),
+                    b.getCaminhoComprovante(),
+                    b.isVisivel(),
+                    b.getEndereco(),
+                    b.getFaixaEtarias(),
+                    b.getTiposEventos(),
+                    b.getServicos(),
+                    b.getImagemDto(),
+                    b.getAgendas()
+            ));
+
+        }
+        return ResponseEntity.ok().body(buffetDtos);
     }
     public static Double calcularDistancia(Double lat1, Double long1, Double lat2, Double long2) {
         // raio médio da Terra em quilômetros
