@@ -3,6 +3,7 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.TipoEvento;
+import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
@@ -75,6 +76,15 @@ public class BuffetService {
             return datasDto;
         }
         return null;
+    }
+
+    public Boolean deletar(int id) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(id);
+        if (buffetOpt.isEmpty()) {
+            return false;
+        }
+        buffetRepository.deleteById(id);
+        return true;
     }
 
     public void cadastrar (Buffet buffet) {
