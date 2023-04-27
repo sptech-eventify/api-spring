@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,22 +31,32 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping
-    public ResponseEntity<List<Usuario>> listar(){
+    public ResponseEntity<List<UsuarioDevolverDTO>> listar(){
         List<Usuario> lista = usuarioService.listar();
         if (lista.isEmpty()){
             return ResponseEntity.status(204).build();
-        } return ResponseEntity.status(200).body(lista);
+        }
+
+        List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
+
+        for(Usuario user: lista){
+            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail()));
+        }
+
+        return ResponseEntity.status(200).body(listaDTO);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/id")
-    public ResponseEntity<Optional<Usuario>> exibir(@RequestParam Integer id) {
+    public ResponseEntity<UsuarioDevolverDTO> exibir(@RequestParam Integer id) {
         Optional<Usuario> resposta = usuarioService.exibir(id);
 
         if (resposta.isEmpty())
             return ResponseEntity.status(204).build();
 
-        return ResponseEntity.status(200).body(resposta);
+        UsuarioDevolverDTO user = new UsuarioDevolverDTO(resposta.get().getId(), resposta.get().getNome(), resposta.get().getEmail());
+
+        return ResponseEntity.status(200).body(user);
     }
 
     @PostMapping("/cadastrar")

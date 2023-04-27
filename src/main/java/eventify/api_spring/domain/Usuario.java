@@ -1,4 +1,5 @@
 package eventify.api_spring.domain;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,14 +15,32 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Schema(example = "Gabriel Santos")
     private String nome;
+
+    @Schema(example = "gabriel@santos.com")
     private String email;
+
+    @Schema(example = "123456")
     private String senha;
+
+    @Schema(example = "31509983015")
     private String cpf;
+
+    @Schema(example = "1")
     private Integer tipoUsuario;
+
+    @Schema(example = "true")
     private Boolean isAtivo;
+
+    @Schema(example = "false")
     private Boolean isBanido;
+
+    @Schema(example = "2023-04-27T16:45:00.000Z")
     private LocalDateTime dataCriacao;
+
+    @Schema(example = "2023-04-27T16:45:00.000Z")
     private LocalDateTime ultimoLogin;
 
     public Usuario() {
