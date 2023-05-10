@@ -47,8 +47,7 @@ public class UsuarioService {
 
     public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuarioCadastrarDTO) {
         UsuarioDevolverDTO usuarioDevolverDTO = new UsuarioDevolverDTO();
-        Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
-
+            Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
         this.usuarioRepository.save(novoUsuario);
@@ -87,8 +86,8 @@ public class UsuarioService {
                 usuario.setSenha(novoUsuario.getSenha());
                 usuarioOpt.get().setSenha(novoUsuario.getSenha());
             }
-            usuarioOpt.get().setAtivo(usuarioOpt.get().isAtivo());
-            usuarioOpt.get().setBanido(usuarioOpt.get().isBanido());
+                usuarioOpt.get().setAtivo(usuarioOpt.get().isAtivo());
+                usuarioOpt.get().setBanido(usuarioOpt.get().isBanido());
         } else {
             throw new ResponseStatusException(404, "Usuário não encontrado", null);
         }
@@ -99,8 +98,6 @@ public class UsuarioService {
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
         if (usuario.isPresent()) {
-            usuario.get().setAtivo(true);
-            usuario.get().setBanido(false);
             usuario.get().setUltimoLogin(LocalDateTime.now());
             usuarioRepository.save(usuario.get());
         }

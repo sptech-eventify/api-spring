@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller;
 
+import eventify.api_spring.api.assets.ListaBuffet;
 import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.service.BuffetService;
@@ -85,7 +86,11 @@ public class PesquisaController {
         return ResponseEntity.ok().body(buffetDtos);
     }
 
+<<<<<<< HEAD
     /*@GetMapping("/ordem-alfabetica")
+=======
+    @GetMapping("/ordem-alfabetica")
+>>>>>>> 1aa61b1aed756e42911c14bb6359becbd0f32233
     private ResponseEntity<List<BuffetDto>> ordenarAlfabeticamente() {
         List<Buffet> buffets = buffetService.listar();
         ListaBuffet buffetsOrdenados = new ListaBuffet(buffets.size());
@@ -121,7 +126,49 @@ public class PesquisaController {
         }
 
         return ResponseEntity.ok().body(buffetDtos);
+<<<<<<< HEAD
     }*/
+=======
+    }
+
+    @GetMapping("/melhores-precos")
+    private ResponseEntity<List<BuffetDto>> ordenarPreco() {
+        List<Buffet> buffets = buffetService.listar();
+        ListaBuffet buffetsOrdenados = new ListaBuffet(buffets.size());
+        List<BuffetDto> buffetDtos = new ArrayList<>();
+
+        for(Buffet b: buffets){
+            buffetsOrdenados.adiciona(b);
+        }
+
+        buffetsOrdenados.ordenarPorPreco();
+
+        if((buffetsOrdenados.tamanho()) == 0){
+            return ResponseEntity.notFound().build();
+        }
+
+        for(int i = 0; i < buffetsOrdenados.tamanho(); i++){
+            buffetDtos.add(new BuffetDto(
+                    buffetsOrdenados.get(i).getId(),
+                    buffetsOrdenados.get(i).getNome(),
+                    buffetsOrdenados.get(i).getDescricao(),
+                    buffetsOrdenados.get(i).getTamanho(),
+                    buffetsOrdenados.get(i).getPrecoMedioDiaria(),
+                    buffetsOrdenados.get(i).getQtdPessoas(),
+                    buffetsOrdenados.get(i).getCaminhoComprovante(),
+                    buffetsOrdenados.get(i).isVisivel(),
+                    buffetsOrdenados.get(i).getEndereco(),
+                    buffetsOrdenados.get(i).getFaixaEtarias(),
+                    buffetsOrdenados.get(i).getTiposEventos(),
+                    buffetsOrdenados.get(i).getServicos(),
+                    buffetsOrdenados.get(i).getImagemDto(),
+                    buffetsOrdenados.get(i).getAgendas()
+            ));
+        }
+
+        return ResponseEntity.ok().body(buffetDtos);
+    }
+>>>>>>> 1aa61b1aed756e42911c14bb6359becbd0f32233
 
     public static Double calcularDistancia(Double lat1, Double long1, Double lat2, Double long2) {
         // raio médio da Terra em quilômetros

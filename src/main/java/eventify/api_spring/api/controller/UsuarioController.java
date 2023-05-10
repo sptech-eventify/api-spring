@@ -16,13 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = "http://localhost:3000")
-@Tag(name = "1. Usuário", description = "Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
+@Tag(name="1. Usuário", description="Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
 public class UsuarioController {
 
     @Autowired
@@ -30,51 +31,57 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping
-    public ResponseEntity<List<Usuario>> listar() {
+    public ResponseEntity<List<UsuarioDevolverDTO>> listar(){
         List<Usuario> lista = usuarioService.listar();
-        if (lista.isEmpty()) {
+        if (lista.isEmpty()){
             return ResponseEntity.status(204).build();
         }
-        return ResponseEntity.status(200).body(lista);
+
+        List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
+
+        for(Usuario user: lista){
+            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail()));
+        }
+
+        return ResponseEntity.status(200).body(listaDTO);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/id")
-    public ResponseEntity<Optional<Usuario>> exibir(@RequestParam Integer id) {
+    public ResponseEntity<UsuarioDevolverDTO> exibir(@RequestParam Integer id) {
         Optional<Usuario> resposta = usuarioService.exibir(id);
 
         if (resposta.isEmpty())
             return ResponseEntity.status(204).build();
 
-        return ResponseEntity.status(200).body(resposta);
+        UsuarioDevolverDTO user = new UsuarioDevolverDTO(resposta.get().getId(), resposta.get().getNome(), resposta.get().getEmail());
+
+        return ResponseEntity.status(200).body(user);
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<UsuarioDevolverDTO> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario) {
-
+    public ResponseEntity<UsuarioDevolverDTO> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario){
         return ResponseEntity.status(201).body(usuarioService.cadastrar(usuario));
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @DeleteMapping
-    public ResponseEntity<Void> deletar(int id) {
-        if (usuarioService.deletar(id)) {
+    public ResponseEntity<Void> deletar(int id){
+        if (usuarioService.deletar(id)){
             return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
+        } return ResponseEntity.status(404).build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PutMapping
-    public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario) {
-        if (usuarioService.atualizar(id, usuario) != null) {
+    public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario){
+        if (usuarioService.atualizar(id, usuario) != null){
             return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuario));
-        }
-        return ResponseEntity.status(404).build();
+        } return ResponseEntity.status(404).build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto){
         UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
         return ResponseEntity.status(200).body(usuarioToken);
     }

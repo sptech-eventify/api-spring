@@ -23,8 +23,11 @@ public class UsuarioCadastrarDTO {
     @Schema(example = "1")
     Integer tipoUsuario;
 
-    private Boolean isAtivo = false;
-    private Boolean isBanido = false;
+    @Schema(example = "true")
+    private Boolean isAtivo;
+
+    @Schema(example = "false")
+    private Boolean isBanido;
 
 
     public String getNome() {
