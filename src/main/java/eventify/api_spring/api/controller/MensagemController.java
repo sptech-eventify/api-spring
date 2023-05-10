@@ -13,7 +13,7 @@ import java.util.List;
 
 @SecurityRequirement(name = "requiredAuth")
 @RestController
-@RequestMapping("/mensagems")
+@RequestMapping("/mensagens")
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="6. Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
 public class MensagemController {

@@ -70,12 +70,4 @@ public class BuffetController {
         buffetService.atualizar(buffet);
         return ResponseEntity.status(200).body(buffet);
     }
-
-    @SecurityRequirement(name = "requiredAuth")
-    @DeleteMapping
-    public ResponseEntity<Void> deletar(int id){
-        if (buffetService.deletar(id)){
-            return ResponseEntity.status(200).build();
-        } return ResponseEntity.status(404).build();
-    }
 }
