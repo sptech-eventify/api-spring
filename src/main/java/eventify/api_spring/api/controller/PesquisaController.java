@@ -5,13 +5,11 @@ import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.hibernate.Hibernate.get;
 
@@ -22,7 +20,7 @@ public class PesquisaController {
     @Autowired
     private BuffetService buffetService;
 
-    @GetMapping()
+    @GetMapping
     private ResponseEntity<List<BuffetDto>> buscarBuffetProximo(@RequestBody Pesquisa p) {
         List<Buffet> buffets = buffetService.listar();
         List<Buffet> buffetsFiltrados = new ArrayList<>();
@@ -86,6 +84,45 @@ public class PesquisaController {
         }
         return ResponseEntity.ok().body(buffetDtos);
     }
+
+    /*@GetMapping("/ordem-alfabetica")
+    private ResponseEntity<List<BuffetDto>> ordenarAlfabeticamente() {
+        List<Buffet> buffets = buffetService.listar();
+        ListaBuffet buffetsOrdenados = new ListaBuffet(buffets.size());
+        List<BuffetDto> buffetDtos = new ArrayList<>();
+
+        for(Buffet b: buffets){
+            buffetsOrdenados.adiciona(b);
+        }
+
+        buffetsOrdenados.ordenaPorNome();
+
+        if((buffetsOrdenados.tamanho()) == 0){
+            return ResponseEntity.notFound().build();
+        }
+
+        for(int i = 0; i < buffetsOrdenados.tamanho(); i++){
+            buffetDtos.add(new BuffetDto(
+                    buffetsOrdenados.get(i).getId(),
+                    buffetsOrdenados.get(i).getNome(),
+                    buffetsOrdenados.get(i).getDescricao(),
+                    buffetsOrdenados.get(i).getTamanho(),
+                    buffetsOrdenados.get(i).getPrecoMedioDiaria(),
+                    buffetsOrdenados.get(i).getQtdPessoas(),
+                    buffetsOrdenados.get(i).getCaminhoComprovante(),
+                    buffetsOrdenados.get(i).isVisivel(),
+                    buffetsOrdenados.get(i).getEndereco(),
+                    buffetsOrdenados.get(i).getFaixaEtarias(),
+                    buffetsOrdenados.get(i).getTiposEventos(),
+                    buffetsOrdenados.get(i).getServicos(),
+                    buffetsOrdenados.get(i).getImagemDto(),
+                    buffetsOrdenados.get(i).getAgendas()
+            ));
+        }
+
+        return ResponseEntity.ok().body(buffetDtos);
+    }*/
+
     public static Double calcularDistancia(Double lat1, Double long1, Double lat2, Double long2) {
         // raio médio da Terra em quilômetros
         double raioTerra = 6371;
