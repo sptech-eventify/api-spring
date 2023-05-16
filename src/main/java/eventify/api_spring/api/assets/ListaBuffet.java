@@ -2,25 +2,25 @@ package eventify.api_spring.api.assets;
 
 import eventify.api_spring.domain.Buffet;
 
+import java.util.List;
+
 public class ListaBuffet {
     private Buffet[] vetor;
     private int nroElem;
-    private int tamanhoMaximo;
+    private int tamanhoMaximo = 0;
 
 
     public ListaBuffet(int tamanho) {
         nroElem = 0;
-        vetor = new Buffet[tamanho];
+        vetor = (Buffet[]) new Object[tamanho];
         tamanhoMaximo = tamanho;
     }
 
     public void adiciona(Buffet valor) {
         if (nroElem >= tamanhoMaximo) {
             throw new IllegalArgumentException("Lista cheia");
-        } else if (valor instanceof Buffet) {
-            vetor[nroElem++] = valor;
         } else {
-            throw new IllegalArgumentException("Valor não é do tipo Buffet");
+            vetor[nroElem++] = valor;
         }
     }
 
