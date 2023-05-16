@@ -30,6 +30,10 @@ public class BuffetService {
         return buffetRepository.findAll();
     }
 
+    public List<Buffet> getBufferPorPesquisaNome(String q){
+        return buffetRepository.findByNomeContainingIgnoreCase(q);
+    }
+
     public List<String> getTipoEventos() {
         List<Buffet> buffets = buffetRepository.findAll();
         List<String> tipos  = new ArrayList<>();

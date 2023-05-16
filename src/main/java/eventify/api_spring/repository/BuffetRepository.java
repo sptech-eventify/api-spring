@@ -11,5 +11,6 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
 
     @Query("SELECT b FROM Buffet b")
     public List<Buffet> findAllBuffet();
+    public List<Buffet>findByNomeContainingIgnoreCase(String q);
 
 }

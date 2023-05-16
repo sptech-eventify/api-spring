@@ -6,11 +6,15 @@ import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.hibernate.Hibernate.get;
 
@@ -86,11 +90,7 @@ public class PesquisaController {
         return ResponseEntity.ok().body(buffetDtos);
     }
 
-<<<<<<< HEAD
-    /*@GetMapping("/ordem-alfabetica")
-=======
     @GetMapping("/ordem-alfabetica")
->>>>>>> 1aa61b1aed756e42911c14bb6359becbd0f32233
     private ResponseEntity<List<BuffetDto>> ordenarAlfabeticamente() {
         List<Buffet> buffets = buffetService.listar();
         ListaBuffet buffetsOrdenados = new ListaBuffet(buffets.size());
@@ -126,9 +126,6 @@ public class PesquisaController {
         }
 
         return ResponseEntity.ok().body(buffetDtos);
-<<<<<<< HEAD
-    }*/
-=======
     }
 
     @GetMapping("/melhores-precos")
@@ -168,7 +165,135 @@ public class PesquisaController {
 
         return ResponseEntity.ok().body(buffetDtos);
     }
->>>>>>> 1aa61b1aed756e42911c14bb6359becbd0f32233
+
+    @GetMapping("/barra-pesquisa")
+    public ResponseEntity<List<BuffetDto>> pesquisar(@RequestParam String nome) {
+        List<Buffet> buffets = buffetService.getBufferPorPesquisaNome(nome);
+        List<BuffetDto> buffetDtos = new ArrayList<>();
+
+        for (Buffet b: buffets) {
+            buffetDtos.add(new BuffetDto(
+                        b.getId(),
+                        b.getNome(),
+                        b.getDescricao(),
+                        b.getTamanho(),
+                        b.getPrecoMedioDiaria(),
+                        b.getQtdPessoas(),
+                        b.getCaminhoComprovante(),
+                        b.isVisivel(),
+                        b.getEndereco(),
+                        b.getFaixaEtarias(),
+                        b.getTiposEventos(),
+                        b.getServicos(),
+                        b.getImagemDto(),
+                        b.getAgendas()));
+        }
+
+        if((buffetDtos.size()) == 0){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(buffetDtos);
+    }
+
+    @GetMapping("/barra-pesquisa-completa")
+    public ResponseEntity<List<BuffetDto>> pesquisarCompleta(
+            @RequestParam String nome,
+            @RequestParam (required = false) String[] faixas,
+            @RequestParam (required = false) Integer qtdPessoas,
+            @RequestParam (required = false) String[] tipoEventos,
+            @RequestParam (required = false) String[] servicos,
+            @RequestParam (required = false) Double orcMin,
+            @RequestParam (required = false) Double orcMax) {
+        List<Buffet> buffets = buffetService.getBufferPorPesquisaNome(nome);
+        List<BuffetDto> buffetDtos = new ArrayList<>();
+
+        for (Buffet b : buffets) {
+            Set<Servico> buffetServicos = b.getServicos();
+            Set<FaixaEtaria> buffetFaixas = b.getFaixaEtarias();
+            Set<TipoEvento> buffetTipoEventos = b.getTiposEventos();
+            boolean hasMatchingServico = false;
+            boolean hasMatchingFaixa = false;
+            boolean hasMatchingTipoEvento = false;
+            boolean quantidadeDePessoas = false;
+            boolean orcamento = false;
+
+            if (servicos != null) {
+                for (String servico : servicos) {
+                    if (buffetServicos.contains(servico)) {
+                        hasMatchingServico = true;
+                        break;
+                    }
+                }
+            }else{
+                hasMatchingServico = true;
+            }
+
+            if (faixas != null) {
+                for (String faixa : faixas) {
+                    if (buffetFaixas.contains(faixa)) {
+                        hasMatchingFaixa = true;
+                        break;
+                    }
+                }
+            }else{
+                hasMatchingFaixa = true;
+            }
+
+
+            if (tipoEventos != null) {
+                for (String tipoEvento : tipoEventos) {
+                    if (buffetServicos.contains(tipoEvento)) {
+                        hasMatchingTipoEvento = true;
+                        break;
+                    }
+                }
+            }else{
+                hasMatchingTipoEvento = true;
+            }
+
+            if (qtdPessoas != null) {
+                if (b.getQtdPessoas() >= qtdPessoas) {
+                    quantidadeDePessoas = true;
+                }
+            } else {
+                quantidadeDePessoas = true;
+            }
+
+            if (orcMin != null && orcMax != null) {
+                if (b.getPrecoMedioDiaria() >= orcMin && b.getPrecoMedioDiaria() <= orcMax) {
+                    orcamento = true;
+                }
+            } else {
+                orcamento = true;
+            }
+
+            if (hasMatchingServico && hasMatchingFaixa && hasMatchingTipoEvento && quantidadeDePessoas && orcamento) {
+                buffetDtos.add(new BuffetDto(
+                        b.getId(),
+                        b.getNome(),
+                        b.getDescricao(),
+                        b.getTamanho(),
+                        b.getPrecoMedioDiaria(),
+                        b.getQtdPessoas(),
+                        b.getCaminhoComprovante(),
+                        b.isVisivel(),
+                        b.getEndereco(),
+                        b.getFaixaEtarias(),
+                        b.getTiposEventos(),
+                        b.getServicos(),
+                        b.getImagemDto(),
+                        b.getAgendas()));
+            }
+        }
+
+
+        if((buffetDtos.size()) == 0){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok().body(buffetDtos);
+    }
 
     public static Double calcularDistancia(Double lat1, Double long1, Double lat2, Double long2) {
         // raio médio da Terra em quilômetros

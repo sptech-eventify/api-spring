@@ -56,7 +56,12 @@ public class SecurityConfiguracao {
             // PESQUISAS LIVRES
             new AntPathRequestMatcher("/buffets"),
             new AntPathRequestMatcher("/buffets/**"),
-            new AntPathRequestMatcher("/pesquisa/**")
+            new AntPathRequestMatcher("/pesquisa/**"),
+            new AntPathRequestMatcher("/pesquisa/barra-pesquisa/**"),
+            new AntPathRequestMatcher("/tipo-eventos"),
+            new AntPathRequestMatcher("/servicos"),
+            new AntPathRequestMatcher("/tipo-eventos"),
+            new AntPathRequestMatcher("/faixa-etarias")
 
     };
 
