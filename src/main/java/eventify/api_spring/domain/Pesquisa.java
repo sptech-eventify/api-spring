@@ -28,7 +28,7 @@ public class Pesquisa {
     private String servico;
 
     @Schema(example = "-23.567890")
-    private Double latitude;
+        private Double latitude;
 
     @Schema(example = "-46.789012")
     private Double longitude;

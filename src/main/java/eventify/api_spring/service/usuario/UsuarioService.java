@@ -58,7 +58,7 @@ public class UsuarioService {
         return usuarioDevolverDTO;
     }
 
-    public Boolean deletar(int id) {
+    public Boolean banir(int id) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isEmpty()) {
             return false;
@@ -99,10 +99,14 @@ public class UsuarioService {
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
         if (usuario.isPresent()) {
-            usuario.get().setAtivo(true);
-            usuario.get().setBanido(false);
-            usuario.get().setUltimoLogin(LocalDateTime.now());
-            usuarioRepository.save(usuario.get());
+            if (usuario.get().isBanido()) {
+                throw new ResponseStatusException(403, "Usuário banido", null);
+            } else {
+                usuario.get().setAtivo(true);
+                usuario.get().setBanido(false);
+                usuario.get().setUltimoLogin(LocalDateTime.now());
+                usuarioRepository.save(usuario.get());
+            }
         }
 
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
@@ -121,5 +125,25 @@ public class UsuarioService {
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
         return UsuarioMapper.of(usuarioAutenticado, token);
+    }
+
+    public boolean desbanir(int id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()) {
+            return false;
+        }
+        usuarioOpt.get().setBanido(false);
+        usuarioRepository.save(usuarioOpt.get());
+        return true;
+    }
+
+    public boolean logof(int id) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()) {
+            return false;
+        }
+        usuarioOpt.get().setAtivo(false);
+        usuarioRepository.save(usuarioOpt.get());
+        return true;
     }
 }

@@ -33,7 +33,7 @@ public class EventoController {
     public ResponseEntity<List<Evento>> exibirTodosEventos() {
         List<Evento> eventos = eventoService.exibirTodosEventos();
         if (eventos.isEmpty()) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(200).body(eventos);
     }

@@ -8,6 +8,15 @@ public class UsuarioDevolverDTO {
 
     private String email;
 
+    public UsuarioDevolverDTO(Integer id, String nome, String email) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+    }
+
+public UsuarioDevolverDTO() {
+    }
+
     public Integer getId() {
         return id;
     }
