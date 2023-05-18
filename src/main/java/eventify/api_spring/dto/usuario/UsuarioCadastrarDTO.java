@@ -23,6 +23,19 @@ public class UsuarioCadastrarDTO {
     @Schema(example = "1")
     Integer tipoUsuario;
 
+    public UsuarioCadastrarDTO() {
+    }
+
+    public UsuarioCadastrarDTO(String nome, String email, String senha, String cpf, Integer tipoUsuario) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.cpf = cpf;
+        this.tipoUsuario = tipoUsuario;
+        this.isAtivo = true;
+        this.isBanido = false;
+    }
+
     private Boolean isAtivo = false;
     private Boolean isBanido = false;
 
