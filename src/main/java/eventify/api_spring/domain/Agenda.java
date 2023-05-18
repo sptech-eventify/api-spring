@@ -16,6 +16,7 @@ public class Agenda {
     @FutureOrPresent
     private LocalDateTime data;
     @ManyToOne
+    @JoinColumn(name = "id_buffet")
     private Buffet buffet;
 
     public Agenda(Integer id, LocalDateTime data, Buffet buffet) {

@@ -12,8 +12,6 @@ public class Servico {
 
     @Schema(example = "Estacionamento")
     private String descricao;
-    @ManyToOne
-    private Buffet buffet;
 
     public Servico(Integer id, String descricao) {
         this.id = id;

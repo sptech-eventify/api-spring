@@ -39,7 +39,7 @@ public class BuffetService {
         for (Buffet buffet : buffets) {
             for (TipoEvento evento  : buffet.getTiposEventos()) {
                 if (!tipos.contains(evento.getDescricao())) {
-                    tipos.add(evento.getDescricao());
+                    tipos.add(evento.getDescricao())    ;
                 }
             }
         }
