@@ -22,6 +22,7 @@ public class Evento {
     private Double nota;
     private String status;
     private String motivoNaoAceito;
+    private Boolean isFormularioDinamico;
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
@@ -29,13 +30,14 @@ public class Evento {
     @JoinColumn(name = "id_pagamento")
     private Pagamento pagamento;
 
-    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento) {
+    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento, Boolean isFormularioDinamico) {
         this.id = id;
         this.data = data;
         this.preco = preco;
         this.avalicacao = avalicacao;
         this.nota = nota;
         this.status = status;
+        this.isFormularioDinamico = isFormularioDinamico;
         this.motivoNaoAceito = motivoNaoAceito;
         this.buffet = buffet;
         this.pagamento = pagamento;
@@ -90,6 +92,14 @@ public class Evento {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Boolean getFormularioDinamico() {
+        return isFormularioDinamico;
+    }
+
+    public void setFormularioDinamico(Boolean formularioDinamico) {
+        isFormularioDinamico = formularioDinamico;
     }
 
     public String getMotivoNaoAceito() {
