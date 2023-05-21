@@ -13,4 +13,5 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     public List<Buffet> findAllBuffet();
     public List<Buffet>findByNomeContainingIgnoreCase(String q);
 
+    public Buffet findBuffetById(int idBuffet);
 }

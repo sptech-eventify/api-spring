@@ -6,6 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDate;
+
 @Entity
 public class Endereco {
 
@@ -25,6 +27,9 @@ public class Endereco {
     @Schema(example = "Aclimação")
     private String bairro;
 
+    @Schema(example = "São Paulo")
+    private String cidade;
+
     @Schema(example = "SP")
     private String uf;
 
@@ -38,16 +43,21 @@ public class Endereco {
     @Schema(example = "46.6388203")
     private Double longitude;
 
-    public Endereco(Integer id, boolean isValidado, String logradouro, Integer numero, String bairro, String uf, String cep, Double latitude, Double longitude) {
+    @Schema(example = "2023-05-20 17:49:12")
+    private LocalDate dataCriacao;
+
+    public Endereco(Integer id, boolean isValidado, String logradouro, Integer numero, String bairro, String cidade, String uf, String cep, Double latitude, Double longitude, LocalDate dataCriacao) {
         this.id = id;
         this.isValidado = isValidado;
         this.logradouro = logradouro;
         this.numero = numero;
         this.bairro = bairro;
+        this.cidade = cidade;
         this.uf = uf;
         this.cep = cep;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.dataCriacao = dataCriacao;
     }
 
     public Endereco() {
@@ -93,6 +103,14 @@ public class Endereco {
         this.bairro = bairro;
     }
 
+    public String getCidade() {
+        return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
+    }
+
     public String getUf() {
         return uf;
     }
@@ -123,5 +141,13 @@ public class Endereco {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 }

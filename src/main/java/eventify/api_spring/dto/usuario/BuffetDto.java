@@ -5,6 +5,7 @@ import eventify.api_spring.dto.ImagemDTO;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class BuffetDto {
     private Integer qtdPessoas;
     private String caminhoComprovante;
     private boolean isVisivel;
+    private LocalDate dataCriacao;
     private Endereco endereco;
     private Set<FaixaEtaria> faixaEtarias;
     private Set<TipoEvento> tipoEventos;
@@ -26,7 +28,7 @@ public class BuffetDto {
 
     private List<Agenda> agendas;
 
-    public BuffetDto(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean isVisivel, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tipoEventos, Set<Servico> servicos, List<ImagemDTO> imagens, List<Agenda> agendas) {
+    public BuffetDto(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tipoEventos, Set<Servico> servicos, List<ImagemDTO> imagens, List<Agenda> agendas) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -35,6 +37,7 @@ public class BuffetDto {
         this.qtdPessoas = qtdPessoas;
         this.caminhoComprovante = caminhoComprovante;
         this.isVisivel = isVisivel;
+        this.dataCriacao = dataCriacao;
         this.endereco = endereco;
         this.faixaEtarias = faixaEtarias;
         this.tipoEventos = tipoEventos;
@@ -105,6 +108,14 @@ public class BuffetDto {
 
     public void setVisivel(boolean visivel) {
         isVisivel = visivel;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
     public Endereco getEndereco() {

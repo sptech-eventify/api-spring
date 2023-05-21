@@ -1,6 +1,8 @@
 package eventify.api_spring.domain;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 public class Notificacao {
 
@@ -8,13 +10,15 @@ public class Notificacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String descricao;
+    private LocalDate dataCriacao;
     @ManyToOne
     private Usuario usuario;
 
-    public Notificacao(Integer id, String descricao, Usuario usuario) {
+    public Notificacao(Integer id, String descricao, Usuario usuario, LocalDate dataCriacao) {
         this.id = id;
         this.descricao = descricao;
         this.usuario = usuario;
+        this.dataCriacao = dataCriacao;
     }
 
     public Notificacao() {
@@ -36,7 +40,7 @@ public class Notificacao {
         this.descricao = descricao;
     }
 
-    public Usuario getUsuario() {
+    public Usuario usuario() {
         return usuario;
     }
 

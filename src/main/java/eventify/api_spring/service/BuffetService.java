@@ -3,6 +3,8 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.TipoEvento;
+import eventify.api_spring.dto.AgendaDto;
+import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
@@ -17,7 +19,6 @@ import java.util.Optional;
 
 @Service
 public class BuffetService {
-
     @Autowired
     private BuffetRepository buffetRepository;
     @Autowired
@@ -25,8 +26,33 @@ public class BuffetService {
     @Autowired
     private ImagemRepository imagemRepository;
 
-    public List<Buffet> listar() {
-        return buffetRepository.findAll();
+    public List<BuffetDtoResposta> listar() {
+        List<Buffet> buffets = buffetRepository.findAll();
+        List<BuffetDtoResposta> buffetsDto = new ArrayList<>();
+
+        for (Buffet buffet : buffets) {
+            List<AgendaDto> agendasDto = buffet.getAgendas().stream().map(agenda -> new AgendaDto(agenda.getId(), agenda.getData())).toList();
+
+            buffetsDto.add(new BuffetDtoResposta(
+                    buffet.getId(),
+                    buffet.getNome(),
+                    buffet.getDescricao(),
+                    buffet.getPrecoMedioDiaria(),
+                    buffet.getEndereco(),
+                    buffet.getTamanho(),
+                    buffet.getQtdPessoas(),
+                    buffet.getCaminhoComprovante(),
+                    buffet.isResidenciaComprovada(),
+                    buffet.getFaixaEtarias(),
+                    buffet.getTiposEventos(),
+                    buffet.getServicos(),
+                    buffet.getUsuario().getNome(),
+                    agendasDto,
+                    buffet.getImagemDto()
+            ));
+        }
+
+        return buffetsDto;
     }
 
     public List<Buffet> getBufferPorPesquisaNome(String q){
@@ -43,6 +69,7 @@ public class BuffetService {
                 }
             }
         }
+
         return tipos;
     }
 

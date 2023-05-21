@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +50,9 @@ public class Buffet {
     @Schema(example = "true")
     private boolean isVisivel;
 
+    @Schema(example = "2023-05-20 17:49:12")
+    private LocalDate dataCriacao;
+
     @OneToOne
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
@@ -77,7 +81,7 @@ public class Buffet {
     @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY)
     private List<Agenda> agendas = new ArrayList<>();
 
-    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel,Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
+    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -87,6 +91,7 @@ public class Buffet {
         this.caminhoComprovante = caminhoComprovante;
         this.residenciaComprovada = residenciaComprovada;
         this.isVisivel = isVisivel;
+        this.dataCriacao = dataCriacao;
         this.endereco = endereco;
         this.faixaEtarias = faixaEtarias;
         this.tiposEventos = tiposEventos;
@@ -159,6 +164,14 @@ public class Buffet {
 
     public void setVisivel(boolean visivel) {
         isVisivel = visivel;
+    }
+
+    public LocalDate getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
     }
 
     public Endereco getEndereco() {

@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
@@ -20,13 +21,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="2. Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
-
     @Autowired
     private BuffetService buffetService;
 
     @GetMapping
-    public ResponseEntity<List<Buffet>> listar() {
-        List<Buffet> buffets = buffetService.listar();
+    public ResponseEntity<List<BuffetDtoResposta>> listar() {
+        List<BuffetDtoResposta> buffets = buffetService.listar();
         if (buffets.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
