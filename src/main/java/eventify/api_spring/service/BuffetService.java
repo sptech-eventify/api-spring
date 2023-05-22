@@ -77,15 +77,12 @@ public class BuffetService {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
         if (buffetOpt.isPresent()) {
             Buffet buffet = buffetOpt.get();
-            return eventoRepository.findByBuffet(buffet).stream()
-                    .mapToDouble(Evento::getNota)
-                    .average()
-                    .orElse(0.0);
+            return eventoRepository.findAvaliacaoByBuffet(buffet);
         }
         return null;
     }
 
-    public String pegarCaminhoImagem(int idBuffet) {
+    public List<String> pegarCaminhoImagem(int idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
         if (buffetOpt.isPresent()) {
             Buffet buffet = buffetOpt.get();

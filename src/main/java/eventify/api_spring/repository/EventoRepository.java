@@ -21,6 +21,9 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     @Query("select e.data from Evento e where e.buffet = :buffet")
     public List<LocalDate> findAllDataByBuffet(Buffet buffet);
 
+    @Query("select round(avg(e.nota),2) from Evento e where e.buffet = :buffet")
+    public Double findAvaliacaoByBuffet(Buffet buffet);
+
     //    public List<Evento> findEventoByEqualsEvento(Evento evento);
 }
 

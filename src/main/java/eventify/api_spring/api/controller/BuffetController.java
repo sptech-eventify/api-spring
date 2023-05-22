@@ -48,7 +48,7 @@ public class BuffetController {
     }
 
     @GetMapping("/{idBuffet}/imagem")
-    public ResponseEntity<String> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
+    public ResponseEntity<List<String>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
         return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet));
     }
 
