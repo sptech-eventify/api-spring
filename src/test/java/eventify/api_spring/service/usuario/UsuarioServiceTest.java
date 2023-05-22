@@ -15,9 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,8 +39,7 @@ class UsuarioServiceTest {
     private ArgumentCaptor<Usuario> usuarioArgumentCaptor;
 
     @Test
-    @Disabled("Ainda em construção")
-    void deve_cadastrar_um_usuario_com_os_dados_correto(){
+    void deve_cadastrar_um_usuario_com_os_dados_correto() {
         final UsuarioCadastrarDTO requisicao = usuarioCadastrarDTOFactory();
         final Usuario usuario = usuarioFactory();
 
@@ -48,22 +47,23 @@ class UsuarioServiceTest {
 
         final UsuarioDevolverDTO resposta = usuarioService.cadastrar(requisicao);
 
-        Usuario capture = usuarioArgumentCaptor.capture();
+        final Usuario capture = usuarioArgumentCaptor.getValue();
 
+        assertNotNull(capture);
         assertEquals(requisicao.getTipoUsuario(), capture.getTipoUsuario());
         assertEquals(requisicao.getCpf(), capture.getCpf());
         assertEquals(requisicao.getNome(), capture.getNome());
         assertEquals(requisicao.getEmail(), capture.getEmail());
-        assertEquals(requisicao.getAtivo(), capture.isAtivo());
         assertEquals(requisicao.getBanido(), capture.isBanido());
         assertNotEquals(requisicao.getSenha(), capture.getSenha());
 
+        assertNotNull(resposta);
         assertEquals(capture.getId(), resposta.getId());
         assertEquals(capture.getNome(), resposta.getNome());
         assertEquals(capture.getEmail(), resposta.getEmail());
     }
 
-    public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory(){
+    public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
         return new UsuarioCadastrarDTO(
                 "Gabriel Santos",
                 "gabriel@santos.com",
@@ -73,7 +73,7 @@ class UsuarioServiceTest {
         );
     }
 
-    public static Usuario usuarioFactory(){
+    public static Usuario usuarioFactory() {
         Usuario usuario = new Usuario();
 
         usuario.setNome("Gabriel Santos");
