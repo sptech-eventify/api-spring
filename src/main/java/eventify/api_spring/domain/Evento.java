@@ -18,7 +18,7 @@ public class Evento {
     @NotNull
     @DecimalMin("0.01")
     private Double preco;
-    private String avalicacao;
+    private String avaliacao;
     private Double nota;
     private String status;
     private String motivoNaoAceito;
@@ -34,7 +34,7 @@ public class Evento {
         this.id = id;
         this.data = data;
         this.preco = preco;
-        this.avalicacao = avalicacao;
+        this.avaliacao = avalicacao;
         this.nota = nota;
         this.status = status;
         this.isFormularioDinamico = isFormularioDinamico;
@@ -70,12 +70,12 @@ public class Evento {
         this.preco = preco;
     }
 
-    public String getAvalicacao() {
-        return avalicacao;
+    public String getAvaliacao() {
+        return avaliacao;
     }
 
-    public void setAvalicacao(String avalicacao) {
-        this.avalicacao = avalicacao;
+    public void setAvaliacao(String avalicacao) {
+        this.avaliacao = avalicacao;
     }
 
     public Double getNota() {
