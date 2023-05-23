@@ -47,20 +47,20 @@ class UsuarioServiceTest {
 
         final UsuarioDevolverDTO resposta = usuarioService.cadastrar(requisicao);
 
-        final Usuario capture = usuarioArgumentCaptor.getValue();
+        final Usuario usuarioCapture = usuarioArgumentCaptor.getValue();
 
-        assertNotNull(capture);
-        assertEquals(requisicao.getTipoUsuario(), capture.getTipoUsuario());
-        assertEquals(requisicao.getCpf(), capture.getCpf());
-        assertEquals(requisicao.getNome(), capture.getNome());
-        assertEquals(requisicao.getEmail(), capture.getEmail());
-        assertEquals(requisicao.getBanido(), capture.isBanido());
-        assertNotEquals(requisicao.getSenha(), capture.getSenha());
+        assertNotNull(usuarioCapture);
+        assertEquals(requisicao.getTipoUsuario(), usuarioCapture.getTipoUsuario());
+        assertEquals(requisicao.getCpf(), usuarioCapture.getCpf());
+        assertEquals(requisicao.getNome(), usuarioCapture.getNome());
+        assertEquals(requisicao.getEmail(), usuarioCapture.getEmail());
+        assertEquals(requisicao.getBanido(), usuarioCapture.isBanido());
+        assertNotEquals(requisicao.getSenha(), usuarioCapture.getSenha());
 
         assertNotNull(resposta);
-        assertEquals(capture.getId(), resposta.getId());
-        assertEquals(capture.getNome(), resposta.getNome());
-        assertEquals(capture.getEmail(), resposta.getEmail());
+        assertEquals(usuarioCapture.getId(), resposta.getId());
+        assertEquals(usuarioCapture.getNome(), resposta.getNome());
+        assertEquals(usuarioCapture.getEmail(), resposta.getEmail());
     }
 
     public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
