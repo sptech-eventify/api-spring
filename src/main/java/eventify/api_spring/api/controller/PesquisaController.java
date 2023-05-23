@@ -7,6 +7,7 @@ import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.service.BuffetService;
 import eventify.api_spring.service.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,21 @@ public class PesquisaController {
     @Autowired
     private PesquisaService pesquisaService;
 
-    @PostMapping
-    private ResponseEntity<List<BuffetDtoResposta>> buscador(@RequestBody Pesquisa p) {
+    @GetMapping
+    private ResponseEntity<List<BuffetDtoResposta>> buscador(
+            @RequestParam(value = "nome", required = false) String nome,
+            @RequestParam(value = "faixaEtaria", required = false) List<String> faixaEtaria,
+            @RequestParam(value = "tamanho", required = false) Integer tamanho,
+            @RequestParam(value = "qtdPessoas", required = false) Integer qtdPessoas,
+            @RequestParam(value = "tipoEvento", required = false) List<String> tipoEvento,
+            @RequestParam(value = "orcMin", required = false) Double orcMin,
+            @RequestParam(value = "orcMax", required = false) Double orcMax,
+            @RequestParam(value = "dataEvento", required = false) LocalDate dataEvento,
+            @RequestParam(value = "servico", required = false) List<String> servico,
+            @RequestParam(value = "latitude", required = false) Double latitude,
+            @RequestParam(value = "longitude", required = false) Double longitude) {
+
+        Pesquisa p = new Pesquisa(nome, faixaEtaria, tamanho, qtdPessoas, tipoEvento, orcMin, orcMax, dataEvento, servico, latitude, longitude);
         List<BuffetDtoResposta> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
 
         if((listaFiltrada.size()) == 0){

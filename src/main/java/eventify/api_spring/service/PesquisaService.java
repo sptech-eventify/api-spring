@@ -32,6 +32,22 @@ public class PesquisaService {
         return distancia;
     }
 
+    public static boolean calcularOrcamento(Double orcMin, Double orcMax, Double precoMedio) {
+        boolean isOrcMinSatisfeito = false;
+        boolean isOrcMaxSatisfeito = false;
+
+        // Aplique um calculo no qual, caso o orcMin seja maior do que o precoMedio, o isOrcMinSatisfeito vire true
+        if (orcMin > precoMedio * 0.8) {
+            isOrcMinSatisfeito = true;
+        }
+
+        if(orcMax < precoMedio * 1.2){
+            isOrcMinSatisfeito = true;
+        }
+
+        return isOrcMinSatisfeito || isOrcMaxSatisfeito;
+    }
+
     public List<BuffetDtoResposta> getBuffetPorPesquisa(Pesquisa p) {
         System.out.println("Pesquisa: " + p.toString());
         List<Buffet> buffets = new ArrayList<>();
@@ -116,33 +132,39 @@ public class PesquisaService {
                 }
             }
 
-            if((p.getOrcMin() == null && p.getOrcMax() == null) || (p.getOrcMin() > buffets.get(i).getPrecoMedioDiaria() && p.getOrcMax() < buffets.get(i).getPrecoMedioDiaria())) {
+            boolean isOrcMinSatisfeito = false;
+            boolean isOrcMaxSatisfeito = false;
+
+            if(p.getOrcMin() == null && p.getOrcMax() == null){
                 isOrcamentoSatisfeito = true;
-            }else if (p.getOrcMin() == null) {
-                if (p.getOrcMax() > buffets.get(i).getPrecoMedioDiaria()) {
-                    isOrcamentoSatisfeito = true;
-                } else {
-                    isOrcamentoSatisfeito = false;
-                }
-            } else if (p.getOrcMax() == null) {
-                if (p.getOrcMin() > buffets.get(i).getPrecoMedioDiaria()) {
-                    isOrcamentoSatisfeito = true;
-                } else {
-                    isOrcamentoSatisfeito = false;
-                }
             } else {
-                isOrcamentoSatisfeito = false;
+                if(p.getOrcMin() != null && p.getOrcMax() != null){
+                    if (calcularOrcamento(p.getOrcMin(), p.getOrcMax(), buffets.get(i).getPrecoMedioDiaria())) {
+                        isOrcamentoSatisfeito = true;
+                    }
+                }else{
+                    if(p.getOrcMin() != null){
+                        if(p.getOrcMin() <= buffets.get(i).getPrecoMedioDiaria()){
+                            isOrcamentoSatisfeito = true;
+                        }
+                    }else{
+                        if(p.getOrcMax() != null){
+                            if(p.getOrcMax() >= buffets.get(i).getPrecoMedioDiaria()){
+                                isOrcamentoSatisfeito = true;
+                            }
+                        }
+                    }
+                }
             }
 
             if(p.getTamanho() != null) {
-                if (p.getTamanho() >= buffets.get(i).getTamanho()) {
+                if (p.getTamanho() <= buffets.get(i).getTamanho()) {
                     isTamanhoSatisfeito = true;
-                } else {
-                    isTamanhoSatisfeito = false;
                 }
             }else{
                 isTamanhoSatisfeito = true;
             }
+
 
             if(isTamanhoSatisfeito
                 && isDistanciaSatisfeito
