@@ -1,6 +1,7 @@
 package eventify.api_spring.service.usuario;
 
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
+import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
@@ -8,6 +9,9 @@ import eventify.api_spring.dto.usuario.UsuarioMapper;
 import eventify.api_spring.repository.UsuarioRepository;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

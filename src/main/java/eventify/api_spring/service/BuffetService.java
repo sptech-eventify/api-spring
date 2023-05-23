@@ -158,6 +158,15 @@ public class BuffetService {
         return query.getResultList();
     }
 
+    public List<Object[]> pegarAvaliacoes(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        Query query = entityManager.createNativeQuery(String.format("CALL sp_avaliacoes_buffet(6, %d);", idBuffet));
+        return query.getResultList();
+    }
+
     public void cadastrar (Buffet buffet) {
         buffetRepository.save(buffet);
     }
