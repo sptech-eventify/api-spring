@@ -10,7 +10,7 @@ public class BuffetDtoResposta {
     private String descricao;
     private Double precoMedioDiaria;
     private Endereco endereco;
-    private String tamanho;
+    private Integer tamanho;
     private Integer qtdPessoas;
     private String caminhoComprovante;
     private Boolean residenciaComprovada;
@@ -21,7 +21,7 @@ public class BuffetDtoResposta {
     private List<AgendaDto> agendas;
     private List<ImagemDTO> imagens;
 
-    public BuffetDtoResposta(Integer id, String nome, String descricao, Double precoMedioDiaria, Endereco endereco, String tamanho, Integer qtdPessoas, String caminhoComprovante, Boolean residenciaComprovada, Set<FaixaEtaria> faixasEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, String nomeProprietario, List<AgendaDto> agendas, List<ImagemDTO> imagens) {
+    public BuffetDtoResposta(Integer id, String nome, String descricao, Double precoMedioDiaria, Endereco endereco, Integer tamanho, Integer qtdPessoas, String caminhoComprovante, Boolean residenciaComprovada, Set<FaixaEtaria> faixasEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, String nomeProprietario, List<AgendaDto> agendas, List<ImagemDTO> imagens) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -37,6 +37,10 @@ public class BuffetDtoResposta {
         this.nomeProprietario = nomeProprietario;
         this.agendas = agendas;
         this.imagens = imagens;
+    }
+
+    public BuffetDtoResposta() {
+
     }
 
     public Integer getId() {
@@ -79,11 +83,11 @@ public class BuffetDtoResposta {
         this.endereco = endereco;
     }
 
-    public String getTamanho() {
+    public Integer getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(String tamanho) {
+    public void setTamanho(Integer tamanho) {
         this.tamanho = tamanho;
     }
 

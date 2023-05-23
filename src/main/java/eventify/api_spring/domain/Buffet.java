@@ -29,9 +29,8 @@ public class Buffet {
     @NotBlank
     private String descricao;
 
-    @NotBlank
-    @Schema(example = "500m2")
-    private String tamanho;
+    @Schema(example = "500")
+    private Integer tamanho;
 
     @Schema(example = "2134.00")
     @DecimalMin("0.0")
@@ -81,7 +80,7 @@ public class Buffet {
     @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY)
     private List<Agenda> agendas = new ArrayList<>();
 
-    public Buffet(Integer id, String nome, String descricao, String tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
+    public Buffet(Integer id, String nome, String descricao, Integer tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -126,11 +125,11 @@ public class Buffet {
         this.descricao = descricao;
     }
 
-    public String getTamanho() {
+    public Integer getTamanho() {
         return tamanho;
     }
 
-    public void setTamanho(String tamanho) {
+    public void setTamanho(Integer tamanho) {
         this.tamanho = tamanho;
     }
 
