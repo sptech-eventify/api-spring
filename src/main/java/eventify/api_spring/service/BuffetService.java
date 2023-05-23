@@ -2,6 +2,7 @@ package eventify.api_spring.service;
 
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
+import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.domain.TipoEvento;
 import eventify.api_spring.dto.AgendaDto;
 import eventify.api_spring.dto.BuffetDtoResposta;
@@ -9,6 +10,8 @@ import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.ImagemRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ public class BuffetService {
     private EventoRepository eventoRepository;
     @Autowired
     private ImagemRepository imagemRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     public List<BuffetDtoResposta> listar() {
         List<Buffet> buffets = buffetRepository.findAll();
@@ -82,7 +87,7 @@ public class BuffetService {
         return null;
     }
 
-    public List<String> pegarCaminhoImagem(int idBuffet) {
+    public List<Imagem> pegarCaminhoImagem(int idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
         if (buffetOpt.isPresent()) {
             Buffet buffet = buffetOpt.get();
@@ -103,6 +108,54 @@ public class BuffetService {
             return datasDto;
         }
         return null;
+    }
+
+    public List<Long> pegarTaxaDeAbandono(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        List<Long> valores = new ArrayList<>();
+        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_abandono_reserva(6, %d);", idBuffet));
+        Object[] result = (Object[]) query.getSingleResult();
+        valores.add((Long) result[0]);
+        valores.add((Long) result[1]);
+        return valores;
+    }
+
+    public List<Object> pegarTaxaDeSatisfacao(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        List<Object> valores = new ArrayList<>();
+        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_satisfacao(6, %d);", idBuffet));
+        Object[] result = (Object[]) query.getSingleResult();
+        valores.add(result[0]);
+        valores.add(result[1]);
+        return valores;
+    }
+
+    public List<Object> pegarMovimentacaoFinanceira(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        List<Object> valores = new ArrayList<>();
+        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_movimentacao_financeira(6, %d);", idBuffet));
+        Object[] result = (Object[]) query.getSingleResult();
+        valores.add(result[0]);
+        valores.add(result[1]);
+        return valores;
+    }
+
+    public List<Object[]> pegarDadosFinanceiro(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        Query query = entityManager.createNativeQuery(String.format("CALL sp_dados_do_buffet(6, %d);", idBuffet));
+        return query.getResultList();
     }
 
     public void cadastrar (Buffet buffet) {

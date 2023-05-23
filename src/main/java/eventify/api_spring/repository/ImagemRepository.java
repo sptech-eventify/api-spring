@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ImagemRepository extends JpaRepository<Imagem, Integer> {
 
-    @Query("select i.caminho from Imagem i where i.buffet = :buffet")
-    public List<String> findByBuffet(Buffet buffet);
+    @Query("select i from Imagem i where i.buffet = :buffet")
+    public List<Imagem> findByBuffet(Buffet buffet);
 
 }

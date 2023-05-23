@@ -1,8 +1,10 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.DataDto;
+import eventify.api_spring.dto.ImagemDTO;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -48,8 +50,11 @@ public class BuffetController {
     }
 
     @GetMapping("/{idBuffet}/imagem")
-    public ResponseEntity<List<String>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet));
+    public ResponseEntity<List<ImagemDTO>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
+        return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet)
+                .stream()
+                .map(img -> new ImagemDTO(img.getId(),img.getCaminho(),img.getNome(), img.getTipo(), true,img.getDataUpload()))
+                .toList());
     }
 
     @GetMapping("/datas/{idBuffet}")
@@ -70,4 +75,41 @@ public class BuffetController {
         buffetService.atualizar(buffet);
         return ResponseEntity.status(200).body(buffet);
     }
+
+    @GetMapping("/abandono/{idBuffet}")
+    public ResponseEntity<List<Long>> pegarTaxaDeAbandono(@PathVariable int idBuffet) {
+        List<Long> result = buffetService.pegarTaxaDeAbandono(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/satisfacao/{idBuffet}")
+    public ResponseEntity<List<Object>> pegarTaxaDeSatisfacao(@PathVariable int idBuffet) {
+        List<Object> result = buffetService.pegarTaxaDeSatisfacao(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/financeiro/{idBuffet}")
+    public ResponseEntity<List<Object>> pegarMovimentacaoFinanceira(@PathVariable int idBuffet) {
+        List<Object> result = buffetService.pegarMovimentacaoFinanceira(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/dados-financeiro/{idBuffet}")
+    public ResponseEntity<List<Object[]>> pegarDadosFinanceiro(@PathVariable int idBuffet) {
+        List<Object[]> result = buffetService.pegarDadosFinanceiro(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }
