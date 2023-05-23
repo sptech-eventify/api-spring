@@ -83,6 +83,30 @@ class UsuarioServiceTest {
         assertFalse(resposta);
     }
 
+    @Test
+    void deve_colocar_true_no_usuario_banido(){
+        final Usuario usuario = usuarioFactory();
+        usuario.setBanido(false);
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        usuarioService.banir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertTrue(usuario.isBanido());
+    }
+
+    @Test
+    void deve_colocar_false_no_usuario_desbanido(){
+        final Usuario usuario = usuarioFactory();
+        usuario.setBanido(true);
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+
+        usuarioService.desbanir(1);
+
+        assertFalse(usuario.isBanido());
+    }
+
     public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
         return new UsuarioCadastrarDTO(
                 "Gabriel Santos",
