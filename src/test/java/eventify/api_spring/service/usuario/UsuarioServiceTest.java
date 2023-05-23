@@ -7,16 +7,14 @@ import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.repository.UsuarioRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +35,8 @@ class UsuarioServiceTest {
 
     @Captor
     private ArgumentCaptor<Usuario> usuarioArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<Integer> idArgumentCaptor;
 
     @Test
     void deve_cadastrar_um_usuario_com_os_dados_correto() {
@@ -61,6 +61,26 @@ class UsuarioServiceTest {
         assertEquals(usuarioCapture.getId(), resposta.getId());
         assertEquals(usuarioCapture.getNome(), resposta.getNome());
         assertEquals(usuarioCapture.getEmail(), resposta.getEmail());
+    }
+
+    @Test
+    void deve_retornar_true_para_id_que_existe(){
+        final Usuario usuario = usuarioFactory();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        Boolean resposta = usuarioService.banir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertTrue(resposta);
+    }
+
+    @Test
+    void deve_retornar_false_para_id_que_nao_existe(){
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+        Boolean resposta = usuarioService.banir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertFalse(resposta);
     }
 
     public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
