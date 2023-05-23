@@ -15,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -83,6 +83,33 @@ class UsuarioServiceTest {
         assertFalse(resposta);
     }
 
+    @Test
+    void deve_colocar_true_no_usuario_banido(){
+        final Usuario usuario = usuarioFactory();
+        usuario.setBanido(false);
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        usuarioService.banir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+
+        verify(usuarioRepository, times(0)).deleteById(anyInt());
+        assertTrue(usuario.isBanido());
+    }
+
+    @Test
+    void deve_colocar_false_no_usuario_desbanido(){
+        final Usuario usuario = usuarioFactory();
+        usuario.setBanido(true);
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+
+        usuarioService.desbanir(1);
+
+        assertFalse(usuario.isBanido());
+        assertEquals(1, idArgumentCaptor.getValue());
+    }
+
     public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
         return new UsuarioCadastrarDTO(
                 "Gabriel Santos",
@@ -96,6 +123,7 @@ class UsuarioServiceTest {
     public static Usuario usuarioFactory() {
         Usuario usuario = new Usuario();
 
+        usuario.setId(1);
         usuario.setNome("Gabriel Santos");
         usuario.setEmail("gabriel@santos.com");
         usuario.setAtivo(true);
