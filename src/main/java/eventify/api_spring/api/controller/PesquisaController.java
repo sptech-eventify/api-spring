@@ -42,7 +42,39 @@ public class PesquisaController {
             @RequestParam(value = "latitude", required = false) Double latitude,
             @RequestParam(value = "longitude", required = false) Double longitude) {
 
-        Pesquisa p = new Pesquisa(nome, faixaEtaria, tamanho, qtdPessoas, tipoEvento, orcMin, orcMax, dataEvento, servico, latitude, longitude);
+        System.out.println(nome);
+        System.out.println(faixaEtaria);
+        System.out.println(tamanho);
+        System.out.println(qtdPessoas);
+        System.out.println(tipoEvento);
+        System.out.println(orcMin);
+        System.out.println(orcMax);
+        System.out.println(dataEvento);
+        System.out.println(servico);
+        System.out.println(latitude);
+        System.out.println(longitude);
+        if(nome == null
+                && faixaEtaria == null
+                && tamanho == null
+                && qtdPessoas == null
+                && tipoEvento == null
+                && orcMin == null
+                && orcMax == null
+                && dataEvento == null
+                && servico == null
+                && latitude == null
+                && longitude == null){
+            List<BuffetDtoResposta> lista = pesquisaService.getTodosBuffets();
+
+            if(lista.isEmpty()){
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(lista);
+        }
+
+        String nomeTratado = nome != null ? nome : "";
+
+        Pesquisa p = new Pesquisa(nomeTratado, faixaEtaria, tamanho, qtdPessoas, tipoEvento, orcMin, orcMax, dataEvento, servico, latitude, longitude);
         List<BuffetDtoResposta> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
 
         if((listaFiltrada.size()) == 0){

@@ -18,7 +18,7 @@ public class FaixaEtariaService {
     }
 
     public List<FaixaEtaria> exibirFaixaEtaria() {
-        return faixaEtariaRepository.findAll();
+        return faixaEtariaRepository.findAllByOrderByIdAsc();
     }
 
 }
