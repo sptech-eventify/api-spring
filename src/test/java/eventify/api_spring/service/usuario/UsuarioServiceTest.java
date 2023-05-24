@@ -4,6 +4,8 @@ import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory;
+import eventify.api_spring.factory.usuario.UsuarioFactory;
 import eventify.api_spring.repository.UsuarioRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory.usuarioCadastrarDTO;
-import static eventify.api_spring.factory.usuario.UsuarioFactory.usuarioAtualizado;
-import static eventify.api_spring.factory.usuario.UsuarioFactory.usuarioFactory;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -44,8 +43,8 @@ class UsuarioServiceTest {
 
     @Test
     void deve_cadastrar_um_usuario_com_os_dados_correto() {
-        final UsuarioCadastrarDTO requisicao = usuarioCadastrarDTO();
-        final Usuario usuario = usuarioFactory();
+        final UsuarioCadastrarDTO requisicao = UsuarioCadastrarDTOFactory.usuarioCadastrarDTO();
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
 
@@ -69,7 +68,7 @@ class UsuarioServiceTest {
 
     @Test
     void deve_retornar_true_para_id_que_existe() {
-        final Usuario usuario = usuarioFactory();
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         Boolean resposta = usuarioService.banir(1);
@@ -89,7 +88,7 @@ class UsuarioServiceTest {
 
     @Test
     void deve_colocar_true_no_usuario_banido() {
-        final Usuario usuario = usuarioFactory();
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         usuarioService.banir(1);
@@ -102,7 +101,7 @@ class UsuarioServiceTest {
 
     @Test
     void deve_colocar_false_no_usuario_desbanido() {
-        final Usuario usuario = usuarioFactory();
+        final Usuario usuario = UsuarioFactory.usuario();
         usuario.setBanido(true);
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -116,9 +115,9 @@ class UsuarioServiceTest {
     @Test
     void deve_atualizar_os_dados_corretamente() {
 
-        final Usuario usuario = usuarioFactory();
+        final Usuario usuario = UsuarioFactory.usuario();
         UsuarioCadastrarDTO usuarioAtualizado;
-        final Usuario novoUsuario = usuarioAtualizado();
+        final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         when(usuarioRepository.save(usuario)).thenReturn(novoUsuario);
@@ -141,11 +140,11 @@ class UsuarioServiceTest {
 
     @Test
     void deve_lancar_ResponseStatusException_ao_nao_encontrar_id() {
-        final Usuario novoUsuario = usuarioAtualizado();
+        final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
-
     }
+
 }
