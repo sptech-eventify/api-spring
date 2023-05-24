@@ -15,6 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+import static eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory.usuarioCadastrarDTO;
+import static eventify.api_spring.factory.usuario.UsuarioFactory.usuarioAtualizado;
+import static eventify.api_spring.factory.usuario.UsuarioFactory.usuarioFactory;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
@@ -41,7 +44,7 @@ class UsuarioServiceTest {
 
     @Test
     void deve_cadastrar_um_usuario_com_os_dados_correto() {
-        final UsuarioCadastrarDTO requisicao = usuarioCadastrarDTOFactory();
+        final UsuarioCadastrarDTO requisicao = usuarioCadastrarDTO();
         final Usuario usuario = usuarioFactory();
 
         when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
@@ -65,7 +68,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_true_para_id_que_existe(){
+    void deve_retornar_true_para_id_que_existe() {
         final Usuario usuario = usuarioFactory();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -76,7 +79,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_false_para_id_que_nao_existe(){
+    void deve_retornar_false_para_id_que_nao_existe() {
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
         Boolean resposta = usuarioService.banir(1);
 
@@ -85,7 +88,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_colocar_true_no_usuario_banido(){
+    void deve_colocar_true_no_usuario_banido() {
         final Usuario usuario = usuarioFactory();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -98,7 +101,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_colocar_false_no_usuario_desbanido(){
+    void deve_colocar_false_no_usuario_desbanido() {
         final Usuario usuario = usuarioFactory();
         usuario.setBanido(true);
 
@@ -111,15 +114,16 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_atualizar_os_dados_corretamente(){
+    void deve_atualizar_os_dados_corretamente() {
 
         final Usuario usuario = usuarioFactory();
-        final Usuario novoUsuario = usuarioAtualizadoFactory();
+        UsuarioCadastrarDTO usuarioAtualizado;
+        final Usuario novoUsuario = usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         when(usuarioRepository.save(usuario)).thenReturn(novoUsuario);
 
-        final UsuarioCadastrarDTO usuarioAtualizado = usuarioService.atualizar(1, novoUsuario);
+        usuarioAtualizado = usuarioService.atualizar(1, novoUsuario);
 
         assertEquals(1, idArgumentCaptor.getValue());
 
@@ -136,52 +140,12 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_lancar_ResponseStatusException_ao_nao_encontrar_id(){
-        final Usuario novoUsuario = usuarioAtualizadoFactory();
+    void deve_lancar_ResponseStatusException_ao_nao_encontrar_id() {
+        final Usuario novoUsuario = usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
 
     }
-
-    public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
-        return new UsuarioCadastrarDTO(
-                "Gabriel Santos",
-                "gabriel@santos.com",
-                "123456",
-                "31509983015",
-                1
-        );
-    }
-
-    public static Usuario usuarioAtualizadoFactory(){
-        final Usuario usuario = new Usuario();
-
-        usuario.setId(1);
-        usuario.setNome("Paulo José");
-        usuario.setEmail("paulin@jose.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
-        usuario.setTipoUsuario(1);
-        usuario.setSenha("#SenhaDaora");
-        usuario.setCpf("14389563556");
-
-        return usuario;
-    }
-
-    public static Usuario usuarioFactory() {
-        Usuario usuario = new Usuario();
-
-        usuario.setId(1);
-        usuario.setNome("Gabriel Santos");
-        usuario.setEmail("gabriel@santos.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
-        usuario.setTipoUsuario(1);
-        usuario.setSenha("123456");
-        usuario.setCpf("31509983015");
-        return usuario;
-    }
-
 }
