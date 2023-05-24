@@ -11,6 +11,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -86,7 +87,6 @@ class UsuarioServiceTest {
     @Test
     void deve_colocar_true_no_usuario_banido(){
         final Usuario usuario = usuarioFactory();
-        usuario.setBanido(false);
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         usuarioService.banir(1);
@@ -110,6 +110,41 @@ class UsuarioServiceTest {
         assertEquals(1, idArgumentCaptor.getValue());
     }
 
+    @Test
+    void deve_atualizar_os_dados_corretamente(){
+
+        final Usuario usuario = usuarioFactory();
+        final Usuario novoUsuario = usuarioAtualizadoFactory();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(usuario)).thenReturn(novoUsuario);
+
+        final UsuarioCadastrarDTO usuarioAtualizado = usuarioService.atualizar(1, novoUsuario);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+
+        assertEquals(idArgumentCaptor.getValue(), usuario.getId());
+        assertEquals(usuario.getId(), novoUsuario.getId());
+
+        assertEquals(novoUsuario.getNome(), usuarioAtualizado.getNome());
+        assertEquals(novoUsuario.getCpf(), usuarioAtualizado.getCpf());
+        assertEquals(novoUsuario.getEmail(), usuarioAtualizado.getEmail());
+        assertNotEquals(novoUsuario.getSenha(), usuarioAtualizado.getSenha());
+        assertEquals(novoUsuario.getTipoUsuario(), usuarioAtualizado.getTipoUsuario());
+        assertEquals(novoUsuario.isAtivo(), usuarioAtualizado.getAtivo());
+        assertEquals(novoUsuario.isBanido(), usuarioAtualizado.getBanido());
+    }
+
+    @Test
+    void deve_lancar_ResponseStatusException_ao_nao_encontrar_id(){
+        final Usuario novoUsuario = usuarioAtualizadoFactory();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+
+        assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
+
+    }
+
     public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
         return new UsuarioCadastrarDTO(
                 "Gabriel Santos",
@@ -120,6 +155,21 @@ class UsuarioServiceTest {
         );
     }
 
+    public static Usuario usuarioAtualizadoFactory(){
+        final Usuario usuario = new Usuario();
+
+        usuario.setId(1);
+        usuario.setNome("Paulo José");
+        usuario.setEmail("paulin@jose.com");
+        usuario.setAtivo(true);
+        usuario.setBanido(false);
+        usuario.setTipoUsuario(1);
+        usuario.setSenha("#SenhaDaora");
+        usuario.setCpf("14389563556");
+
+        return usuario;
+    }
+
     public static Usuario usuarioFactory() {
         Usuario usuario = new Usuario();
 
@@ -127,6 +177,7 @@ class UsuarioServiceTest {
         usuario.setNome("Gabriel Santos");
         usuario.setEmail("gabriel@santos.com");
         usuario.setAtivo(true);
+        usuario.setBanido(false);
         usuario.setTipoUsuario(1);
         usuario.setSenha("123456");
         usuario.setCpf("31509983015");
