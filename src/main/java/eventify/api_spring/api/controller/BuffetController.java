@@ -112,4 +112,13 @@ public class BuffetController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/avaliacoes/{idBuffet}")
+    public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
+        List<Object[]> result = buffetService.pegarAvaliacoes(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
 }
