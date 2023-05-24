@@ -167,6 +167,14 @@ class UsuarioServiceTest {
     }
 
     @Test
+    void deve_lancar_ResponseStatusException_quando_usuario_esta_banido(){
+        final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
+
+        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.empty());
+        assertThrows(ResponseStatusException.class, () -> usuarioService.autenticar(usuarioLoginDTO));
+    }
+
+    @Test
     @Disabled("Parado por problemas técnicos")
     void deve_retornar_usuario_autenticado(){
         final Usuario usuario = UsuarioFactory.usuario();
