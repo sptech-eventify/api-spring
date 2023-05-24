@@ -6,7 +6,9 @@ import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory;
 import eventify.api_spring.factory.usuario.UsuarioFactory;
+import eventify.api_spring.factory.usuario.UsuarioLoginDTOFactory;
 import eventify.api_spring.repository.UsuarioRepository;
+import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -15,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +43,8 @@ class UsuarioServiceTest {
     private ArgumentCaptor<Usuario> usuarioArgumentCaptor;
     @Captor
     private ArgumentCaptor<Integer> idArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<String> emailArgumentCaptor;
 
     @Test
     void deve_cadastrar_um_usuario_com_os_dados_correto() {
@@ -116,13 +121,12 @@ class UsuarioServiceTest {
     void deve_atualizar_os_dados_corretamente() {
 
         final Usuario usuario = UsuarioFactory.usuario();
-        UsuarioCadastrarDTO usuarioAtualizado;
         final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         when(usuarioRepository.save(usuario)).thenReturn(novoUsuario);
 
-        usuarioAtualizado = usuarioService.atualizar(1, novoUsuario);
+        final UsuarioCadastrarDTO usuarioAtualizado = usuarioService.atualizar(1, novoUsuario);
 
         assertEquals(1, idArgumentCaptor.getValue());
 
@@ -145,6 +149,19 @@ class UsuarioServiceTest {
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
+    }
+
+    @Test
+    void deve_colocar_false_o_atributo_ativo_ao_deslogar(){
+        final Usuario usuario = UsuarioFactory.usuario();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
+
+        usuarioService.logof(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertFalse(usuario.isAtivo());
     }
 
 }
