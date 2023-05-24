@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -165,7 +167,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @Disabled("Em construção")
+    @Disabled("Parado por problemas técnicos")
     void deve_retornar_usuario_autenticado(){
         final Usuario usuario = UsuarioFactory.usuario();
         final LocalDateTime data = LocalDateTime.of(2000, 8, 23, 21, 43, 01);
@@ -177,5 +179,48 @@ class UsuarioServiceTest {
         when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
 //        when(authenticationManager.authenticate()).thenReturn();
 //        usuarioService.autenticar();
+    }
+
+    @Test
+    void deve_retornar_uma_lista_vazia(){
+        when(usuarioRepository.findAll()).thenReturn(Collections.emptyList());
+
+        final List<Usuario> listaUsuario = usuarioService.listar();
+        assertTrue(listaUsuario.isEmpty());
+    }
+
+    @Test
+    void deve_retornar_uma_lista_com_dois_usuarios(){
+        final List<Usuario> listaRetornada = List.of(UsuarioFactory.usuario(), UsuarioFactory.usuario());
+
+        when(usuarioRepository.findAll()).thenReturn(listaRetornada);
+
+        final List<Usuario> listaUsuario = usuarioService.listar();
+        assertEquals(2, listaUsuario.size());
+    }
+
+    @Test
+    void deve_retornar_um_usuario_existente(){
+        final Usuario usuario = UsuarioFactory.usuario();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+
+        Optional<Usuario> usuarioRetornado = usuarioService.exibir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertTrue(usuarioRetornado.isPresent());
+
+        assertEquals(usuario.getId(), usuarioRetornado.get().getId());
+        assertEquals(usuario.getNome(), usuarioRetornado.get().getNome());
+        assertEquals(usuario.getEmail(), usuarioRetornado.get().getEmail());
+    }
+
+    @Test
+    void deve_nao_retornar_usuario_com_id_nao_encontrado(){
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+
+        Optional<Usuario> usuarioRetornado = usuarioService.exibir(2);
+
+        assertTrue(usuarioRetornado.isEmpty());
     }
 }
