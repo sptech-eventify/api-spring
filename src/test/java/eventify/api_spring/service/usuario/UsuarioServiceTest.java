@@ -164,4 +164,18 @@ class UsuarioServiceTest {
         assertFalse(usuario.isAtivo());
     }
 
+    @Test
+    @Disabled("Em construção")
+    void deve_retornar_usuario_autenticado(){
+        final Usuario usuario = UsuarioFactory.usuario();
+        final LocalDateTime data = LocalDateTime.of(2000, 8, 23, 21, 43, 01);
+        final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
+
+        usuario.setUltimoLogin(data);
+
+        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
+//        when(authenticationManager.authenticate()).thenReturn();
+//        usuarioService.autenticar();
+    }
 }
