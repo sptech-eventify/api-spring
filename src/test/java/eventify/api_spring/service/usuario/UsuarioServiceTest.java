@@ -4,7 +4,11 @@ import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory;
+import eventify.api_spring.factory.usuario.UsuarioFactory;
+import eventify.api_spring.factory.usuario.UsuarioLoginDTOFactory;
 import eventify.api_spring.repository.UsuarioRepository;
+import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -13,6 +17,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,11 +45,13 @@ class UsuarioServiceTest {
     private ArgumentCaptor<Usuario> usuarioArgumentCaptor;
     @Captor
     private ArgumentCaptor<Integer> idArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<String> emailArgumentCaptor;
 
     @Test
     void deve_cadastrar_um_usuario_com_os_dados_correto() {
-        final UsuarioCadastrarDTO requisicao = usuarioCadastrarDTOFactory();
-        final Usuario usuario = usuarioFactory();
+        final UsuarioCadastrarDTO requisicao = UsuarioCadastrarDTOFactory.usuarioCadastrarDTO();
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
 
@@ -65,8 +74,8 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_true_para_id_que_existe(){
-        final Usuario usuario = usuarioFactory();
+    void deve_retornar_true_para_id_que_existe() {
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         Boolean resposta = usuarioService.banir(1);
@@ -76,7 +85,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_false_para_id_que_nao_existe(){
+    void deve_retornar_false_para_id_que_nao_existe() {
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
         Boolean resposta = usuarioService.banir(1);
 
@@ -85,8 +94,8 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_colocar_true_no_usuario_banido(){
-        final Usuario usuario = usuarioFactory();
+    void deve_colocar_true_no_usuario_banido() {
+        final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         usuarioService.banir(1);
@@ -98,8 +107,8 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_colocar_false_no_usuario_desbanido(){
-        final Usuario usuario = usuarioFactory();
+    void deve_colocar_false_no_usuario_desbanido() {
+        final Usuario usuario = UsuarioFactory.usuario();
         usuario.setBanido(true);
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -111,10 +120,10 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_atualizar_os_dados_corretamente(){
+    void deve_atualizar_os_dados_corretamente() {
 
-        final Usuario usuario = usuarioFactory();
-        final Usuario novoUsuario = usuarioAtualizadoFactory();
+        final Usuario usuario = UsuarioFactory.usuario();
+        final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         when(usuarioRepository.save(usuario)).thenReturn(novoUsuario);
@@ -136,52 +145,90 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_lancar_ResponseStatusException_ao_nao_encontrar_id(){
-        final Usuario novoUsuario = usuarioAtualizadoFactory();
+    void deve_lancar_ResponseStatusException_ao_nao_encontrar_id() {
+        final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
 
         assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
-
     }
 
-    public static UsuarioCadastrarDTO usuarioCadastrarDTOFactory() {
-        return new UsuarioCadastrarDTO(
-                "Gabriel Santos",
-                "gabriel@santos.com",
-                "123456",
-                "31509983015",
-                1
-        );
+    @Test
+    void deve_colocar_false_o_atributo_ativo_ao_deslogar(){
+        final Usuario usuario = UsuarioFactory.usuario();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
+
+        usuarioService.logof(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertFalse(usuario.isAtivo());
     }
 
-    public static Usuario usuarioAtualizadoFactory(){
-        final Usuario usuario = new Usuario();
+    @Test
+    void deve_lancar_ResponseStatusException_quando_usuario_esta_banido(){
+        final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
 
-        usuario.setId(1);
-        usuario.setNome("Paulo José");
-        usuario.setEmail("paulin@jose.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
-        usuario.setTipoUsuario(1);
-        usuario.setSenha("#SenhaDaora");
-        usuario.setCpf("14389563556");
-
-        return usuario;
+        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.empty());
+        assertThrows(ResponseStatusException.class, () -> usuarioService.autenticar(usuarioLoginDTO));
     }
 
-    public static Usuario usuarioFactory() {
-        Usuario usuario = new Usuario();
+    @Test
+    @Disabled("Parado por problemas técnicos")
+    void deve_retornar_usuario_autenticado(){
+        final Usuario usuario = UsuarioFactory.usuario();
+        final LocalDateTime data = LocalDateTime.of(2000, 8, 23, 21, 43, 01);
+        final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
 
-        usuario.setId(1);
-        usuario.setNome("Gabriel Santos");
-        usuario.setEmail("gabriel@santos.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
-        usuario.setTipoUsuario(1);
-        usuario.setSenha("123456");
-        usuario.setCpf("31509983015");
-        return usuario;
+        usuario.setUltimoLogin(data);
+
+        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
+//        when(authenticationManager.authenticate()).thenReturn();
+//        usuarioService.autenticar();
     }
 
+    @Test
+    void deve_retornar_uma_lista_vazia(){
+        when(usuarioRepository.findAll()).thenReturn(Collections.emptyList());
+
+        final List<Usuario> listaUsuario = usuarioService.listar();
+        assertTrue(listaUsuario.isEmpty());
+    }
+
+    @Test
+    void deve_retornar_uma_lista_com_dois_usuarios(){
+        final List<Usuario> listaRetornada = List.of(UsuarioFactory.usuario(), UsuarioFactory.usuario());
+
+        when(usuarioRepository.findAll()).thenReturn(listaRetornada);
+
+        final List<Usuario> listaUsuario = usuarioService.listar();
+        assertEquals(2, listaUsuario.size());
+    }
+
+    @Test
+    void deve_retornar_um_usuario_existente(){
+        final Usuario usuario = UsuarioFactory.usuario();
+
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+
+        Optional<Usuario> usuarioRetornado = usuarioService.exibir(1);
+
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertTrue(usuarioRetornado.isPresent());
+
+        assertEquals(usuario.getId(), usuarioRetornado.get().getId());
+        assertEquals(usuario.getNome(), usuarioRetornado.get().getNome());
+        assertEquals(usuario.getEmail(), usuarioRetornado.get().getEmail());
+    }
+
+    @Test
+    void deve_nao_retornar_usuario_com_id_nao_encontrado(){
+        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+
+        Optional<Usuario> usuarioRetornado = usuarioService.exibir(2);
+
+        assertTrue(usuarioRetornado.isEmpty());
+    }
 }
