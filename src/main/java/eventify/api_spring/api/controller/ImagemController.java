@@ -26,6 +26,7 @@ public class ImagemController {
         if (imagemService.salvarImagems(imagens, idBuffet)){
             return ResponseEntity.status(201).build();
         }
+
         return ResponseEntity.status(404).build();
     }
 }

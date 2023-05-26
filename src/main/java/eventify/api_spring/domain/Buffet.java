@@ -202,6 +202,10 @@ public class Buffet {
         return tiposEventos;
     }
 
+    public List<String> getDescricaoTiposEventos(){
+        return tiposEventos.stream().map(TipoEvento::getDescricao).toList();
+    }
+
     public void setTiposEventos(Set<TipoEvento> tiposEventos) {
         this.tiposEventos = tiposEventos;
     }
