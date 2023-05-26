@@ -1,6 +1,7 @@
 package eventify.api_spring.repository;
 
 import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.BuffetDtoResposta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +20,6 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     List<Buffet> findAllByNome(String nome);
 
     List<Buffet> findAllByNomeContaining(String nome);
+
+    List<Buffet> findAllByUsuario(Usuario usuario);
 }

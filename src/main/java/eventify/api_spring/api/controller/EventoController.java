@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller;
 
+import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.service.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +42,15 @@ public class EventoController {
     @GetMapping("/{nome}")
     public ResponseEntity<Evento> exibirEvento(@PathVariable String nome) {
         return ResponseEntity.of(eventoService.exibeEvento(nome));
+    }
+
+    @GetMapping("/contratante/{idUser}/orcamentos")
+    public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idUser) {
+        List<Object[]> result = eventoService.pegarOrcamentos(idUser);
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(result);
     }
 
 }

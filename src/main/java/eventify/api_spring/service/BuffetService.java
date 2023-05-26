@@ -1,15 +1,13 @@
 package eventify.api_spring.service;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Evento;
-import eventify.api_spring.domain.Imagem;
-import eventify.api_spring.domain.TipoEvento;
+import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.AgendaDto;
 import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.ImagemRepository;
+import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ public class BuffetService {
     private EventoRepository eventoRepository;
     @Autowired
     private ImagemRepository imagemRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
     @Autowired
     private EntityManager entityManager;
 
