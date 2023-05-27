@@ -116,7 +116,7 @@ public class BuffetController {
     public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
         List<Object[]> result = buffetService.pegarAvaliacoes(idBuffet);
         if (result.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(result);
     }
