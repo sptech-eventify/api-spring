@@ -10,7 +10,9 @@ import eventify.api_spring.factory.usuario.UsuarioLoginDTOFactory;
 import eventify.api_spring.repository.UsuarioRepository;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -152,13 +153,15 @@ class UsuarioServiceTest {
     void deve_lancar_ResponseStatusException_ao_nao_encontrar_id() {
         final Usuario novoUsuario = UsuarioFactory.usuarioAtualizado();
 
-        when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+        when(usuarioRepository.findById(anyInt())).thenReturn(Optional.empty());
 
-        assertThrows(ResponseStatusException.class, () -> usuarioService.atualizar(2, novoUsuario));
+        assertThrows(ResponseStatusException.class,
+                () -> usuarioService.atualizar(2, novoUsuario),
+                "Usuário não encontrado");
     }
 
     @Test
-    void deve_colocar_false_o_atributo_ativo_ao_deslogar(){
+    void deve_colocar_false_o_atributo_ativo_ao_deslogar() {
         final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -171,11 +174,15 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_lancar_ResponseStatusException_quando_usuario_esta_banido(){
+    void deve_lancar_ResponseStatusException_quando_usuario_esta_banido() {
         final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
+        final Usuario usuario = UsuarioFactory.usuario();
+        usuario.setBanido(true);
 
-        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.empty());
-        assertThrows(ResponseStatusException.class, () -> usuarioService.autenticar(usuarioLoginDTO));
+        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
+        assertThrows(ResponseStatusException.class,
+                () -> usuarioService.autenticar(usuarioLoginDTO),
+                "Usuário banido");
     }
 
     @Test
@@ -204,7 +211,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_uma_lista_vazia(){
+    void deve_retornar_uma_lista_vazia() {
         when(usuarioRepository.findAll()).thenReturn(Collections.emptyList());
 
         final List<Usuario> listaUsuario = usuarioService.listar();
@@ -212,7 +219,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_uma_lista_com_dois_usuarios(){
+    void deve_retornar_uma_lista_com_dois_usuarios() {
         final List<Usuario> listaRetornada = List.of(UsuarioFactory.usuario(), UsuarioFactory.usuario());
 
         when(usuarioRepository.findAll()).thenReturn(listaRetornada);
@@ -222,7 +229,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_retornar_um_usuario_existente(){
+    void deve_retornar_um_usuario_existente() {
         final Usuario usuario = UsuarioFactory.usuario();
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
@@ -238,7 +245,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deve_nao_retornar_usuario_com_id_nao_encontrado(){
+    void deve_nao_retornar_usuario_com_id_nao_encontrado() {
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
 
         Optional<Usuario> usuarioRetornado = usuarioService.exibir(2);
