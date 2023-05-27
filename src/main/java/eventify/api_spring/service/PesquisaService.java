@@ -24,12 +24,16 @@ public class PesquisaService {
 
         List<BuffetDtoResposta> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
                 .filter(buffet -> pesquisa.getNome().isEmpty() || buffet.getNome().contains(pesquisa.getNome()))
+
                 .filter(buffet -> pesquisa.getTipoEvento() == null || buffet.getTiposEventos().stream()
                         .anyMatch(tipoEvento -> pesquisa.getTipoEvento().contains(tipoEvento.getDescricao())))
+
                 .filter(buffet -> pesquisa.getFaixaEtaria() == null || buffet.getFaixaEtarias().stream()
-                        .anyMatch(faixaEtaria -> faixaEtaria.getDescricao().equals(pesquisa.getFaixaEtaria())))
+                        .anyMatch(faixaEtaria -> pesquisa.getFaixaEtaria().contains(faixaEtaria.getDescricao())))
+
                 .filter(buffet -> pesquisa.getServico() == null || buffet.getServicos().stream()
-                        .anyMatch(servico -> servico.getDescricao().equals(pesquisa.getServico())))
+                        .anyMatch(servico -> pesquisa.getServico().contains(servico.getDescricao())))
+
                 .filter(buffet -> pesquisa.getQtdPessoas() == null || pesquisa.getQtdPessoas() <= buffet.getQtdPessoas())
                 .filter(buffet -> pesquisa.getOrcMin() == null || pesquisa.getOrcMin() <= buffet.getPrecoMedioDiaria())
                 .filter(buffet -> pesquisa.getOrcMax() == null || pesquisa.getOrcMax() >= buffet.getPrecoMedioDiaria())
