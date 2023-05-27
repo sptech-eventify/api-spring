@@ -9,11 +9,15 @@ import eventify.api_spring.factory.usuario.UsuarioFactory;
 import eventify.api_spring.factory.usuario.UsuarioLoginDTOFactory;
 import eventify.api_spring.repository.UsuarioRepository;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
+import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -175,18 +179,28 @@ class UsuarioServiceTest {
     }
 
     @Test
-    @Disabled("Parado por problemas técnicos")
-    void deve_retornar_usuario_autenticado(){
-        final Usuario usuario = UsuarioFactory.usuario();
-        final LocalDateTime data = LocalDateTime.of(2000, 8, 23, 21, 43, 01);
-        final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
+    void deve_retornar_usuario_autenticado() {
+        final Usuario usuario = UsuarioFactory.usuarioNaoAutenticado();
+        final UsuarioLoginDto usuarioLoginDto = UsuarioLoginDTOFactory.usuarioLoginDto();
+        final Authentication authentication = Mockito.mock(Authentication.class);
+        final String token = "jwt_token";
 
-        usuario.setUltimoLogin(data);
+        when(usuarioRepository.findByEmail(usuarioLoginDto.getEmail())).thenReturn(Optional.of(usuario));
 
-        when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
-        when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
-//        when(authenticationManager.authenticate()).thenReturn();
-//        usuarioService.autenticar();
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(authentication);
+
+        when(gerenciadorTokenJwt.generateToken(authentication)).thenReturn(token);
+
+        final UsuarioTokenDto retorno = usuarioService.autenticar(usuarioLoginDto);
+
+        assertNotNull(retorno);
+        assertEquals(usuario.getEmail(), retorno.getEmail());
+        assertEquals(token, retorno.getToken());
+        assertTrue(usuario.isAtivo());
+        assertFalse(usuario.isBanido());
+        assertNotNull(usuario.getUltimoLogin());
+        assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
     }
 
     @Test
