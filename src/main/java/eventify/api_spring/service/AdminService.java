@@ -69,7 +69,7 @@ public class AdminService {
     }
 
     public List<Object[]> pegarUsuariosBanidos() {
-        Query query = entityManager.createNativeQuery(String.format("select nome, tipo_usuario, cpf from usuario where is_banido = 1;"));
+        Query query = entityManager.createNativeQuery(String.format("select nome, tipo_usuario, cpf from usuario where is_banido = 1 order by data_criacao;"));
         return query.getResultList();
     }
 

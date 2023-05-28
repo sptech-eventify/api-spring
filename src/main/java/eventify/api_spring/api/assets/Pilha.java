@@ -1,4 +1,7 @@
 package eventify.api_spring.api.assets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Pilha<T> {
     private T[] pilha;
@@ -94,4 +97,19 @@ public class Pilha<T> {
 
         return true;
     }
+
+    public List<T> getValores() {
+        List<T> valores = new ArrayList<>();
+
+        if (!isEmpty()) {
+            for (int i = topo; i >= 0; i--) {
+                valores.add(pilha[i]);
+            }
+        } else {
+            throw new IllegalStateException("Pilha vazia!");
+        }
+
+        return valores;
+    }
+
 }

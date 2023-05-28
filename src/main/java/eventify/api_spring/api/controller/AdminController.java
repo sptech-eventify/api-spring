@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller;
 
+import eventify.api_spring.api.assets.Pilha;
 import eventify.api_spring.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -94,8 +95,18 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(result);
+
+        Pilha<Object[]> pilha = new Pilha<>(result.size());
+        for (Object[] obj : result) {
+            pilha.push(obj);
+        }
+
+        List<Object[]> valoresPilha = pilha.getValores();
+
+        return ResponseEntity.ok(valoresPilha);
     }
+
+
 
 
 
