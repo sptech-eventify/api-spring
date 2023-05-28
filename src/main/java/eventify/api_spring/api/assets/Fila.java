@@ -1,4 +1,7 @@
 package eventify.api_spring.api.assets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Fila<T> {
     private T[] fila;
@@ -56,6 +59,18 @@ public class Fila<T> {
             }
         } else {
             System.out.println("Fila vazia");
+        }
+    }
+
+    public List<T> getValores() {
+        if (!isEmpty()) {
+            List<T> valores = new ArrayList<>();
+            for (int i = 0; i < tamanho; i++) {
+                valores.add(fila[i]);
+            }
+            return valores;
+        } else {
+            throw new IllegalStateException("Fila vazia!");
         }
     }
 }

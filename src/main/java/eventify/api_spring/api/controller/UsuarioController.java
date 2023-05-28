@@ -1,5 +1,8 @@
 package eventify.api_spring.api.controller;
 
+import eventify.api_spring.api.assets.Fila;
+import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
@@ -8,10 +11,8 @@ import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
