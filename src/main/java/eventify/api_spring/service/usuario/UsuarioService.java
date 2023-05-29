@@ -57,6 +57,7 @@ public class UsuarioService {
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
+        novoUsuario.setAtivo(true);
         this.usuarioRepository.save(novoUsuario);
         usuarioDevolverDTO.setId(novoUsuario.getId());
         usuarioDevolverDTO.setNome(novoUsuario.getNome());
@@ -69,7 +70,11 @@ public class UsuarioService {
         if (usuarioOpt.isEmpty()) {
             return false;
         }
-        usuarioRepository.deleteById(id);
+
+        Usuario usuario = usuarioOpt.get();
+        usuario.setBanido(true);
+        usuarioRepository.save(usuario);
+
         return true;
     }
 
@@ -81,20 +86,32 @@ public class UsuarioService {
                 usuario.setNome(novoUsuario.getNome());
                 usuarioOpt.get().setNome(novoUsuario.getNome());
             }
+
             if (novoUsuario.getEmail() != null) {
                 usuario.setEmail(novoUsuario.getEmail());
                 usuarioOpt.get().setEmail(novoUsuario.getEmail());
             }
+
             if (novoUsuario.getCpf() != null) {
                 usuario.setCpf(novoUsuario.getCpf());
                 usuarioOpt.get().setCpf(novoUsuario.getCpf());
             }
+
             if (novoUsuario.getSenha() != null) {
-                usuario.setSenha(novoUsuario.getSenha());
+                usuario.setSenha(passwordEncoder.encode(novoUsuario.getSenha()));
                 usuarioOpt.get().setSenha(novoUsuario.getSenha());
             }
-            usuarioOpt.get().setAtivo(usuarioOpt.get().isAtivo());
-            usuarioOpt.get().setBanido(usuarioOpt.get().isBanido());
+
+            if(novoUsuario.getTipoUsuario() != null) {
+                usuario.setTipoUsuario(novoUsuario.getTipoUsuario());
+                usuarioOpt.get().setTipoUsuario(novoUsuario.getTipoUsuario());
+            }
+
+            usuario.setAtivo(novoUsuario.isAtivo());
+            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
+
+            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
+            usuarioOpt.get().setBanido(novoUsuario.isBanido());
         } else {
             throw new ResponseStatusException(404, "Usuário não encontrado", null);
         }
