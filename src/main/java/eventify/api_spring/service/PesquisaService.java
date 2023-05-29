@@ -19,20 +19,29 @@ public class PesquisaService {
         this.buffetRepository = buffetRepository;
     }
 
+    public Boolean containsStringIgnoreCase(String[] array, String targetString) {
+        for (String str : array) {
+            if (str.equalsIgnoreCase(targetString)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public List<BuffetDtoResposta> getBuffetPorPesquisa(Pesquisa pesquisa) {
         System.out.println("Pesquisa: " + pesquisa.toString());
 
         List<BuffetDtoResposta> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
-                .filter(buffet -> pesquisa.getNome().isEmpty() || buffet.getNome().contains(pesquisa.getNome()))
+                .filter(buffet -> pesquisa.getNome().isEmpty() || buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
 
                 .filter(buffet -> pesquisa.getTipoEvento() == null || buffet.getTiposEventos().stream()
-                        .anyMatch(tipoEvento -> pesquisa.getTipoEvento().contains(tipoEvento.getDescricao())))
+                        .anyMatch(tipoEvento -> pesquisa.getTipoEvento().stream().anyMatch(t -> t.equalsIgnoreCase(tipoEvento.getDescricao()))))
 
                 .filter(buffet -> pesquisa.getFaixaEtaria() == null || buffet.getFaixaEtarias().stream()
-                        .anyMatch(faixaEtaria -> pesquisa.getFaixaEtaria().contains(faixaEtaria.getDescricao())))
+                        .anyMatch(faixaEtaria -> pesquisa.getFaixaEtaria().stream().anyMatch(f -> f.equalsIgnoreCase(faixaEtaria.getDescricao()))))
 
                 .filter(buffet -> pesquisa.getServico() == null || buffet.getServicos().stream()
-                        .anyMatch(servico -> pesquisa.getServico().contains(servico.getDescricao())))
+                        .anyMatch(servico -> pesquisa.getServico().stream().anyMatch(s -> s.equalsIgnoreCase(servico.getDescricao()))))
 
                 .filter(buffet -> pesquisa.getQtdPessoas() == null || pesquisa.getQtdPessoas() <= buffet.getQtdPessoas())
                 .filter(buffet -> pesquisa.getOrcMin() == null || pesquisa.getOrcMin() <= buffet.getPrecoMedioDiaria())
@@ -46,6 +55,7 @@ public class PesquisaService {
 
         return buffetsFiltrados;
     }
+
 
     public List<BuffetDtoResposta> getTodosBuffets() {
         return buffetRepository.findAllBuffet().stream()
