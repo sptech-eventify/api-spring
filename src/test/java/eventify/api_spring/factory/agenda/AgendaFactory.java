@@ -10,14 +10,20 @@ public class AgendaFactory {
 
     public static List<Agenda> agenda(Buffet buffet){
 
-        Agenda agenda = new Agenda();
+        final Agenda agenda1 = new Agenda();
+        final Agenda agenda2 = new Agenda();
 
-        LocalDateTime data = LocalDateTime.of(2022,11,25,16,44,2);
+        final LocalDateTime data1 = LocalDateTime.of(2022,11,25,16,44,2);
+        final LocalDateTime data2 = LocalDateTime.of(2023, 8,13,23,48,34);
 
-        agenda.setId(1);
-        agenda.setData(data);
-        agenda.setBuffet(buffet);
+        agenda1.setId(1);
+        agenda1.setData(data1);
+        agenda1.setBuffet(buffet);
 
-        return List.of(agenda);
+        agenda2.setId(2);
+        agenda2.setData(data2);
+        agenda2.setBuffet(buffet);
+
+        return List.of(agenda1, agenda2);
     }
 }
