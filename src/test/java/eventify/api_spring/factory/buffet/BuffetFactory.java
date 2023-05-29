@@ -1,6 +1,7 @@
 package eventify.api_spring.factory.buffet;
 
 import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.factory.TipoEventoFactory;
 import eventify.api_spring.factory.agenda.AgendaFactory;
 import eventify.api_spring.factory.usuario.UsuarioFactory;
 
@@ -12,6 +13,7 @@ public class BuffetFactory {
         buffet.setNome("Giussepe Cadura");
         buffet.setAgendas(AgendaFactory.agenda(buffet));
         buffet.setUsuario(UsuarioFactory.usuario());
+        buffet.setTiposEventos(TipoEventoFactory.tiposRepetidos());
 
         return buffet;
     }
