@@ -3,6 +3,7 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.AgendaDto;
 import eventify.api_spring.dto.BuffetDtoResposta;
+import eventify.api_spring.dto.BuffetInfoDto;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -174,6 +176,25 @@ public class BuffetService {
         }
         Query query = entityManager.createNativeQuery(String.format("select nome, evento.data_criacao from evento join usuario on evento.id_contratante = usuario.id where id_buffet = %d and status = 1;", idBuffet));
         return query.getResultList();
+    }
+
+    public List<BuffetInfoDto> pegarBuffetInfo() {
+        List<Object[]> result = buffetRepository.findAllBuffetInfo();
+
+        List<BuffetInfoDto> buffetInfoList = new ArrayList<>();
+
+        for (Object[] row : result) {
+            List<String> descricoes = Arrays.asList(((String) row[0]).split(","));
+            String nome = (String) row[1];
+            Double precoMediaDiaria = (Double) row[2];
+            Double notaMediaAvaliacao = (Double) row[3];
+            List<String> caminhos = Arrays.asList(((String) row[4]).split(","));
+
+            BuffetInfoDto buffetInfo = new BuffetInfoDto(descricoes, nome, precoMediaDiaria, notaMediaAvaliacao, caminhos);
+            buffetInfoList.add(buffetInfo);
+        }
+
+        return buffetInfoList;
     }
 
     public void cadastrar (Buffet buffet) {
