@@ -167,6 +167,15 @@ public class BuffetService {
         return query.getResultList();
     }
 
+    public List<Object[]> pegarOrcamentos(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (buffetOpt.isEmpty()) {
+            return null;
+        }
+        Query query = entityManager.createNativeQuery(String.format("select nome, evento.data_criacao from evento join usuario on evento.id_contratante = usuario.id where id_buffet = %d and status = 1;", idBuffet));
+        return query.getResultList();
+    }
+
     public void cadastrar (Buffet buffet) {
         buffetRepository.save(buffet);
     }
