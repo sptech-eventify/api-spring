@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller;
 
+import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.dto.BuffetDtoResposta;
@@ -115,6 +116,15 @@ public class BuffetController {
     @GetMapping("/avaliacoes/{idBuffet}")
     public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
         List<Object[]> result = buffetService.pegarAvaliacoes(idBuffet);
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("orcamentos/{idBuffet}")
+    public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idBuffet) {
+        List<Object[]> result = buffetService.pegarOrcamentos(idBuffet);
         if (result.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
