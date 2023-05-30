@@ -47,6 +47,16 @@ public class BuffetServiceTest {
     private ArgumentCaptor<Integer> idArgumentCaptor;
     @Captor
     private ArgumentCaptor<Buffet> buffetArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<String> parametroArgumentCaptor;
+
+    @Test
+    void deve_validar_se_id_passado_eh_o_mesmo_usado_na_pesquisa() {
+        when(buffetRepository.findByNomeContainingIgnoreCase(parametroArgumentCaptor.capture())).thenReturn(Collections.emptyList());
+
+        service.getBuffetPorPesquisaNome("Uma pessoa Branda");
+        assertEquals("Uma pessoa Branda", parametroArgumentCaptor.getValue());
+    }
 
     @Test
     void deve_retornar_uma_lista_vazia() {
@@ -79,6 +89,18 @@ public class BuffetServiceTest {
         assertEquals(2, tipoEventos.size());
         assertEquals("Casamento", tipoEventos.get(0));
         assertEquals("Aniversário", tipoEventos.get(1));
+    }
+
+    @Test
+    void getAvaliacaoEvento_deve_verificar_se_os_dados_permanecem_imutaveis(){
+        final Buffet buffet = BuffetFactory.buffet();
+
+        when(buffetRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(buffet));
+        when(eventoRepository.findAvaliacaoByBuffet(buffetArgumentCaptor.capture())).thenReturn(anyDouble());
+
+        service.getAvaliacaoEvento(1);
+        assertEquals(1, idArgumentCaptor.getValue());
+        assertSame(buffet, buffetArgumentCaptor.getValue());
     }
 
     @Test
