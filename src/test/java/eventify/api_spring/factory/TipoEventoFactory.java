@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class TipoEventoFactory {
 
-    public static Set<TipoEvento> tiposRepetidos(){
+    public static Set<TipoEvento> tiposEventos() {
         final TipoEvento casamento = new TipoEvento();
         casamento.setId(1);
         casamento.setDescricao("Casamento");

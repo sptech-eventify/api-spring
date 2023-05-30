@@ -13,7 +13,7 @@ public class BuffetFactory {
         buffet.setNome("Giussepe Cadura");
         buffet.setAgendas(AgendaFactory.agenda(buffet));
         buffet.setUsuario(UsuarioFactory.usuario());
-        buffet.setTiposEventos(TipoEventoFactory.tiposRepetidos());
+        buffet.setTiposEventos(TipoEventoFactory.tiposEventos());
 
         return buffet;
     }
