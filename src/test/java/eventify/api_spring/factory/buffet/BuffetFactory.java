@@ -1,7 +1,7 @@
 package eventify.api_spring.factory.buffet;
 
 import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.factory.TipoEventoFactory;
+import eventify.api_spring.factory.tipoevento.TipoEventoFactory;
 import eventify.api_spring.factory.agenda.AgendaFactory;
 import eventify.api_spring.factory.usuario.UsuarioFactory;
 

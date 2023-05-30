@@ -1,4 +1,4 @@
-package eventify.api_spring.factory;
+package eventify.api_spring.factory.tipoevento;
 
 import eventify.api_spring.domain.TipoEvento;
 

@@ -126,6 +126,13 @@ public class BuffetServiceTest {
         assertEquals(2023, dataDtos.get(1).getAno());
         assertEquals(8, dataDtos.get(1).getMes());
         assertEquals(13, dataDtos.get(1).getDia());
+    }
 
+    @Test
+    void pegarTaxaDeAbandono_deve_verificar_se_os_dados_permanecem_imutaveis(){
+        when(buffetRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.empty());
+
+        assertNull(service.pegarTaxaDeAbandono(1));
+        assertEquals(1, idArgumentCaptor.getValue());
     }
 }
