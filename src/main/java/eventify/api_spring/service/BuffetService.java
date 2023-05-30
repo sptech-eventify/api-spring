@@ -231,8 +231,7 @@ public class BuffetService {
     }
 
 
-    public void cadastrar (Buffet buffet) {
-        buffetRepository.save(buffet);
+    public void cadastrar (Buffet buffet) {buffetRepository.save(buffet);
     }
 
     public void atualizar (Buffet buffet) {
