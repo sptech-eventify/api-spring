@@ -3,6 +3,7 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.AgendaDto;
 import eventify.api_spring.dto.BuffetDtoResposta;
+import eventify.api_spring.dto.BuffetInfoDto;
 import eventify.api_spring.dto.DataDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
@@ -13,10 +14,9 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class BuffetService {
@@ -175,6 +175,55 @@ public class BuffetService {
         Query query = entityManager.createNativeQuery(String.format("select nome, evento.data_criacao from evento join usuario on evento.id_contratante = usuario.id where id_buffet = %d and status = 1;", idBuffet));
         return query.getResultList();
     }
+
+    /*public List<BuffetInfoDto> pegarBuffetInfo() {
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
+        List<Object[]> result = query.getResultList();
+
+        List<BuffetInfoDto> buffetInfoList = new ArrayList<>();
+
+        for (Object[] row : result) {
+            List<String> descricoes = Arrays.asList(((String) row[0]).split(","));
+            String nome = (String) row[1];
+            Double precoMediaDiaria = ((BigDecimal) row[2]).doubleValue();
+            Double notaMediaAvaliacao = (Double) row[3];
+            List<String> caminhos = Arrays.asList(((String) row[4]).split(","));
+
+            BuffetInfoDto buffetInfo = new BuffetInfoDto(descricoes, nome, precoMediaDiaria, notaMediaAvaliacao, caminhos);
+            buffetInfoList.add(buffetInfo);
+        }
+
+
+        return buffetInfoList;
+    }*/
+
+    public Map<String, List<BuffetInfoDto>> pegarBuffetInfoPorTipoEvento() {
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
+        List<Object[]> result = query.getResultList();
+
+        Map<String, List<BuffetInfoDto>> buffetInfoMap = new HashMap<>();
+
+        for (Object[] row : result) {
+            List<String> descricoes = Arrays.asList(((String) row[0]).split(","));
+            String nome = (String) row[1];
+            BigDecimal precoMediaDiaria = (BigDecimal) row[2];
+            Double notaMediaAvaliacao = (Double) row[3];
+            List<String> caminhos = Arrays.asList(((String) row[4]).split(","));
+
+            BuffetInfoDto buffetInfo = new BuffetInfoDto(descricoes, nome, precoMediaDiaria.doubleValue(), notaMediaAvaliacao, caminhos);
+
+            for (String tipoEvento : descricoes) {
+                tipoEvento = tipoEvento.toLowerCase();
+
+                List<BuffetInfoDto> buffetInfoList = buffetInfoMap.getOrDefault(tipoEvento, new ArrayList<>());
+                buffetInfoList.add(buffetInfo);
+                buffetInfoMap.put(tipoEvento, buffetInfoList);
+            }
+        }
+
+        return buffetInfoMap;
+    }
+
 
     public void cadastrar (Buffet buffet) {
         buffetRepository.save(buffet);
