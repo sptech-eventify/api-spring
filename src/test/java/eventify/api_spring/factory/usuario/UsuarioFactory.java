@@ -32,4 +32,14 @@ public class UsuarioFactory {
 
         return usuario;
     }
+
+    public static Usuario usuarioNaoAutenticado(){
+        Usuario usuario = new Usuario();
+        usuario.setEmail("gabriel@santos.com");
+        usuario.setSenha("123456");
+        usuario.setBanido(false);
+        usuario.setAtivo(false);
+
+        return usuario;
+    }
 }
