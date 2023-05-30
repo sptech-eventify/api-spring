@@ -5,6 +5,7 @@ import eventify.api_spring.dto.AgendaDto;
 import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.BuffetInfoDto;
 import eventify.api_spring.dto.DataDto;
+import eventify.api_spring.mapper.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.ImagemRepository;
@@ -58,6 +59,11 @@ public class BuffetService {
         }
 
         return buffetsDto;
+    }
+
+    public BuffetDtoResposta buscarBuffet(int idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        return buffetOpt.map(BuffetMapper::toDto).orElse(null);
     }
 
     public List<Buffet> getBufferPorPesquisaNome(String q){

@@ -4,6 +4,7 @@ import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.ImagemChat;
 import eventify.api_spring.domain.Mensagem;
 import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.dto.ChatListaDto;
 import eventify.api_spring.dto.MensagemDto;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.ImagemChatRepository;
@@ -142,6 +143,19 @@ public class MensagemServices {
                     .toList();
         }
         return null;
+    }
+
+    public List<ChatListaDto> listarChatsDoUsuario(int idUsuario) {
+        return mensagemRepository.findAllChatByUsuario(idUsuario);
+    }
+
+    public Integer checarQtdMensagens(int idUsuario, int idBuffet) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+        if (usuarioOpt.isEmpty() || buffetOpt.isEmpty()) {
+            return null;
+        }
+        return mensagemRepository.countMensagemByBuffetAndUsuario(buffetOpt.get(), usuarioOpt.get());
     }
 
 }

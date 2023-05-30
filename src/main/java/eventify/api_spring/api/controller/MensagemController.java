@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.Mensagem;
+import eventify.api_spring.dto.ChatListaDto;
 import eventify.api_spring.dto.MensagemDto;
 import eventify.api_spring.service.MensagemServices;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/mensagens")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -76,6 +76,20 @@ public class MensagemController {
             return ResponseEntity.status(204).build();
         }
         return ResponseEntity.status(200).body(mensagems);
+    }
+
+    @GetMapping("/chat/{idUsuario}")
+    public ResponseEntity<List<ChatListaDto>> listarChatsDoUsuario(@PathVariable int idUsuario) {
+        List<ChatListaDto> lista = mensagemServices.listarChatsDoUsuario(idUsuario);
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(lista);
+    }
+
+    @GetMapping("/check-chat/{idUsuario}/{idBuffet}")
+    public ResponseEntity<Integer> checarQtdMensagens(@PathVariable int idUsuario, @PathVariable int idBuffet) {
+        return ResponseEntity.ok().body(mensagemServices.checarQtdMensagens(idUsuario, idBuffet));
     }
 
 }

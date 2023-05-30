@@ -38,6 +38,11 @@ public class BuffetController {
         return ResponseEntity.status(200).body(buffets);
     }
 
+    @GetMapping("/{idBuffet}")
+    public ResponseEntity<BuffetDtoResposta> buscarBuffet(@PathVariable int idBuffet) {
+        return ResponseEntity.status(200).body(buffetService.buscarBuffet(idBuffet));
+    }
+
     @GetMapping("/tipos")
     public ResponseEntity<List<String>> listarTipoEventos() {
         List<String> tipos = buffetService.getTipoEventos();

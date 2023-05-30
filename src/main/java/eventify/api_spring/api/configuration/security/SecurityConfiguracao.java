@@ -65,7 +65,8 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/pesquisa"),
             new AntPathRequestMatcher("/admin"),
             new AntPathRequestMatcher("/admin/**"),
-            new AntPathRequestMatcher("/eventos/**")
+            new AntPathRequestMatcher("/eventos/**"),
+            new AntPathRequestMatcher("/mensagens/**")
     };
 
     @Bean
