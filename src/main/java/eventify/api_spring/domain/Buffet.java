@@ -49,7 +49,7 @@ public class Buffet {
     @Schema(example = "true")
     private boolean isVisivel;
 
-    @Schema(example = "2023-05-20 17:49:12")
+    @Schema(example = "2023-05-20")
     private LocalDate dataCriacao;
 
     @OneToOne
@@ -153,11 +153,19 @@ public class Buffet {
         return residenciaComprovada;
     }
 
+    public boolean getResidenciaComprovada() {
+        return residenciaComprovada;
+    }
+
     public void setResidenciaComprovada(boolean residenciaComprovada) {
         this.residenciaComprovada = residenciaComprovada;
     }
 
     public boolean isVisivel() {
+        return isVisivel;
+    }
+
+    public boolean getIsVisivel() {
         return isVisivel;
     }
 
@@ -242,5 +250,28 @@ public class Buffet {
 
     public void setAgendas(List<Agenda> agendas) {
         this.agendas = agendas;
+    }
+
+    @Override
+    public String toString() {
+        return "Buffet{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", tamanho=" + tamanho +
+                ", precoMedioDiaria=" + precoMedioDiaria +
+                ", qtdPessoas=" + qtdPessoas +
+                ", caminhoComprovante='" + caminhoComprovante + '\'' +
+                ", residenciaComprovada=" + residenciaComprovada +
+                ", isVisivel=" + isVisivel +
+                ", dataCriacao=" + dataCriacao +
+                ", endereco=" + endereco +
+                ", faixaEtarias=" + faixaEtarias +
+                ", tiposEventos=" + tiposEventos +
+                ", servicos=" + servicos +
+                ", usuario=" + usuario +
+                ", imagens=" + imagens +
+                ", agendas=" + agendas +
+                '}';
     }
 }

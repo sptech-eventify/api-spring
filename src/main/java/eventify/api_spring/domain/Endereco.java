@@ -38,10 +38,10 @@ public class Endereco {
     private String cep;
 
     @Schema(example = "-23.574011")
-    private Double latitude;
+    private Double latitude = -23.574011;
 
     @Schema(example = "46.6388203")
-    private Double longitude;
+    private Double longitude = 46.6388203;
 
     @Schema(example = "2023-05-20 17:49:12")
     private LocalDate dataCriacao;
@@ -103,13 +103,9 @@ public class Endereco {
         this.bairro = bairro;
     }
 
-    public String getCidade() {
-        return cidade;
-    }
+    public String getCidade() { return cidade; }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
+    public void setCidade(String cidade) { this.cidade = cidade; }
 
     public String getUf() {
         return uf;

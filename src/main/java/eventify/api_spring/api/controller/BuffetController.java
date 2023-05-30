@@ -70,11 +70,11 @@ public class BuffetController {
         return ResponseEntity.status(200).body(buffetService.pegarDatasOcupadas(idBuffet));
     }
 
-    @SecurityRequirement(name = "requiredAuth")
+//    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
-    public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
+    public ResponseEntity<Integer> cadastrar(@RequestBody Buffet buffet) {
         buffetService.cadastrar(buffet);
-        return ResponseEntity.status(201).body(buffet);
+        return ResponseEntity.status(201).build();
     }
 
     @PutMapping("/{idBuffet}")

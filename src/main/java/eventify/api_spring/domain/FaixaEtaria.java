@@ -40,4 +40,12 @@ public class FaixaEtaria {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    @Override
+    public String toString() {
+        return "FaixaEtaria{" +
+                "id=" + id +
+                ", descricao='" + descricao + '\'' +
+                '}';
+    }
 }

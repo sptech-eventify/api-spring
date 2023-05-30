@@ -8,12 +8,12 @@ public class Servico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Schema(example = "Estacionamento")
     private String descricao;
 
-    public Servico(Integer id, String descricao) {
+    public Servico(Long id, String descricao) {
         this.id = id;
         this.descricao = descricao;
     }
@@ -21,11 +21,11 @@ public class Servico {
     public Servico() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
