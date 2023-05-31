@@ -4,6 +4,9 @@ import eventify.api_spring.domain.Pesquisa;
 import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.mapper.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class PesquisaService {
     private final BuffetRepository buffetRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public PesquisaService(BuffetRepository buffetRepository) {
@@ -56,11 +62,17 @@ public class PesquisaService {
         return buffetsFiltrados;
     }
 
-
     public List<BuffetDtoResposta> getTodosBuffets() {
         return buffetRepository.findAllBuffet().stream()
                 .map(BuffetMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<Object> getNotas(){
+        String sql = "SELECT * FROM vw_notas_buffet";
+        Query query = entityManager.createNativeQuery(sql);
+        List<Object> resultados = query.getResultList();
+        return resultados;
     }
 
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {

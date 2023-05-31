@@ -210,13 +210,14 @@ public class BuffetService {
         Map<String, List<BuffetInfoDto>> buffetInfoMap = new HashMap<>();
 
         for (Object[] row : result) {
-            List<String> descricoes = Arrays.asList(((String) row[0]).split(","));
-            String nome = (String) row[1];
-            BigDecimal precoMediaDiaria = (BigDecimal) row[2];
-            Double notaMediaAvaliacao = (Double) row[3];
-            List<String> caminhos = Arrays.asList(((String) row[4]).split(","));
+            Integer id = (Integer) row[0];
+            List<String> descricoes = Arrays.asList(((String) row[1]).split(","));
+            String nome = (String) row[2];
+            BigDecimal precoMediaDiaria = (BigDecimal) row[3];
+            Double notaMediaAvaliacao = (Double) row[4];
+            List<String> caminhos = Arrays.asList(((String) row[5]).split(","));
 
-            BuffetInfoDto buffetInfo = new BuffetInfoDto(descricoes, nome, precoMediaDiaria.doubleValue(), notaMediaAvaliacao, caminhos);
+            BuffetInfoDto buffetInfo = new BuffetInfoDto(id, descricoes, nome, precoMediaDiaria.doubleValue(), notaMediaAvaliacao, caminhos);
 
             for (String tipoEvento : descricoes) {
                 tipoEvento = tipoEvento.toLowerCase();

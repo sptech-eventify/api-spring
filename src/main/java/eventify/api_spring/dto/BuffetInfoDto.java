@@ -4,19 +4,28 @@ import java.util.List;
 import java.util.Set;
 
 public class BuffetInfoDto {
-
+    private Integer id;
     private List<String> descricoes;
     private String nome;
     private Double precoMediaDiaria;
     private Double notaMediaAvaliacao;
     private List<String> caminho;
 
-    public BuffetInfoDto(List<String> descricao, String nome, Double precoMediaDiaria, Double notaMediaAvaliacao, List<String> caminho) {
+    public BuffetInfoDto(Integer id, List<String> descricao, String nome, Double precoMediaDiaria, Double notaMediaAvaliacao, List<String> caminho) {
+        this.id = id;
         this.descricoes = descricao;
         this.nome = nome;
         this.precoMediaDiaria = precoMediaDiaria;
         this.notaMediaAvaliacao = notaMediaAvaliacao;
         this.caminho = caminho;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public List<String> getDescricoes() {
