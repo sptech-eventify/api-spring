@@ -38,24 +38,27 @@ public class PesquisaService {
         System.out.println("Pesquisa: " + pesquisa.toString());
 
         List<BuffetDtoResposta> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
-                .filter(buffet -> pesquisa.getNome().isEmpty() || buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
-
-                .filter(buffet -> pesquisa.getTipoEvento() == null || buffet.getTiposEventos().stream()
-                        .anyMatch(tipoEvento -> pesquisa.getTipoEvento().stream().anyMatch(t -> t.equalsIgnoreCase(tipoEvento.getDescricao()))))
-
-                .filter(buffet -> pesquisa.getFaixaEtaria() == null || buffet.getFaixaEtarias().stream()
-                        .anyMatch(faixaEtaria -> pesquisa.getFaixaEtaria().stream().anyMatch(f -> f.equalsIgnoreCase(faixaEtaria.getDescricao()))))
-
-                .filter(buffet -> pesquisa.getServico() == null || buffet.getServicos().stream()
-                        .anyMatch(servico -> pesquisa.getServico().stream().anyMatch(s -> s.equalsIgnoreCase(servico.getDescricao()))))
-
+                .filter(buffet -> buffet.getNome() != null &&
+                        buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
+                .filter(buffet -> pesquisa.getTipoEvento() == null || pesquisa.getTipoEvento().isEmpty() ||
+                        buffet.getTiposEventos().isEmpty() ||
+                        buffet.getTiposEventos().stream().anyMatch(tipoEvento ->
+                                pesquisa.getTipoEvento().stream().anyMatch(t -> t.equalsIgnoreCase(tipoEvento.getDescricao()))))
+                .filter(buffet -> pesquisa.getFaixaEtaria() == null || pesquisa.getFaixaEtaria().isEmpty() ||
+                        buffet.getFaixaEtarias().isEmpty() ||
+                        buffet.getFaixaEtarias().stream().anyMatch(faixaEtaria ->
+                                pesquisa.getFaixaEtaria().stream().anyMatch(f -> f.equalsIgnoreCase(faixaEtaria.getDescricao()))))
+                .filter(buffet -> pesquisa.getServico() == null || pesquisa.getServico().isEmpty() ||
+                        buffet.getServicos().isEmpty() ||
+                        buffet.getServicos().stream().anyMatch(servico ->
+                                pesquisa.getServico().stream().anyMatch(s -> s.equalsIgnoreCase(servico.getDescricao()))))
                 .filter(buffet -> pesquisa.getQtdPessoas() == null || pesquisa.getQtdPessoas() <= buffet.getQtdPessoas())
                 .filter(buffet -> pesquisa.getOrcMin() == null || pesquisa.getOrcMin() <= buffet.getPrecoMedioDiaria())
                 .filter(buffet -> pesquisa.getOrcMax() == null || pesquisa.getOrcMax() >= buffet.getPrecoMedioDiaria())
                 .filter(buffet -> pesquisa.getTamanho() == null || pesquisa.getTamanho() <= buffet.getTamanho())
-                .filter(buffet -> pesquisa.getLatitude() == null || pesquisa.getLongitude() == null
-                        || calcularDistancia(pesquisa.getLatitude(), pesquisa.getLongitude(),
-                        buffet.getEndereco().getLatitude(), buffet.getEndereco().getLongitude()) <= 15)
+                .filter(buffet -> pesquisa.getLatitude() == null || pesquisa.getLongitude() == null ||
+                        calcularDistancia(pesquisa.getLatitude(), pesquisa.getLongitude(),
+                                buffet.getEndereco().getLatitude(), buffet.getEndereco().getLongitude()) <= 15)
                 .map(BuffetMapper::toDto)
                 .collect(Collectors.toList());
 

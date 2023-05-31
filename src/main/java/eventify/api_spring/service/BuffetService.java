@@ -66,7 +66,7 @@ public class BuffetService {
         return buffetOpt.map(BuffetMapper::toDto).orElse(null);
     }
 
-    public List<Buffet> getBufferPorPesquisaNome(String q){
+    public List<Buffet> getBuffetPorPesquisaNome(String q){
         return buffetRepository.findByNomeContainingIgnoreCase(q);
     }
 
@@ -181,27 +181,6 @@ public class BuffetService {
         Query query = entityManager.createNativeQuery(String.format("select nome, evento.data_criacao from evento join usuario on evento.id_contratante = usuario.id where id_buffet = %d and status = 1;", idBuffet));
         return query.getResultList();
     }
-
-    /*public List<BuffetInfoDto> pegarBuffetInfo() {
-        Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
-        List<Object[]> result = query.getResultList();
-
-        List<BuffetInfoDto> buffetInfoList = new ArrayList<>();
-
-        for (Object[] row : result) {
-            List<String> descricoes = Arrays.asList(((String) row[0]).split(","));
-            String nome = (String) row[1];
-            Double precoMediaDiaria = ((BigDecimal) row[2]).doubleValue();
-            Double notaMediaAvaliacao = (Double) row[3];
-            List<String> caminhos = Arrays.asList(((String) row[4]).split(","));
-
-            BuffetInfoDto buffetInfo = new BuffetInfoDto(descricoes, nome, precoMediaDiaria, notaMediaAvaliacao, caminhos);
-            buffetInfoList.add(buffetInfo);
-        }
-
-
-        return buffetInfoList;
-    }*/
 
     public Map<String, List<BuffetInfoDto>> pegarBuffetInfoPorTipoEvento() {
         Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
