@@ -149,6 +149,10 @@ public class MensagemServices {
         return mensagemRepository.findAllChatByUsuario(idUsuario);
     }
 
+    public List<ChatListaDto> listarChat() {
+        return mensagemRepository.findAllChatListaDto();
+    }
+
     public Integer checarQtdMensagens(int idUsuario, int idBuffet) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);

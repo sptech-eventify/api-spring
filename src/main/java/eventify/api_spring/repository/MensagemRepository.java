@@ -21,8 +21,11 @@ public interface MensagemRepository extends JpaRepository<Mensagem, Integer> {
     @Query("select m from Mensagem m where m.usuario = :usuario and m.buffet = :buffet order by m.id desc")
     public List<Mensagem> findAllByUsuarioBuffet(Usuario usuario, Buffet buffet);
 
-    @Query("select new eventify.api_spring.dto.ChatListaDto(m.buffet.id, m.buffet.nome, m.mensagem, m.data) from Mensagem m where m.usuario.id = :idUsuario and m.mandadoPor = true order by m.id desc limit 1")
+    @Query("select new eventify.api_spring.dto.ChatListaDto(m.buffet.id, m.buffet.nome, m.mensagem, m.data) from Mensagem m where m.usuario.id = :idUsuario order by m.id desc limit 1")
     public List<ChatListaDto> findAllChatByUsuario(int idUsuario);
+
+    @Query("select distinct new eventify.api_spring.dto.ChatListaDto(m.buffet.id, m.buffet.nome, m.mensagem, m.data) from Mensagem m group by m.buffet order by m.id")
+    public List<ChatListaDto> findAllChatListaDto();
 
     Integer countMensagemByBuffetAndUsuario(Buffet buffet, Usuario usuario);
 }

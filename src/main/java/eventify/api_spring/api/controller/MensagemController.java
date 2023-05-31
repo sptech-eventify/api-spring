@@ -87,6 +87,15 @@ public class MensagemController {
         return ResponseEntity.ok().body(lista);
     }
 
+    @GetMapping("/chat")
+    public ResponseEntity<List<ChatListaDto>> listarTodosOsChats() {
+        List<ChatListaDto> lista = mensagemServices.listarChat();
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(lista);
+    }
+
     @GetMapping("/check-chat/{idUsuario}/{idBuffet}")
     public ResponseEntity<Integer> checarQtdMensagens(@PathVariable int idUsuario, @PathVariable int idBuffet) {
         return ResponseEntity.ok().body(mensagemServices.checarQtdMensagens(idUsuario, idBuffet));
