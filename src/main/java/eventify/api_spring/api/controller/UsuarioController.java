@@ -6,6 +6,7 @@ import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.service.usuario.UsuarioService;
 import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
@@ -48,14 +49,14 @@ public class UsuarioController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/id")
-    public ResponseEntity<UsuarioDevolverDTO> exibir(@RequestParam Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer id) {
         Optional<Usuario> resposta = usuarioService.exibir(id);
 
         if (resposta.isEmpty())
             return ResponseEntity.status(204).build();
 
-        UsuarioDevolverDTO user = new UsuarioDevolverDTO(resposta.get().getId(), resposta.get().getNome(), resposta.get().getEmail());
+        UsuarioInfoDto user = new UsuarioInfoDto(resposta.get().getNome(), resposta.get().getEmail(), resposta.get().getCpf());
 
         return ResponseEntity.status(200).body(user);
     }

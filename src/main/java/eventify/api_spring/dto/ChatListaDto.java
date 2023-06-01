@@ -16,7 +16,7 @@ public class ChatListaDto {
         this.id = id;
         this.nome = nome;
         this.mensagem = mensagem;
-        this.data = data.toLocalTime().plusHours(3);
+        this.data = data.toLocalTime();
     }
 
     public Integer getId() {

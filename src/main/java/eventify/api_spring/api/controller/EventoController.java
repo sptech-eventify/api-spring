@@ -2,6 +2,8 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
+import eventify.api_spring.dto.EventoDto;
+import eventify.api_spring.dto.OrcamentoDto;
 import eventify.api_spring.service.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -51,6 +53,29 @@ public class EventoController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/info/{idUser}")
+    public ResponseEntity<List<EventoDto>> listarEventosInfo(@PathVariable int idUser) {
+        List<EventoDto> lista = eventoService.listarEventosInfo(idUser);
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/info/orcamentos/{idUser}")
+    public ResponseEntity<List<EventoDto>> listarOrcamentos(@PathVariable int idUser) {
+        List<EventoDto> lista = eventoService.listarOrcamentos(idUser);
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/orcamento")
+    public ResponseEntity<OrcamentoDto> buscarOrcamento(@RequestParam int idUser, @RequestParam int idEvento) {
+        return ResponseEntity.ok((eventoService.buscarOrcamento(idUser, idEvento)));
     }
 
 }

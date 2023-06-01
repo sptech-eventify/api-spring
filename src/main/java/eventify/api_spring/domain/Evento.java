@@ -1,5 +1,6 @@
 package eventify.api_spring.domain;
 
+import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -30,7 +31,11 @@ public class Evento {
     @JoinColumn(name = "id_pagamento")
     private Pagamento pagamento;
 
-    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento, Boolean isFormularioDinamico) {
+    @ManyToOne
+    @JoinColumn(name = "id_contratante")
+    private Usuario contratante;
+
+    public Evento(Integer id, LocalDate data, Double preco, String avalicacao, Double nota, String status, String motivoNaoAceito, Buffet buffet, Pagamento pagamento, Boolean isFormularioDinamico, Usuario contratante) {
         this.id = id;
         this.data = data;
         this.preco = preco;
@@ -41,6 +46,7 @@ public class Evento {
         this.motivoNaoAceito = motivoNaoAceito;
         this.buffet = buffet;
         this.pagamento = pagamento;
+        this.contratante = contratante;
     }
 
     public Evento() {
@@ -124,5 +130,13 @@ public class Evento {
 
     public void setPagamento(Pagamento pagamento) {
         this.pagamento = pagamento;
+    }
+
+    public Usuario getContratante() {
+        return contratante;
+    }
+
+    public void setContratante(Usuario contratante) {
+        this.contratante = contratante;
     }
 }
