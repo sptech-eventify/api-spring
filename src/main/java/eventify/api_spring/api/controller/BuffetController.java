@@ -3,10 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Imagem;
-import eventify.api_spring.dto.BuffetDtoResposta;
-import eventify.api_spring.dto.BuffetInfoDto;
-import eventify.api_spring.dto.DataDto;
-import eventify.api_spring.dto.ImagemDTO;
+import eventify.api_spring.dto.*;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -41,6 +38,11 @@ public class BuffetController {
     @GetMapping("/{idBuffet}")
     public ResponseEntity<BuffetDtoResposta> buscarBuffet(@PathVariable int idBuffet) {
         return ResponseEntity.status(200).body(buffetService.buscarBuffet(idBuffet));
+    }
+
+    @GetMapping("/publico/{idBuffet}")
+    public ResponseEntity<BuffetPublicDto> buscarBuffetPublico(@PathVariable int idBuffet) {
+        return ResponseEntity.status(200).body(buffetService.buscarBuffetPublico(idBuffet));
     }
 
     @GetMapping("/tipos")
