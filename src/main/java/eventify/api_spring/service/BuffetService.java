@@ -1,10 +1,7 @@
 package eventify.api_spring.service;
 
 import eventify.api_spring.domain.*;
-import eventify.api_spring.dto.AgendaDto;
-import eventify.api_spring.dto.BuffetDtoResposta;
-import eventify.api_spring.dto.BuffetInfoDto;
-import eventify.api_spring.dto.DataDto;
+import eventify.api_spring.dto.*;
 import eventify.api_spring.mapper.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
@@ -208,6 +205,10 @@ public class BuffetService {
         }
 
         return buffetInfoMap;
+    }
+
+    public BuffetPublicDto buscarBuffetPublico(int idBuffet) {
+        return buffetRepository.findBuffetPublicDtoById(idBuffet);
     }
 
 
