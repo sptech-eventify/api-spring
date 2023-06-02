@@ -8,4 +8,5 @@ import java.util.Optional;
 // Interface que herda de JpaRepository e recebe a classe que será mapeada e o tipo do ID
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String email);
+
 }
