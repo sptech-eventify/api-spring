@@ -75,7 +75,20 @@ public class EventoController {
 
     @GetMapping("/orcamento")
     public ResponseEntity<List<OrcamentoDto>> buscarOrcamento(@RequestParam int idUser, @RequestParam int idEvento) {
-        return ResponseEntity.ok((eventoService.buscarOrcamento(idUser, idEvento)));
+        return ResponseEntity.ok(eventoService.buscarOrcamento(idUser, idEvento));
+    }
+
+    @GetMapping("/orcamento/verificar/{idEvento}")
+    public ResponseEntity<Integer> verificarPagamento(@PathVariable int idEvento) {
+        return ResponseEntity.ok(eventoService.verificarOrcamento(idEvento));
+    }
+
+    @PostMapping("/orcamento/pagar/{idEvento}")
+    public ResponseEntity<Boolean> pagarOrcamento(@PathVariable int idEvento) {
+        if (eventoService.pagarOrcamento(idEvento)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 }

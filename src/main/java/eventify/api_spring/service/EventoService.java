@@ -62,4 +62,19 @@ public class EventoService {
         return eventoRepository.findOrcamentoById(idUser, idEvento);
     }
 
+    public Integer verificarOrcamento(int idEvento) {
+        return eventoRepository.findStatusByEvento(idEvento);
+    }
+
+    public boolean pagarOrcamento(int idEvento) {
+        Optional<Evento> eventoOpt = eventoRepository.findById(idEvento);
+        if (eventoOpt.isEmpty()) {
+            return false;
+        }
+        Evento evento = eventoOpt.get();
+        evento.setStatus("6");
+        eventoRepository.save(evento);
+        return true;
+    }
+
 }
