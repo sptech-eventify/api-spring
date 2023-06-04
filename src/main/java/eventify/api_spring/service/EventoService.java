@@ -58,7 +58,7 @@ public class EventoService {
         return eventoRepository.findAllOrcamentos(idUser);
     }
 
-    public OrcamentoDto buscarOrcamento(int idUser, int idEvento) {
+    public List<OrcamentoDto> buscarOrcamento(int idUser, int idEvento) {
         return eventoRepository.findOrcamentoById(idUser, idEvento);
     }
 

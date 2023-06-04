@@ -74,7 +74,7 @@ public class EventoController {
     }
 
     @GetMapping("/orcamento")
-    public ResponseEntity<OrcamentoDto> buscarOrcamento(@RequestParam int idUser, @RequestParam int idEvento) {
+    public ResponseEntity<List<OrcamentoDto>> buscarOrcamento(@RequestParam int idUser, @RequestParam int idEvento) {
         return ResponseEntity.ok((eventoService.buscarOrcamento(idUser, idEvento)));
     }
 

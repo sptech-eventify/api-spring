@@ -62,8 +62,8 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "JOIN b.tiposEventos te " +
             "WHERE u.id = :id " +
             "AND e.id = :idEvento " +
-            "GROUP BY e")
-    OrcamentoDto findOrcamentoById(int id, int idEvento);
+            "GROUP BY b.nome ")
+    List<OrcamentoDto> findOrcamentoById(int id, int idEvento);
 
 
 }

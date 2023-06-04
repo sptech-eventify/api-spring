@@ -22,12 +22,18 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
 
     @Query("SELECT new eventify.api_spring.dto.BuffetPublicDto(b.nome, " +
             "b.descricao, " +
-            "GROUP_CONCACT(DISTINCT CONCAT(i.caminho, '/', i.nome, '.', i.tipo)), " +
+            "GROUP_CONCAT(DISTINCT CONCAT(i.caminho, '/', i.nome, '.', i.tipo)), " +
             "b.precoMedioDiaria, " +
-            "round(avg(e.nota),2)) " +
+            "round(avg(e.nota),2), " +
+            "GROUP_CONCAT(DISTINCT ts.descricao)," +
+            "GROUP_CONCAT(DISTINCT fe.descricao)," +
+            "GROUP_CONCAT(DISTINCT te.descricao))  " +
             "FROM Buffet b " +
             "JOIN Imagem i on i.buffet = b " +
             "JOIN Evento e on e.buffet = b " +
+            "JOIN b.servicos as ts " +
+            "JOIN b.faixaEtarias as fe " +
+            "JOIN b.tiposEventos as te " +
             "WHERE b.id = :idBuffet " +
             "GROUP BY b")
     BuffetPublicDto findBuffetPublicDtoById(int idBuffet);
