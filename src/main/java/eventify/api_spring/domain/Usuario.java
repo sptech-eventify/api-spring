@@ -21,6 +21,7 @@ public class Usuario {
     private Integer tipoUsuario;
     private Boolean isAtivo;
     private Boolean isBanido;
+    private String foto;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 
@@ -89,6 +90,14 @@ public class Usuario {
 
     public void setBanido(Boolean banido) {
         isBanido = banido;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public LocalDateTime getDataCriacao() {

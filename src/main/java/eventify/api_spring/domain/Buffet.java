@@ -50,6 +50,7 @@ public class Buffet {
     private boolean isVisivel;
 
     @Schema(example = "2023-05-20")
+
     private LocalDate dataCriacao;
 
     @OneToOne
