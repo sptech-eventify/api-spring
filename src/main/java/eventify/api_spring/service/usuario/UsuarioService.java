@@ -120,6 +120,7 @@ public class UsuarioService {
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
+        System.out.println("Primeiro corte");
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
         if (usuario.isPresent()) {
             if (usuario.get().isBanido()) {
@@ -132,9 +133,12 @@ public class UsuarioService {
             }
         }
 
+        System.out.println("Segundo corte");
+
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
 
+        System.out.println("Terceiro corte");
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado =
@@ -143,10 +147,14 @@ public class UsuarioService {
                                 () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
                         );
 
+        System.out.println("Quarto corte");
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        System.out.println("Quinto corte");
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
+        System.out.println("Sexto corte");
         return UsuarioMapper.of(usuarioAutenticado, token);
     }
 

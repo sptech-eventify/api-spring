@@ -42,7 +42,7 @@ public class UsuarioController {
         List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
 
         for (Usuario user : lista) {
-            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail()));
+            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail(), user.getFoto()));
         }
 
         return ResponseEntity.status(200).body(listaDTO);
