@@ -4,6 +4,8 @@ import eventify.api_spring.api.assets.Fila;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.dto.BuffetInfoDto;
+import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
@@ -24,7 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @Tag(name = "1. Usuário", description = "Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
 public class UsuarioController {
 
@@ -107,4 +109,5 @@ public class UsuarioController {
         }
         return ResponseEntity.status(404).build();
     }
+
 }
