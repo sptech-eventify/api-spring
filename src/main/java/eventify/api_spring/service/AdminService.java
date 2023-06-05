@@ -3,6 +3,8 @@ package eventify.api_spring.service;
 import eventify.api_spring.api.assets.Fila;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Endereco;
+import eventify.api_spring.dto.usuario.UsuarioAdminDto;
+import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class AdminService {
 
     @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public List<Object[]> pegarConversaoCadastros() {
         Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_conversao_de_visitantes(6)"));
@@ -53,24 +57,8 @@ public class AdminService {
         return query.getResultList();
     }
 
-    public List<Object[]> pegarListaUsuarios() {
-        Query query = entityManager.createNativeQuery(String.format("SELECT\n" +
-                "  usuario.nome,\n" +
-                "  usuario.tipo_usuario,\n" +
-                "  usuario.is_banido,\n" +
-                "  usuario.is_ativo,\n" +
-                "  usuario.cpf,\n" +
-                "  usuario.data_criacao,\n" +
-                "  COUNT(CASE WHEN Evento.status = 6 THEN 1 END) AS quantidade_eventos_status_6,\n" +
-                "  COUNT(Evento.id) AS quantidade_total_eventos\n" +
-                "FROM\n" +
-                "  Usuario\n" +
-                "LEFT JOIN\n" +
-                "  Evento ON Usuario.id = Evento.id_contratante\n" +
-                "GROUP BY\n" +
-                "  Usuario.id,\n" +
-                "  Usuario.nome;"));
-        return query.getResultList();
+    public List<UsuarioAdminDto> pegarListaUsuarios() {
+        return usuarioRepository.findAllUsuarioLista();
     }
 
     public List<Object[]> pegarUsuariosBanidos() {

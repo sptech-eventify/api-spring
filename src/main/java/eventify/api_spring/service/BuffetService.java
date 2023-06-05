@@ -185,22 +185,12 @@ public class BuffetService {
     }
 
     public Map<String, List<BuffetInfoDto>> pegarBuffetInfoPorTipoEvento() {
-        Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
-        List<Object[]> result = query.getResultList();
+        List<BuffetInfoDto> buffetInfoLista = buffetRepository.findAllBuffetInfo();
 
         Map<String, List<BuffetInfoDto>> buffetInfoMap = new HashMap<>();
 
-        for (Object[] row : result) {
-            Integer id = (Integer) row[0];
-            List<String> descricoes = Arrays.asList(((String) row[1]).split(","));
-            String nome = (String) row[2];
-            BigDecimal precoMediaDiaria = (BigDecimal) row[3];
-            Double notaMediaAvaliacao = (Double) row[4];
-            List<String> caminhos = Arrays.asList(((String) row[5]).split(","));
-
-            BuffetInfoDto buffetInfo = new BuffetInfoDto(id, descricoes, nome, precoMediaDiaria.doubleValue(), notaMediaAvaliacao, caminhos);
-
-            for (String tipoEvento : descricoes) {
+        for (BuffetInfoDto buffetInfo: buffetInfoLista) {
+            for (String tipoEvento : String.valueOf(buffetInfo.tiposEventos()).split(",")) {
                 tipoEvento = tipoEvento.toLowerCase();
 
                 List<BuffetInfoDto> buffetInfoList = buffetInfoMap.getOrDefault(tipoEvento, new ArrayList<>());
