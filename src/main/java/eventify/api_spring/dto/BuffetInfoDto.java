@@ -20,6 +20,11 @@ public class BuffetInfoDto {
         this.caminho = caminho;
     }
 
+    public BuffetInfoDto(Integer id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
     public Integer getId() {
         return id;
     }

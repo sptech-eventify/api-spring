@@ -5,6 +5,8 @@ import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.dto.BuffetInfoDto;
+import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.dto.usuario.UsuarioMapper;
@@ -133,12 +135,9 @@ public class UsuarioService {
             }
         }
 
-        System.out.println("Segundo corte");
-
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
 
-        System.out.println("Terceiro corte");
         final Authentication authentication = this.authenticationManager.authenticate(credentials);
 
         Usuario usuarioAutenticado =
@@ -147,14 +146,11 @@ public class UsuarioService {
                                 () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
                         );
 
-        System.out.println("Quarto corte");
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        System.out.println("Quinto corte");
 
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
-        System.out.println("Sexto corte");
         return UsuarioMapper.of(usuarioAutenticado, token);
     }
 
@@ -176,5 +172,15 @@ public class UsuarioService {
         usuarioOpt.get().setAtivo(false);
         usuarioRepository.save(usuarioOpt.get());
         return true;
+    }
+
+    public List<BuffetInfoDto> listarProprietariosBuffetQuantidade(Integer id){
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
+        if (usuarioOpt.isEmpty()) {
+            throw new ResponseStatusException(404, "Usuário não encontrado", null);
+        }
+        List<BuffetInfoDto> lista = usuarioRepository.listarProprietariosBuffetQuantidade(usuarioOpt.get());
+
+        return lista;
     }
 }
