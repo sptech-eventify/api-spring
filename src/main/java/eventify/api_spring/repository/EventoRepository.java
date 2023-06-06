@@ -4,6 +4,7 @@ import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.dto.EventoDto;
 import eventify.api_spring.dto.OrcamentoDto;
+import eventify.api_spring.dto.OrcamentoPropDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -58,6 +59,15 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
 
     @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
     Integer findStatusByEvento(int idEvento);
+
+    @Query("SELECT new eventify.api_spring.dto.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)" +
+            "FROM Evento e " +
+            "JOIN Usuario u on e.contratante = u " +
+            "JOIN Buffet b on e.buffet = b " +
+            "WHERE b.id = :idBuffet AND " +
+            "e.status != '6' " +
+            "ORDER BY e.status")
+    List<OrcamentoPropDto> findAllOrcamentosByBuffet(int idBuffet);
 
 }
 

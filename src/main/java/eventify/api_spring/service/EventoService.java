@@ -5,6 +5,7 @@ import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.EventoDto;
 import eventify.api_spring.dto.OrcamentoDto;
+import eventify.api_spring.dto.OrcamentoPropDto;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
@@ -75,6 +76,10 @@ public class EventoService {
         evento.setStatus("6");
         eventoRepository.save(evento);
         return true;
+    }
+
+    public List<OrcamentoPropDto> buscarOrcamentosDoBuffet(int idBuffet) {
+        return eventoRepository.findAllOrcamentosByBuffet(idBuffet);
     }
 
 }
