@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller;
 import eventify.api_spring.api.assets.Fila;
 import eventify.api_spring.api.assets.Pilha;
 import eventify.api_spring.domain.Endereco;
+import eventify.api_spring.dto.usuario.UsuarioAdminDto;
 import eventify.api_spring.service.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,8 +85,8 @@ public class AdminController {
     }
 
     @GetMapping("/usuarios")
-    public ResponseEntity<List<Object[]>> pegarListaUsuarios() {
-        List<Object[]> result = adminService.pegarListaUsuarios();
+    public ResponseEntity<List<UsuarioAdminDto>> pegarListaUsuarios() {
+        List<UsuarioAdminDto> result = adminService.pegarListaUsuarios();
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }

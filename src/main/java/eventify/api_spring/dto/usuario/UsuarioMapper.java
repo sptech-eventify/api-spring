@@ -23,14 +23,12 @@ public class UsuarioMapper {
     }
 
     public static UsuarioTokenDto of(Usuario usuario, String token) {
-        UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();
-
-        usuarioTokenDto.setUserId(usuario.getId());
-        usuarioTokenDto.setNome(usuario.getNome());
-        usuarioTokenDto.setEmail(usuario.getEmail());
-        usuarioTokenDto.setToken(token);
-        usuarioTokenDto.setFoto(usuario.getFoto());
-
+        UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto(usuario.getId(),
+                usuario.getTipoUsuario(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                token,
+                usuario.getFoto());
         return usuarioTokenDto;
     }
 }

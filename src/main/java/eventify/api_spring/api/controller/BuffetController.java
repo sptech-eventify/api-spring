@@ -145,4 +145,13 @@ public class BuffetController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/proprietario/{idUser}")
+    public ResponseEntity<List<BuffetInfoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
+        List<BuffetInfoDto> lista = buffetService.pegarBuffetsProprietario(idUser);
+        if (lista.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(lista);
+    }
+
 }

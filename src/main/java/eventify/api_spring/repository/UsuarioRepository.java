@@ -1,6 +1,10 @@
 package eventify.api_spring.repository;
 
 import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.dto.usuario.UsuarioAdminDto;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import eventify.api_spring.dto.BuffetInfoDto;
 import eventify.api_spring.dto.usuario.BuffetDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +18,17 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String email);
 
-    @Validated
-    @Query("SELECT new eventify.api_spring.dto.BuffetInfoDto(b.id, b.nome) FROM Buffet b WHERE b.usuario = :id")
-    List<BuffetInfoDto> listarProprietariosBuffetQuantidade(Usuario id);
+    @Query("SELECT new eventify.api_spring.dto.usuario.UsuarioAdminDto(u.nome," +
+            "u.tipoUsuario," +
+            "u.isBanido," +
+            "u.isAtivo," +
+            "u.cpf," +
+            "u.dataCriacao," +
+            "COUNT(CASE WHEN e.status = '6' THEN 1 END)," +
+            "COUNT(e.id))" +
+            "FROM Usuario u " +
+            "JOIN Evento e on e.contratante = u " +
+            "GROUP BY u.nome")
+    List<UsuarioAdminDto> findAllUsuarioLista();
+
 }

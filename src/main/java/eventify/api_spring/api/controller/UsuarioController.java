@@ -110,12 +110,4 @@ public class UsuarioController {
         return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/proprietarios-buffet-quantidade/{id}")
-    public ResponseEntity<List<BuffetInfoDto>> listarProprietariosBuffetQuantidade(@PathVariable Integer id) {
-        List<BuffetInfoDto> lista = usuarioService.listarProprietariosBuffetQuantidade(id);
-        if (lista.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(200).body(lista);
-    }
 }

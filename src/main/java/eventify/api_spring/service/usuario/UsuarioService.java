@@ -174,13 +174,4 @@ public class UsuarioService {
         return true;
     }
 
-    public List<BuffetInfoDto> listarProprietariosBuffetQuantidade(Integer id){
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isEmpty()) {
-            throw new ResponseStatusException(404, "Usuário não encontrado", null);
-        }
-        List<BuffetInfoDto> lista = usuarioRepository.listarProprietariosBuffetQuantidade(usuarioOpt.get());
-
-        return lista;
-    }
 }
