@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
@@ -19,18 +21,23 @@ public class Endereco {
     private boolean isValidado;
 
     @Schema(example = "R. Gualaxo")
+    @NotBlank
     private String logradouro;
 
     @Schema(example = "285")
+    @Min(1)
     private Integer numero;
 
     @Schema(example = "Aclimação")
+    @NotBlank
     private String bairro;
 
     @Schema(example = "São Paulo")
+    @NotBlank
     private String cidade;
 
     @Schema(example = "SP")
+    @NotBlank
     private String uf;
 
     @Schema(example = "01533-010")
@@ -38,10 +45,10 @@ public class Endereco {
     private String cep;
 
     @Schema(example = "-23.574011")
-    private Double latitude = -23.574011;
+    private Double latitude;
 
     @Schema(example = "46.6388203")
-    private Double longitude = 46.6388203;
+    private Double longitude;
 
     @Schema(example = "2023-05-20 17:49:12")
     private LocalDate dataCriacao;

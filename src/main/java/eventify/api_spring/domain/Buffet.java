@@ -30,6 +30,7 @@ public class Buffet {
     private String descricao;
 
     @Schema(example = "500")
+    @Min(1)
     private Integer tamanho;
 
     @Schema(example = "2134.00")
@@ -41,6 +42,7 @@ public class Buffet {
     private Integer qtdPessoas;
 
     @Schema(example = "assets/files/comprovantes/buffet1_comp1.pdf")
+    @NotBlank
     private String caminhoComprovante;
 
     @Schema(example = "true")
@@ -60,6 +62,7 @@ public class Buffet {
     @JoinTable(name = "buffet_faixa_etaria",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_faixa_etaria"))
+
     private Set<FaixaEtaria> faixaEtarias = new HashSet<>();
     @ManyToMany
     @JoinTable(name = "buffet_tipo_evento",

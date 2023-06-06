@@ -74,15 +74,15 @@ public class BuffetController {
 
 //    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
-    public ResponseEntity<Buffet> cadastrar(@RequestBody Buffet buffet) {
+    public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
         Buffet buffetCadastrado = buffetService.cadastrar(buffet);
         return ResponseEntity.status(201).body(buffetCadastrado);
     }
 
     @PutMapping("/{idBuffet}")
-    public ResponseEntity<Integer> atualizar(@PathVariable int idBuffet, @RequestBody @Valid Buffet buffet) {
+    public ResponseEntity<Buffet> atualizar(@PathVariable int idBuffet, @RequestBody @Valid Buffet buffet) {
        Buffet buffetAtualizado = buffetService.atualizar(idBuffet, buffet);
-        return ResponseEntity.status(200).body(buffetAtualizado.getId());
+        return ResponseEntity.status(200).body(buffetAtualizado);
     }
 
     @GetMapping("/abandono/{idBuffet}")
