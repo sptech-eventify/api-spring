@@ -59,8 +59,20 @@ public class EventoService {
         return eventoRepository.findAllOrcamentos(idUser);
     }
 
-    public List<OrcamentoDto> buscarOrcamento(int idUser, int idEvento) {
-        return eventoRepository.findOrcamentoById(idUser, idEvento);
+    public OrcamentoDto buscarOrcamento(int idEvento) {
+        return eventoRepository.findOrcamentoById(idEvento);
+    }
+
+    public Boolean mandarOrcamento(int idEvento, double preco) {
+        Optional<Evento> eventoOpt = eventoRepository.findById(idEvento);
+        if (eventoOpt.isEmpty()) {
+            return false;
+        }
+        Evento evento = eventoOpt.get();
+        evento.setPreco(preco);
+        evento.setStatus("3");
+        eventoRepository.save(evento);
+        return true;
     }
 
     public Integer verificarOrcamento(int idEvento) {

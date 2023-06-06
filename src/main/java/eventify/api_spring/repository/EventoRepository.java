@@ -53,9 +53,9 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "JOIN b.servicos ts\n" +
             "JOIN b.faixaEtarias fe\n" +
             "JOIN b.tiposEventos te\n" +
-            "WHERE u.id = :id AND e.id = :idEvento\n" +
+            "WHERE e.id = :idEvento\n" +
             "GROUP BY b.nome")
-    List<OrcamentoDto> findOrcamentoById(int id, int idEvento);
+    OrcamentoDto findOrcamentoById(int idEvento);
 
     @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
     Integer findStatusByEvento(int idEvento);

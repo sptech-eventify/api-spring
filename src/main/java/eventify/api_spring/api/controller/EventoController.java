@@ -75,8 +75,8 @@ public class EventoController {
     }
 
     @GetMapping("/orcamento")
-    public ResponseEntity<List<OrcamentoDto>> buscarOrcamento(@RequestParam int idUser, @RequestParam int idEvento) {
-        return ResponseEntity.ok(eventoService.buscarOrcamento(idUser, idEvento));
+    public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam int idEvento) {
+        return ResponseEntity.ok(eventoService.buscarOrcamento(idEvento));
     }
 
     @GetMapping("/buffet/orcamento/{idBuffet}")
@@ -86,6 +86,14 @@ public class EventoController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(lista);
+    }
+
+    @PutMapping("/orcamento/mandar")
+    public ResponseEntity<Boolean> mandarOrcamento(@RequestParam @Valid int idEvento, @RequestParam @Valid double preco) {
+        if (eventoService.mandarOrcamento(idEvento, preco)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/orcamento/verificar/{idEvento}")

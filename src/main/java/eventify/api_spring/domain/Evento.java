@@ -13,7 +13,6 @@ public class Evento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull
-    @FutureOrPresent
     private LocalDate data;
 
     @NotNull
