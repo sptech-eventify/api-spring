@@ -285,4 +285,8 @@ public class BuffetService {
         buffet.setDataCriacao(buffetBanco.getDataCriacao());
         return buffet;
     }
+
+    public List<BuffetInfoDto> pegarBuffetsProprietario(int idUser) {
+        return buffetRepository.findAllBuffetProprietario(idUser);
+    }
 }
