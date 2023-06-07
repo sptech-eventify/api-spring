@@ -4,6 +4,8 @@ import java.util.List;
 
 public record BuffetPublicDto(
         String nome,
+
+        String proprietario,
         String descricao,
         Object imagens,
         Double precoMedioDiaria,

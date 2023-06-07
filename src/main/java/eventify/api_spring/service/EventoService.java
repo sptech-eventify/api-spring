@@ -3,9 +3,11 @@ package eventify.api_spring.service;
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.dto.EventoCriacaoDto;
 import eventify.api_spring.dto.EventoDto;
 import eventify.api_spring.dto.OrcamentoDto;
 import eventify.api_spring.dto.OrcamentoPropDto;
+import eventify.api_spring.mapper.EventoMapper;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
@@ -37,9 +39,9 @@ public class EventoService {
         return evento;
     }
 
-    public Evento criarEvento(Evento e) {
-        Evento evento = eventoRepository.save(e);
-        return evento;
+    public Boolean criarEvento(EventoCriacaoDto e) {
+        eventoRepository.save(EventoMapper.of(e));
+        return true;
     }
 
     public List<Object[]> pegarOrcamentos(int idUser) {
@@ -85,7 +87,7 @@ public class EventoService {
             return false;
         }
         Evento evento = eventoOpt.get();
-        evento.setStatus("6");
+        evento.setStatus("5");
         eventoRepository.save(evento);
         return true;
     }
