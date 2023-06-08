@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
+import eventify.api_spring.dto.EventoCriacaoDto;
 import eventify.api_spring.dto.EventoDto;
 import eventify.api_spring.dto.OrcamentoDto;
 import eventify.api_spring.dto.OrcamentoPropDto;
@@ -29,7 +30,7 @@ public class EventoController {
     private EventoService eventoService;
 
     @PostMapping
-    public ResponseEntity<Evento> criarEvento(@RequestBody @Valid Evento e) {
+    public ResponseEntity<Boolean> criarEvento(@RequestBody @Valid EventoCriacaoDto e) {
         return ResponseEntity.status(201).body(eventoService.criarEvento(e));
     }
 

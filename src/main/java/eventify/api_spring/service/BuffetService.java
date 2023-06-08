@@ -189,7 +189,7 @@ public class BuffetService {
 
         Map<String, List<BuffetInfoDto>> buffetInfoMap = new HashMap<>();
 
-        for (BuffetInfoDto buffetInfo: buffetInfoLista) {
+        for (BuffetInfoDto buffetInfo : buffetInfoLista) {
             for (String tipoEvento : String.valueOf(buffetInfo.tiposEventos()).split(",")) {
                 tipoEvento = tipoEvento.toLowerCase();
 
@@ -217,12 +217,33 @@ public class BuffetService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado");
         }
-        buffet.setCaminhoComprovante(buffet.getCaminhoComprovante());
         buffet.setDataCriacao(LocalDate.now());
         buffet.setEndereco(endereco);
         buffet.setVisivel(true);
         buffetRepository.save(buffet);
         return buffet;
+    }
+
+    public void verificarBuffet(Buffet buffet) {
+        if (Objects.isNull(buffet.getNome())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "O nome não pode ser nulo");
+        } else if (Objects.isNull(buffet.getDescricao())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "A descrição não pode ser nula");
+        } else if (Objects.isNull(buffet.getTamanho())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "O tamanho não pode ser nulo");
+        } else if (Objects.isNull(buffet.getPrecoMedioDiaria())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "O preço médio da diária não pode ser nulo");
+        } else if (Objects.isNull(buffet.getQtdPessoas())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "A quantidade de pessoas não pode ser nula");
+        } else if (Objects.isNull(buffet.getCaminhoComprovante())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "O caminho do comprovante não pode ser nulo");
+        }
     }
 
     public Buffet atualizar(Integer idBuffet, Buffet buffet) {
@@ -246,6 +267,15 @@ public class BuffetService {
                 } else {
                     endereco = enderecoOpt.get();
                 }
+
+                Optional<Usuario> usuario = usuarioRepository.findById(buffet.getUsuario().getId());
+
+                if (usuario.isPresent()) {
+                    buffet.setUsuario(usuario.get());
+                } else {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado");
+                }
+
                 buffet.setEndereco(endereco);
                 Buffet buffetAtualizado = atualizaBuffet(buffet, buffetDadosBanco);
                 buffetRepository.save(buffetAtualizado);
