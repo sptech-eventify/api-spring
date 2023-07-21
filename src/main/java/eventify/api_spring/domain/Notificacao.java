@@ -11,6 +11,7 @@ public class Notificacao {
     private Integer id;
     private String descricao;
     private LocalDate dataCriacao;
+
     @ManyToOne
     private Usuario usuario;
 
@@ -46,5 +47,9 @@ public class Notificacao {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public getDataCriacao() {
+        return dataCriacao;
     }
 }

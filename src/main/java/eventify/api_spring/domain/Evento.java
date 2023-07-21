@@ -1,6 +1,5 @@
 package eventify.api_spring.domain;
 
-import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 

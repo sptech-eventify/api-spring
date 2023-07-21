@@ -1,20 +1,14 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Agenda;
 import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.dto.*;
-import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.service.BuffetService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 

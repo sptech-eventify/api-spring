@@ -2,8 +2,6 @@ package eventify.api_spring.api.assets;
 
 import eventify.api_spring.domain.Buffet;
 
-import java.util.List;
-
 public class ListaBuffet {
     private Buffet[] vetor;
     private int nroElem;

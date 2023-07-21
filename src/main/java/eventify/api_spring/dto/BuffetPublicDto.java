@@ -1,7 +1,5 @@
 package eventify.api_spring.dto;
 
-import java.util.List;
-
 public record BuffetPublicDto(
         String nome,
 

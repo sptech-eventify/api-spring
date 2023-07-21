@@ -1,6 +1,5 @@
 package eventify.api_spring.api.assets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Fila<T> {

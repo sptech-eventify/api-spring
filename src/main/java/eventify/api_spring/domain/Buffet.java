@@ -1,13 +1,11 @@
 package eventify.api_spring.domain;
 
-import eventify.api_spring.dto.ImagemChatDto;
 import eventify.api_spring.dto.ImagemDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -239,7 +237,7 @@ public class Buffet {
     }
 
     public void setImagens(List<Imagem> imagens) {
-        imagens = imagens;
+        this.imagens = imagens;
     }
 
     public List<ImagemDTO> getImagemDto() {

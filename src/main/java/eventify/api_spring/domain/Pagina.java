@@ -1,8 +1,6 @@
 package eventify.api_spring.domain;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
 import java.util.List;
 
 public class Pagina {

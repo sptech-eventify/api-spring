@@ -1,6 +1,5 @@
 package eventify.api_spring.dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class AgendaDto {

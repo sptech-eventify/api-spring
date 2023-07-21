@@ -1,6 +1,5 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.dto.EventoCriacaoDto;
 import eventify.api_spring.dto.EventoDto;
@@ -11,13 +10,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Optional;
 
 @SecurityRequirement(name = "requiredAuth")
 @RestController

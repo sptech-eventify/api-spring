@@ -1,7 +1,6 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.TipoEvento;
-import eventify.api_spring.repository.TipoEventoRepository;
 import eventify.api_spring.service.TipoEventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +22,7 @@ public class TipoEventoController {
     @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<TipoEvento> criarTipoEvento(@RequestBody @Valid TipoEvento t) {
-        TipoEvento tipoEvento = this.tipoEventoService.criarTipoEvento(t);
+        this.tipoEventoService.criarTipoEvento(t);
         return ResponseEntity.status(201).body(t);
     }
 

@@ -4,8 +4,6 @@ import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UsuarioMapper {
     public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {

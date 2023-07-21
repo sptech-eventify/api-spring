@@ -1,6 +1,5 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Imagem;
 import eventify.api_spring.service.ImagemService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

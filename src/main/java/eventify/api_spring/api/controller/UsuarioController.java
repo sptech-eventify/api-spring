@@ -1,11 +1,6 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.api.assets.Fila;
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.BuffetInfoDto;
-import eventify.api_spring.dto.usuario.BuffetDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;

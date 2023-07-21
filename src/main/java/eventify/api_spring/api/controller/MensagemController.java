@@ -3,7 +3,6 @@ import eventify.api_spring.domain.Mensagem;
 import eventify.api_spring.dto.ChatListaDto;
 import eventify.api_spring.dto.MensagemDto;
 import eventify.api_spring.service.MensagemServices;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

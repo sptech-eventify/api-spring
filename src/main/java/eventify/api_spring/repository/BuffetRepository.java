@@ -2,18 +2,14 @@ package eventify.api_spring.repository;
 
 import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.BuffetDtoResposta;
 import eventify.api_spring.dto.BuffetInfoDto;
 import eventify.api_spring.dto.BuffetPublicDto;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NamedNativeQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface BuffetRepository extends JpaRepository<Buffet, Integer> {

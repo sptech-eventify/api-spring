@@ -1,25 +1,15 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.api.assets.ListaBuffet;
 import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.BuffetDtoResposta;
-import eventify.api_spring.dto.usuario.BuffetDto;
-import eventify.api_spring.service.BuffetService;
 import eventify.api_spring.service.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-
-import static org.hibernate.Hibernate.get;
 
 @RestController
 @RequestMapping("/pesquisa")

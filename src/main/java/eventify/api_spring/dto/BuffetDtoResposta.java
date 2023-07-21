@@ -1,6 +1,5 @@
 package eventify.api_spring.dto;
 import eventify.api_spring.domain.*;
-import eventify.api_spring.dto.ImagemDTO;
 import java.util.List;
 import java.util.Set;
 

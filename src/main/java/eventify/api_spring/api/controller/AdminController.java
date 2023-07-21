@@ -1,6 +1,5 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.api.assets.Fila;
 import eventify.api_spring.api.assets.Pilha;
 import eventify.api_spring.domain.Endereco;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;

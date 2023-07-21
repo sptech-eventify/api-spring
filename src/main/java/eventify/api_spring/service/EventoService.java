@@ -1,6 +1,5 @@
 package eventify.api_spring.service;
 
-import eventify.api_spring.domain.Buffet;
 import eventify.api_spring.domain.Evento;
 import eventify.api_spring.domain.Usuario;
 import eventify.api_spring.dto.EventoCriacaoDto;
@@ -15,7 +14,6 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 @Service

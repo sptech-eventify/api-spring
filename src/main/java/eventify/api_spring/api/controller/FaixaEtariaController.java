@@ -1,7 +1,6 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.FaixaEtaria;
-import eventify.api_spring.repository.FaixaEtariaRepository;
 import eventify.api_spring.service.FaixaEtariaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

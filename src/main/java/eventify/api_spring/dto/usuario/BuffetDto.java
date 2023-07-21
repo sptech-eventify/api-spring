@@ -2,11 +2,8 @@ package eventify.api_spring.dto.usuario;
 
 import eventify.api_spring.domain.*;
 import eventify.api_spring.dto.ImagemDTO;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
