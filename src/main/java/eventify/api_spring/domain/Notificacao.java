@@ -49,7 +49,7 @@ public class Notificacao {
         this.usuario = usuario;
     }
 
-    public getDataCriacao() {
+    public LocalDate getDataCriacao() {
         return dataCriacao;
     }
 }
