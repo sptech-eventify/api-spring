@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.FaixaEtaria;
-import eventify.api_spring.service.FaixaEtariaService;
+import eventify.api_spring.domain.buffet.FaixaEtaria;
+import eventify.api_spring.service.buffet.FaixaEtariaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

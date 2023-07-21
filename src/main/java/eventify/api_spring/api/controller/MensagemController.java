@@ -1,8 +1,8 @@
 package eventify.api_spring.api.controller;
-import eventify.api_spring.domain.Mensagem;
-import eventify.api_spring.dto.ChatListaDto;
-import eventify.api_spring.dto.MensagemDto;
-import eventify.api_spring.service.MensagemServices;
+import eventify.api_spring.domain.chat.Mensagem;
+import eventify.api_spring.dto.chat.ChatListaDto;
+import eventify.api_spring.dto.chat.MensagemDto;
+import eventify.api_spring.service.chat.MensagemServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

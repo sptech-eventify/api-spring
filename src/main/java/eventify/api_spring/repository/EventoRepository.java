@@ -1,10 +1,11 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Evento;
-import eventify.api_spring.dto.EventoDto;
-import eventify.api_spring.dto.OrcamentoDto;
-import eventify.api_spring.dto.OrcamentoPropDto;
+import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.evento.Evento;
+import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.orcamento.OrcamentoDto;
+import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

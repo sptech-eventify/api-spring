@@ -1,6 +1,6 @@
 package eventify.api_spring.factory.usuario;
 
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
 
 public class UsuarioFactory {
 

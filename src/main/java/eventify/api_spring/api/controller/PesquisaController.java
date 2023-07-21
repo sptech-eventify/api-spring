@@ -1,8 +1,9 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.domain.*;
-import eventify.api_spring.dto.BuffetDtoResposta;
-import eventify.api_spring.service.PesquisaService;
+import eventify.api_spring.domain.buffet.Pesquisa;
+import eventify.api_spring.dto.buffet.BuffetDtoResposta;
+import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,10 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Evento;
-import eventify.api_spring.dto.EventoCriacaoDto;
-import eventify.api_spring.dto.EventoDto;
-import eventify.api_spring.dto.OrcamentoDto;
-import eventify.api_spring.dto.OrcamentoPropDto;
+import eventify.api_spring.domain.evento.Evento;
+import eventify.api_spring.dto.evento.EventoCriacaoDto;
+import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.orcamento.OrcamentoDto;
+import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
 import eventify.api_spring.service.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

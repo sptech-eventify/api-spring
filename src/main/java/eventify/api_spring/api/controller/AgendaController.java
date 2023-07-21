@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Agenda;
-import eventify.api_spring.service.AgendaService;
+import eventify.api_spring.domain.agenda.Agenda;
+import eventify.api_spring.service.agenda.AgendaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

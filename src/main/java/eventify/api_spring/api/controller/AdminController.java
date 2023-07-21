@@ -1,9 +1,9 @@
 package eventify.api_spring.api.controller;
 
 import eventify.api_spring.api.assets.Pilha;
-import eventify.api_spring.domain.Endereco;
+import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;
-import eventify.api_spring.service.AdminService;
+import eventify.api_spring.service.usuario.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

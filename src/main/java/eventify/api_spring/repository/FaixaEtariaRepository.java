@@ -1,8 +1,9 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.FaixaEtaria;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import eventify.api_spring.domain.buffet.FaixaEtaria;
 
 import java.util.List;
 

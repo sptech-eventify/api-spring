@@ -1,13 +1,12 @@
 package eventify.api_spring.service.buffet;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.dto.BuffetDtoResposta;
-import eventify.api_spring.dto.DataDto;
+import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.dto.buffet.BuffetDtoResposta;
+import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.factory.buffet.BuffetFactory;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
 import eventify.api_spring.repository.ImagemRepository;
-import eventify.api_spring.service.BuffetService;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;

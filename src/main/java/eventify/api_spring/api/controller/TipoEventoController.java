@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.TipoEvento;
-import eventify.api_spring.service.TipoEventoService;
+import eventify.api_spring.domain.buffet.TipoEvento;
+import eventify.api_spring.service.buffet.TipoEventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

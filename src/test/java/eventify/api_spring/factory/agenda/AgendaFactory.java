@@ -1,7 +1,7 @@
 package eventify.api_spring.factory.agenda;
 
-import eventify.api_spring.domain.Agenda;
-import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.domain.agenda.Agenda;
+import eventify.api_spring.domain.buffet.Buffet;
 
 import java.time.LocalDateTime;
 import java.util.List;

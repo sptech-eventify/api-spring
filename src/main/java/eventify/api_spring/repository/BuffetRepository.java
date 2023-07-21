@@ -1,9 +1,10 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.BuffetInfoDto;
-import eventify.api_spring.dto.BuffetPublicDto;
+import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.dto.buffet.BuffetInfoDto;
+import eventify.api_spring.dto.buffet.BuffetPublicDto;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

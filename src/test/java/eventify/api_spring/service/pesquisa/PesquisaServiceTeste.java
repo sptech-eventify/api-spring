@@ -1,12 +1,13 @@
 package eventify.api_spring.service.pesquisa;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Pesquisa;
-import eventify.api_spring.dto.BuffetDtoResposta;
+import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.buffet.Pesquisa;
+import eventify.api_spring.dto.buffet.BuffetDtoResposta;
 import eventify.api_spring.factory.buffet.BuffetFactory;
 import eventify.api_spring.factory.pesquisa.PesquisaTestFactory;
 import eventify.api_spring.repository.BuffetRepository;
-import eventify.api_spring.service.PesquisaService;
+import eventify.api_spring.service.buffet.PesquisaService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

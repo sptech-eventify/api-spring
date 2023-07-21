@@ -1,7 +1,6 @@
 package eventify.api_spring.dto.usuario;
 
-import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+import eventify.api_spring.domain.usuario.Usuario;
 
 import java.time.LocalDateTime;
 

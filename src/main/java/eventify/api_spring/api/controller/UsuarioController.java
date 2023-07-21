@@ -1,12 +1,12 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
+import eventify.api_spring.dto.usuario.UsuarioLoginDto;
+import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.service.usuario.UsuarioService;
-import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
-import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

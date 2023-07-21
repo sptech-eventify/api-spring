@@ -1,8 +1,13 @@
 package eventify.api_spring.api.controller;
 
-import eventify.api_spring.domain.Buffet;
+import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.dto.*;
-import eventify.api_spring.service.BuffetService;
+import eventify.api_spring.dto.buffet.BuffetDtoResposta;
+import eventify.api_spring.dto.buffet.BuffetInfoDto;
+import eventify.api_spring.dto.buffet.BuffetPublicDto;
+import eventify.api_spring.dto.imagem.ImagemDTO;
+import eventify.api_spring.dto.utils.DataDto;
+import eventify.api_spring.service.buffet.BuffetService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

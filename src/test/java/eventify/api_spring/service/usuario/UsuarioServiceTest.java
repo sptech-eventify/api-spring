@@ -1,15 +1,16 @@
 package eventify.api_spring.service.usuario;
 
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioLoginDto;
+import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.factory.usuario.UsuarioCadastrarDTOFactory;
 import eventify.api_spring.factory.usuario.UsuarioFactory;
 import eventify.api_spring.factory.usuario.UsuarioLoginDTOFactory;
 import eventify.api_spring.repository.UsuarioRepository;
-import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
-import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;

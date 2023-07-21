@@ -1,7 +1,8 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.Buffet;
-import eventify.api_spring.domain.Imagem;
+import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.buffet.Imagem;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

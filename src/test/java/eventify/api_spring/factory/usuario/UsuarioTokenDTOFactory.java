@@ -1,6 +1,6 @@
 package eventify.api_spring.factory.usuario;
 
-import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 
 public class UsuarioTokenDTOFactory {
 

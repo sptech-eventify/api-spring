@@ -1,8 +1,9 @@
 package eventify.api_spring.service.usuario.autenticacao;
 
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.dto.usuario.UsuarioDetalhesDto;
 import eventify.api_spring.repository.UsuarioRepository;
-import eventify.api_spring.service.usuario.dto.UsuarioDetalhesDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
