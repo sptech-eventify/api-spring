@@ -11,19 +11,22 @@ import eventify.api_spring.dto.imagem.ImagemChatDto;
 
 @Entity
 public class Mensagem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String mensagem;
     private boolean mandadoPor;
     private LocalDateTime data;
+
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
+
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
+    
     @OneToMany(mappedBy = "mensagem")
     private List<ImagemChat> imagens = new ArrayList<>();
 

@@ -1,4 +1,4 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.buffet;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

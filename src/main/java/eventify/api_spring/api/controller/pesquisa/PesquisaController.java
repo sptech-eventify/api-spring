@@ -1,6 +1,5 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.pesquisa;
 
-import eventify.api_spring.domain.*;
 import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.dto.buffet.BuffetDtoResposta;
 import eventify.api_spring.service.buffet.PesquisaService;

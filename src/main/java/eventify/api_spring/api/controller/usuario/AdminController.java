@@ -1,7 +1,5 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.usuario;
 
-import eventify.api_spring.api.assets.Pilha;
-import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;
 import eventify.api_spring.service.usuario.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +24,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+        
         return ResponseEntity.ok(result);
     }
 
@@ -35,6 +34,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -44,6 +44,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -53,6 +54,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -62,6 +64,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -71,6 +74,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -80,6 +84,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -89,6 +94,7 @@ public class AdminController {
         if (result.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(result);
     }
 
@@ -99,28 +105,18 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
 
-        Pilha<Object[]> pilha = new Pilha<>(result.size());
-        for (Object[] obj : result) {
-            pilha.push(obj);
-        }
-
-        List<Object[]> valoresPilha = pilha.getValores();
-
-        return ResponseEntity.ok(valoresPilha);
+        return ResponseEntity.ok(result);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/enderecos")
-    public ResponseEntity<List<Endereco>> pegarListaEndereco() {
-        List<Endereco> enderecos = adminService.pegarListaEndereco();
+    public ResponseEntity<List<Object[]>> pegarListaEndereco() {
+        List<Object[]> enderecos = adminService.pegarListaEndereco();
+
         if (enderecos.isEmpty()) {
             return ResponseEntity.status(204).build();
         }else {
             return ResponseEntity.status(200).body(enderecos);
         }
     }
-
-
-
-
 }

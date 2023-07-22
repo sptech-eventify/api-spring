@@ -28,7 +28,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     @Query("select round(avg(e.nota),2) from Evento e where e.buffet = :buffet")
     public Double findAvaliacaoByBuffet(Buffet buffet);
 
-    @Query("SELECT new eventify.api_spring.dto.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), '6') FROM Buffet b " +
+    @Query("SELECT new eventify.api_spring.dto.evento.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), '6') FROM Buffet b " +
             "JOIN b.tiposEventos t " +
             "JOIN Evento e ON e.buffet = b " +
             "JOIN Imagem i on i.buffet = b " +
@@ -37,7 +37,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "GROUP BY e")
     List<EventoDto> findAllEventosInfo(int id);
 
-    @Query("SELECT new eventify.api_spring.dto.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), e.status) FROM Buffet b " +
+    @Query("SELECT new eventify.api_spring.dto.evento.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), e.status) FROM Buffet b " +
             "JOIN b.tiposEventos t " +
             "JOIN Evento e ON e.buffet = b " +
             "JOIN Imagem i on i.buffet = b " +
@@ -47,7 +47,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "b.id")
     List<EventoDto> findAllOrcamentos(int id);
 
-    @Query("SELECT new eventify.api_spring.dto.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, GROUP_CONCAT(DISTINCT ts.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) " +
+    @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, GROUP_CONCAT(DISTINCT ts.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) " +
             "FROM Buffet b " +
             "JOIN Evento e ON e.buffet = b\n" +
             "JOIN Usuario u ON e.contratante = u\n" +
@@ -66,7 +66,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
     Integer findStatusByEvento(int idEvento);
 
-    @Query("SELECT new eventify.api_spring.dto.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)" +
+    @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)" +
             "FROM Evento e " +
             "JOIN Usuario u on e.contratante = u " +
             "JOIN Buffet b on e.buffet = b " +

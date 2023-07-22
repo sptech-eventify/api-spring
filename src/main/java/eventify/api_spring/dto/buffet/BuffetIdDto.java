@@ -1,7 +1,6 @@
 package eventify.api_spring.dto.buffet;
 
 public class BuffetIdDto {
-
     private Integer id;
 
     public BuffetIdDto(Integer id) {

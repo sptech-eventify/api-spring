@@ -6,6 +6,7 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.pagamento.Pagamento;
 import eventify.api_spring.domain.usuario.Usuario;
 
 @Entity
@@ -14,20 +15,24 @@ public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotNull
     private LocalDate data;
 
     @NotNull
     @DecimalMin("0.01")
     private Double preco;
+
     private String avaliacao;
     private Double nota;
     private String status;
     private String motivoNaoAceito;
     private Boolean isFormularioDinamico;
+
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
+    
     @OneToOne
     @JoinColumn(name = "id_pagamento")
     private Pagamento pagamento;

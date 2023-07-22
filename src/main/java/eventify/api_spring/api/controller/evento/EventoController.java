@@ -1,11 +1,11 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.evento;
 
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.dto.evento.EventoCriacaoDto;
 import eventify.api_spring.dto.evento.EventoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
-import eventify.api_spring.service.EventoService;
+import eventify.api_spring.service.evento.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

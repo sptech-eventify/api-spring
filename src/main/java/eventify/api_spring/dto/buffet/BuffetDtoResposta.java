@@ -1,5 +1,4 @@
 package eventify.api_spring.dto.buffet;
-import eventify.api_spring.domain.*;
 import eventify.api_spring.domain.buffet.FaixaEtaria;
 import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.domain.buffet.TipoEvento;

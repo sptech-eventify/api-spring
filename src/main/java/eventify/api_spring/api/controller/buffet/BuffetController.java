@@ -1,7 +1,6 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
-import eventify.api_spring.dto.*;
 import eventify.api_spring.dto.buffet.BuffetDtoResposta;
 import eventify.api_spring.dto.buffet.BuffetInfoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicDto;

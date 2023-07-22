@@ -1,4 +1,4 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.service.buffet.TipoEventoService;

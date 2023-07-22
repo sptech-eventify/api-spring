@@ -19,7 +19,7 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     public List<Buffet>findByNomeContainingIgnoreCase(String q);
 
     @Validated
-    @Query("SELECT new eventify.api_spring.dto.BuffetPublicDto(b.nome, " +
+    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetPublicDto(b.nome, " +
             "u.nome, " +
             "b.descricao, " +
             "GROUP_CONCAT(DISTINCT CONCAT(i.caminho, '/', i.nome, '.', i.tipo)), " +
@@ -48,7 +48,7 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
             "GROUP BY b")
     BuffetPublicDto findBuffetPublicDtoById(int idBuffet);
 
-    @Query("SELECT new eventify.api_spring.dto.BuffetInfoDto(b.id," +
+    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetInfoDto(b.id," +
             "GROUP_CONCAT(DISTINCT te.descricao)," +
             "b.nome," +
             "b.precoMedioDiaria," +
@@ -64,7 +64,7 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
             "b.id")
     List<BuffetInfoDto> findAllBuffetInfo();
 
-    @Query("SELECT new eventify.api_spring.dto.BuffetInfoDto(b.id," +
+    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetInfoDto(b.id," +
             "GROUP_CONCAT(DISTINCT te.descricao)," +
             "b.nome," +
             "b.precoMedioDiaria," +

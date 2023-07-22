@@ -1,6 +1,5 @@
 package eventify.api_spring.service.buffet;
 
-import eventify.api_spring.domain.*;
 import eventify.api_spring.domain.buffet.Imagem;
 import eventify.api_spring.repository.ImagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;

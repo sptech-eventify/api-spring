@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+import eventify.api_spring.domain.agenda.Pagina;
+
 public class Acesso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,4 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.chat;
 import eventify.api_spring.domain.chat.Mensagem;
 import eventify.api_spring.dto.chat.ChatListaDto;
 import eventify.api_spring.dto.chat.MensagemDto;

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import eventify.api_spring.domain.agenda.Agenda;
+import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.imagem.ImagemDTO;
 
@@ -59,22 +60,25 @@ public class Buffet {
     @OneToOne
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
+
     @ManyToMany
     @JoinTable(name = "buffet_faixa_etaria",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_faixa_etaria"))
-
     private Set<FaixaEtaria> faixaEtarias = new HashSet<>();
+
     @ManyToMany
     @JoinTable(name = "buffet_tipo_evento",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_tipo_evento"))
     private Set<TipoEvento> tiposEventos = new HashSet<>();
+
     @ManyToMany
     @JoinTable(name = "buffet_servico",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_servico"))
     private Set<Servico> servicos = new HashSet<>();
+    
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;

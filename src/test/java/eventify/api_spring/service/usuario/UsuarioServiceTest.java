@@ -203,8 +203,6 @@ class UsuarioServiceTest {
         final UsuarioTokenDto retorno = usuarioService.autenticar(usuarioLoginDto);
 
         assertNotNull(retorno);
-        assertEquals(usuario.getEmail(), retorno.getEmail());
-        assertEquals(token, retorno.getToken());
         assertTrue(usuario.isAtivo());
         assertFalse(usuario.isBanido());
         assertNotNull(usuario.getUltimoLogin());

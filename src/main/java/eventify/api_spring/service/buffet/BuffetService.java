@@ -1,12 +1,10 @@
 package eventify.api_spring.service.buffet;
 
-import eventify.api_spring.domain.*;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.buffet.Imagem;
 import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.*;
 import eventify.api_spring.dto.agenda.AgendaDto;
 import eventify.api_spring.dto.buffet.BuffetDtoResposta;
 import eventify.api_spring.dto.buffet.BuffetInfoDto;

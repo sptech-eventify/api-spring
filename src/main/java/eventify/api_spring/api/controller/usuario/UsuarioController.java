@@ -1,4 +1,4 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;

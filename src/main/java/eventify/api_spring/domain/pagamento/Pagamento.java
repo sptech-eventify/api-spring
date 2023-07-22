@@ -12,6 +12,7 @@ public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     private boolean isPagoContrato;
     private boolean isPagoBuffet;
     private LocalDateTime dataPago;

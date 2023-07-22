@@ -1,4 +1,4 @@
-package eventify.api_spring.api.controller;
+package eventify.api_spring.api.controller.agenda;
 
 import eventify.api_spring.domain.agenda.Agenda;
 import eventify.api_spring.service.agenda.AgendaService;
