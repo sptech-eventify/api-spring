@@ -70,7 +70,7 @@ class UsuarioServiceTest {
         assertEquals(requisicao.getCpf(), usuarioCapture.getCpf());
         assertEquals(requisicao.getNome(), usuarioCapture.getNome());
         assertEquals(requisicao.getEmail(), usuarioCapture.getEmail());
-        assertEquals(requisicao.getBanido(), usuarioCapture.getIsBanido());
+        assertEquals(requisicao.getIsBanido(), usuarioCapture.getIsBanido());
         assertNotEquals(requisicao.getSenha(), usuarioCapture.getSenha());
 
         assertNotNull(resposta);
@@ -146,8 +146,8 @@ class UsuarioServiceTest {
         assertEquals(novoUsuario.getEmail(), usuarioAtualizado.getEmail());
         assertNotEquals(novoUsuario.getSenha(), usuarioAtualizado.getSenha());
         assertEquals(novoUsuario.getTipoUsuario(), usuarioAtualizado.getTipoUsuario());
-        assertEquals(novoUsuario.getIsAtivo(), usuarioAtualizado.getAtivo());
-        assertEquals(novoUsuario.getIsBanido(), usuarioAtualizado.getBanido());
+        assertEquals(novoUsuario.getIsAtivo(), usuarioAtualizado.getIsAtivo());
+        assertEquals(novoUsuario.getIsBanido(), usuarioAtualizado.getIsBanido());
     }
 
     @Test

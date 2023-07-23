@@ -9,7 +9,6 @@ import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.pagamento.Pagamento;
 import eventify.api_spring.domain.usuario.Usuario;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

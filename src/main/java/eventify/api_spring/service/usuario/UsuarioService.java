@@ -102,7 +102,7 @@ public class UsuarioService {
                 usuarioOpt.get().setTipoUsuario(novoUsuario.getTipoUsuario());
             }
 
-            usuario.setAtivo(novoUsuario.getIsAtivo());
+            usuario.setIsAtivo(novoUsuario.getIsAtivo());
             usuarioOpt.get().setIsAtivo(novoUsuario.getIsAtivo());
 
             usuarioOpt.get().setIsAtivo(novoUsuario.getIsAtivo());

@@ -151,5 +151,4 @@ public class BuffetController {
         }
         return ResponseEntity.ok(lista);
     }
-
 }

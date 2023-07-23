@@ -2,7 +2,6 @@ package eventify.api_spring.domain.chat;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import eventify.api_spring.domain.usuario.Usuario;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
