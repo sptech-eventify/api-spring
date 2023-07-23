@@ -5,7 +5,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class FaixaEtaria {
 
@@ -16,36 +24,4 @@ public class FaixaEtaria {
     @Schema(example = "30 a 39 anos")
     @NotBlank
     private String descricao;
-
-    public FaixaEtaria(Integer id, String descricao) {
-        this.id = id;
-        this.descricao = descricao;
-    }
-
-    public FaixaEtaria() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    @Override
-    public String toString() {
-        return "FaixaEtaria{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                '}';
-    }
 }

@@ -9,6 +9,15 @@ import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.pagamento.Pagamento;
 import eventify.api_spring.domain.usuario.Usuario;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+
 @Entity
 public class Evento {
 
@@ -52,97 +61,6 @@ public class Evento {
         this.motivoNaoAceito = motivoNaoAceito;
         this.buffet = buffet;
         this.pagamento = pagamento;
-        this.contratante = contratante;
-    }
-
-    public Evento() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public Double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
-
-    public String getAvaliacao() {
-        return avaliacao;
-    }
-
-    public void setAvaliacao(String avalicacao) {
-        this.avaliacao = avalicacao;
-    }
-
-    public Double getNota() {
-        return nota;
-    }
-
-    public void setNota(Double nota) {
-        this.nota = nota;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Boolean getFormularioDinamico() {
-        return isFormularioDinamico;
-    }
-
-    public void setFormularioDinamico(Boolean formularioDinamico) {
-        isFormularioDinamico = formularioDinamico;
-    }
-
-    public String getMotivoNaoAceito() {
-        return motivoNaoAceito;
-    }
-
-    public void setMotivoNaoAceito(String motivoNaoAceito) {
-        this.motivoNaoAceito = motivoNaoAceito;
-    }
-
-    public Buffet getBuffet() {
-        return buffet;
-    }
-
-    public void setBuffet(Buffet buffet) {
-        this.buffet = buffet;
-    }
-
-    public Pagamento getPagamento() {
-        return pagamento;
-    }
-
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento;
-    }
-
-    public Usuario getContratante() {
-        return contratante;
-    }
-
-    public void setContratante(Usuario contratante) {
         this.contratante = contratante;
     }
 }

@@ -52,7 +52,7 @@ public class UsuarioService {
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-        novoUsuario.setAtivo(true);
+        novoUsuario.setIsAtivo(true);
         this.usuarioRepository.save(novoUsuario);
         usuarioDevolverDTO.setId(novoUsuario.getId());
         usuarioDevolverDTO.setNome(novoUsuario.getNome());
@@ -67,7 +67,7 @@ public class UsuarioService {
         }
 
         Usuario usuario = usuarioOpt.get();
-        usuario.setBanido(true);
+        usuario.setIsBanido(true);
         usuarioRepository.save(usuario);
 
         return true;
@@ -102,11 +102,11 @@ public class UsuarioService {
                 usuarioOpt.get().setTipoUsuario(novoUsuario.getTipoUsuario());
             }
 
-            usuario.setAtivo(novoUsuario.isAtivo());
-            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
+            usuario.setAtivo(novoUsuario.getIsAtivo());
+            usuarioOpt.get().setIsAtivo(novoUsuario.getIsAtivo());
 
-            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
-            usuarioOpt.get().setBanido(novoUsuario.isBanido());
+            usuarioOpt.get().setIsAtivo(novoUsuario.getIsAtivo());
+            usuarioOpt.get().setIsBanido(novoUsuario.getIsBanido());
         } else {
             throw new ResponseStatusException(404, "Usuário não encontrado", null);
         }
@@ -118,11 +118,11 @@ public class UsuarioService {
         System.out.println("Primeiro corte");
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
         if (usuario.isPresent()) {
-            if (usuario.get().isBanido()) {
+            if (usuario.get().getIsBanido()) {
                 throw new ResponseStatusException(403, "Usuário banido", null);
             } else {
-                usuario.get().setAtivo(true);
-                usuario.get().setBanido(false);
+                usuario.get().setIsAtivo(true);
+                usuario.get().setIsBanido(false);
                 usuario.get().setUltimoLogin(LocalDateTime.now());
                 usuarioRepository.save(usuario.get());
             }
@@ -152,7 +152,7 @@ public class UsuarioService {
         if (usuarioOpt.isEmpty()) {
             return false;
         }
-        usuarioOpt.get().setBanido(false);
+        usuarioOpt.get().setIsBanido(false);
         usuarioRepository.save(usuarioOpt.get());
         return true;
     }
@@ -162,7 +162,7 @@ public class UsuarioService {
         if (usuarioOpt.isEmpty()) {
             return false;
         }
-        usuarioOpt.get().setAtivo(false);
+        usuarioOpt.get().setIsAtivo(false);
         usuarioRepository.save(usuarioOpt.get());
         return true;
     }

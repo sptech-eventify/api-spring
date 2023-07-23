@@ -9,6 +9,16 @@ import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.imagem.ImagemChatDto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
 @Entity
 public class Mensagem {
     @Id
@@ -30,16 +40,6 @@ public class Mensagem {
     @OneToMany(mappedBy = "mensagem")
     private List<ImagemChat> imagens = new ArrayList<>();
 
-    public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet, List<ImagemChat> imagens) {
-        this.id = id;
-        this.mensagem = mensagem;
-        this.mandadoPor = mandadoPor;
-        this.data = data;
-        this.usuario = usuario;
-        this.buffet = buffet;
-        this.imagens = imagens;
-    }
-
     public Mensagem(Integer id, String mensagem, boolean mandadoPor, LocalDateTime data, Usuario usuario, Buffet buffet) {
         this.id = id;
         this.mensagem = mensagem;
@@ -47,65 +47,6 @@ public class Mensagem {
         this.data = data;
         this.usuario = usuario;
         this.buffet = buffet;
-    }
-
-    public Mensagem() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getMensagem() {
-        return mensagem;
-    }
-
-    public void setMensagem(String mensagem) {
-        this.mensagem = mensagem;
-    }
-
-    public boolean isMandadoPor() {
-        return mandadoPor;
-    }
-
-    public void setMandadoPor(boolean mandadoPor) {
-        this.mandadoPor = mandadoPor;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Buffet getBuffet() {
-        return buffet;
-    }
-
-    public void setBuffet(Buffet buffet) {
-        this.buffet = buffet;
-    }
-
-    public List<ImagemChat> getImagens() {
-        return imagens;
-    }
-
-    public void setImagens(List<ImagemChat> imagens) {
-        this.imagens = imagens;
     }
 
     public List<ImagemChatDto> getImagensDto() {

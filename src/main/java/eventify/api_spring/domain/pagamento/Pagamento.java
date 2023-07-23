@@ -6,6 +6,15 @@ import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Pagamento {
 
@@ -16,46 +25,4 @@ public class Pagamento {
     private boolean isPagoContrato;
     private boolean isPagoBuffet;
     private LocalDateTime dataPago;
-
-    public Pagamento(Integer id, boolean isPagoContrato, boolean isPagoBuffet, LocalDateTime dataPago) {
-        this.id = id;
-        this.isPagoContrato = isPagoContrato;
-        this.isPagoBuffet = isPagoBuffet;
-        this.dataPago = dataPago;
-    }
-
-    public Pagamento() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public boolean isPagoContrato() {
-        return isPagoContrato;
-    }
-
-    public void setPagoContrato(boolean pagoContrato) {
-        isPagoContrato = pagoContrato;
-    }
-
-    public boolean isPagoBuffet() {
-        return isPagoBuffet;
-    }
-
-    public void setPagoBuffet(boolean pagoBuffet) {
-        isPagoBuffet = pagoBuffet;
-    }
-
-    public LocalDateTime getDataPago() {
-        return dataPago;
-    }
-
-    public void setDataPago(LocalDateTime dataPago) {
-        this.dataPago = dataPago;
-    }
 }

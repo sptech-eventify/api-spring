@@ -70,7 +70,7 @@ class UsuarioServiceTest {
         assertEquals(requisicao.getCpf(), usuarioCapture.getCpf());
         assertEquals(requisicao.getNome(), usuarioCapture.getNome());
         assertEquals(requisicao.getEmail(), usuarioCapture.getEmail());
-        assertEquals(requisicao.getBanido(), usuarioCapture.isBanido());
+        assertEquals(requisicao.getBanido(), usuarioCapture.getIsBanido());
         assertNotEquals(requisicao.getSenha(), usuarioCapture.getSenha());
 
         assertNotNull(resposta);
@@ -109,19 +109,19 @@ class UsuarioServiceTest {
         assertEquals(1, idArgumentCaptor.getValue());
 
         verify(usuarioRepository, times(0)).deleteById(anyInt());
-        assertTrue(usuario.isBanido());
+        assertTrue(usuario.getIsBanido());
     }
 
     @Test
     void deve_colocar_false_no_usuario_desbanido() {
         final Usuario usuario = UsuarioFactory.usuario();
-        usuario.setBanido(true);
+        usuario.setIsBanido(true);
 
         when(usuarioRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
 
         usuarioService.desbanir(1);
 
-        assertFalse(usuario.isBanido());
+        assertFalse(usuario.getIsBanido());
         assertEquals(1, idArgumentCaptor.getValue());
     }
 
@@ -146,8 +146,8 @@ class UsuarioServiceTest {
         assertEquals(novoUsuario.getEmail(), usuarioAtualizado.getEmail());
         assertNotEquals(novoUsuario.getSenha(), usuarioAtualizado.getSenha());
         assertEquals(novoUsuario.getTipoUsuario(), usuarioAtualizado.getTipoUsuario());
-        assertEquals(novoUsuario.isAtivo(), usuarioAtualizado.getAtivo());
-        assertEquals(novoUsuario.isBanido(), usuarioAtualizado.getBanido());
+        assertEquals(novoUsuario.getIsAtivo(), usuarioAtualizado.getAtivo());
+        assertEquals(novoUsuario.getIsBanido(), usuarioAtualizado.getBanido());
     }
 
     @Test
@@ -171,14 +171,14 @@ class UsuarioServiceTest {
         usuarioService.logof(1);
 
         assertEquals(1, idArgumentCaptor.getValue());
-        assertFalse(usuario.isAtivo());
+        assertFalse(usuario.getIsAtivo());
     }
 
     @Test
     void deve_lancar_ResponseStatusException_quando_usuario_esta_banido() {
         final UsuarioLoginDto usuarioLoginDTO = UsuarioLoginDTOFactory.usuarioLoginDto();
         final Usuario usuario = UsuarioFactory.usuario();
-        usuario.setBanido(true);
+        usuario.setIsBanido(true);
 
         when(usuarioRepository.findByEmail(emailArgumentCaptor.capture())).thenReturn(Optional.of(usuario));
         assertThrows(ResponseStatusException.class,
@@ -203,8 +203,8 @@ class UsuarioServiceTest {
         final UsuarioTokenDto retorno = usuarioService.autenticar(usuarioLoginDto);
 
         assertNotNull(retorno);
-        assertTrue(usuario.isAtivo());
-        assertFalse(usuario.isBanido());
+        assertTrue(usuario.getIsAtivo());
+        assertFalse(usuario.getIsBanido());
         assertNotNull(usuario.getUltimoLogin());
         assertEquals(authentication, SecurityContextHolder.getContext().getAuthentication());
     }

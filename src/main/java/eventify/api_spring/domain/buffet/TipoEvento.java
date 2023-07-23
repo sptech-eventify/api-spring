@@ -6,6 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class TipoEvento {
 
@@ -16,28 +25,4 @@ public class TipoEvento {
     @Schema(example = "Evento Empresarial")
     @NotBlank
     private String descricao;
-
-    public TipoEvento(Integer id, String descricao) {
-        this.id = id;
-        this.descricao = descricao;
-    }
-
-    public TipoEvento() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
 }

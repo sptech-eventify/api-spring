@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public class UsuarioMapper {
     public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
         Usuario usuario = new Usuario();
-        usuario.setAtivo(false);
-        usuario.setBanido(false);
+        usuario.setIsAtivo(false);
+        usuario.setIsBanido(false);
         usuario.setEmail(usuarioCadastrarDTO.getEmail());
         usuario.setTipoUsuario(usuarioCadastrarDTO.getTipoUsuario());
         usuario.setNome(usuarioCadastrarDTO.getNome());

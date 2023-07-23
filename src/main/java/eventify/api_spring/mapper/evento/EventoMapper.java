@@ -12,7 +12,7 @@ public class EventoMapper {
         evento.setBuffet(eventoCriacaoDto.buffet());
         evento.setData(eventoCriacaoDto.data());
         evento.setContratante(eventoCriacaoDto.contratante());
-        evento.setFormularioDinamico(eventoCriacaoDto.isFormularioDinamico());
+        evento.setIsFormularioDinamico(eventoCriacaoDto.isFormularioDinamico());
         return evento;
     }
 

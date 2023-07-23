@@ -3,11 +3,16 @@ package eventify.api_spring.domain.agenda;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import eventify.api_spring.domain.buffet.Buffet;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
 public class Agenda {
     @Id
@@ -21,37 +26,4 @@ public class Agenda {
     @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
-
-    public Agenda(Integer id, LocalDateTime data, Buffet buffet) {
-        this.id = id;
-        this.data = data;
-        this.buffet = buffet;
-    }
-
-    public Agenda() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getData() {
-        return data;
-    }
-
-    public void setData(LocalDateTime data) {
-        this.data = data;
-    }
-
-    public Buffet getBuffet() {
-        return buffet;
-    }
-
-    public void setBuffet(Buffet buffet) {
-        this.buffet = buffet;
-    }
 }
