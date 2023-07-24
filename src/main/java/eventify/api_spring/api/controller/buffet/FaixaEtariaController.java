@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/faixa-etarias")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="8. Faixa Etária", description="Controller com os endpoints que controlam as configuraçõs de faixa etária do sistema")
 public class FaixaEtariaController {
     @Autowired

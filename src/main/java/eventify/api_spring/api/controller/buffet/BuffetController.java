@@ -7,6 +7,7 @@ import eventify.api_spring.dto.buffet.BuffetPublicDto;
 import eventify.api_spring.dto.imagem.ImagemDTO;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/buffets")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="2. Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
 
@@ -39,6 +40,7 @@ public class BuffetController {
         return ok(buffets);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
         Buffet buffetCadastrado = buffetService.cadastrar(buffet);
@@ -46,6 +48,7 @@ public class BuffetController {
         return created(null).body(buffetCadastrado);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/{idBuffet}")
     public ResponseEntity<Buffet> atualizar(@PathVariable int idBuffet, @RequestBody @Valid Buffet buffet) {
        Buffet buffetAtualizado = buffetService.atualizar(idBuffet, buffet);
@@ -125,6 +128,7 @@ public class BuffetController {
         return ok(buffets);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/datas/{idBuffet}")
     public ResponseEntity<List<DataDto>> pegarDatasOcupadas(@PathVariable int idBuffet) {
         List<DataDto> datas = buffetService.pegarDatasOcupadas(idBuffet);
@@ -138,6 +142,7 @@ public class BuffetController {
         return ok(datas);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/orcamentos/{idBuffet}")
     public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idBuffet) {
         List<Object[]> orcamentos = buffetService.pegarOrcamentos(idBuffet);
@@ -151,6 +156,7 @@ public class BuffetController {
         return ok(orcamentos);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/proprietario/{idUser}")
     public ResponseEntity<List<BuffetInfoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
         List<BuffetInfoDto> buffets = buffetService.pegarBuffetsProprietario(idUser);
@@ -164,6 +170,7 @@ public class BuffetController {
         return ok(buffets);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/abandono/{idBuffet}")
     public ResponseEntity<List<Long>> pegarTaxaDeAbandono(@PathVariable int idBuffet) {
         List<Long> taxaAbandono = buffetService.pegarTaxaDeAbandono(idBuffet);
@@ -177,6 +184,7 @@ public class BuffetController {
         return ok(taxaAbandono);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/satisfacao/{idBuffet}")
     public ResponseEntity<List<Object>> pegarTaxaDeSatisfacao(@PathVariable int idBuffet) {
         List<Object> taxaSatisfacao = buffetService.pegarTaxaDeSatisfacao(idBuffet);
@@ -190,6 +198,7 @@ public class BuffetController {
         return ok(taxaSatisfacao);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/financeiro/{idBuffet}")
     public ResponseEntity<List<Object>> pegarMovimentacaoFinanceira(@PathVariable int idBuffet) {
         List<Object> movimentacaoFinanceira = buffetService.pegarMovimentacaoFinanceira(idBuffet);
@@ -203,6 +212,7 @@ public class BuffetController {
         return ResponseEntity.ok(movimentacaoFinanceira);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/dados-financeiro/{idBuffet}")
     public ResponseEntity<List<Object[]>> pegarDadosFinanceiro(@PathVariable int idBuffet) {
         List<Object[]> dadosFinanceiro = buffetService.pegarDadosFinanceiro(idBuffet);
@@ -216,6 +226,7 @@ public class BuffetController {
         return ok(dadosFinanceiro);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/avaliacoes/{idBuffet}")
     public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
         List<Object[]> avaliacoes = buffetService.pegarAvaliacoes(idBuffet);

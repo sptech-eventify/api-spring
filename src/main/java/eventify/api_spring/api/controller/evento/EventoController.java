@@ -21,7 +21,7 @@ import static org.springframework.http.ResponseEntity.*;
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/eventos")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="4. Evento", description="Controller com os endpoints de evento")
 public class EventoController {
 
@@ -39,6 +39,7 @@ public class EventoController {
         return ok(eventos);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Boolean> criarEvento(@RequestBody @Valid EventoCriacaoDto evento) {
         if (eventoService.criarEvento(evento)) {
@@ -48,6 +49,7 @@ public class EventoController {
         return badRequest().build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{nome}")
     public ResponseEntity<Evento> exibirEvento(@PathVariable String nome) {
         Evento evento = eventoService.exibeEvento(nome);
@@ -59,6 +61,7 @@ public class EventoController {
         return ok(evento);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/buffet/orcamento/{idBuffet}")
     public ResponseEntity<List<OrcamentoPropDto>> buscarOrcamentosDoBuffet(@PathVariable int idBuffet) {
         List<OrcamentoPropDto> lista = eventoService.buscarOrcamentosDoBuffet(idBuffet);
@@ -71,6 +74,7 @@ public class EventoController {
     }
 
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/contratante/{idUser}/orcamentos")
     public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idUser) {
         List<Object[]> orcamentos = eventoService.pegarOrcamentos(idUser);
@@ -82,6 +86,7 @@ public class EventoController {
         return ok(orcamentos);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/info/{idUser}")
     public ResponseEntity<List<EventoDto>> listarEventosInfo(@PathVariable int idUser) {
         List<EventoDto> eventos = eventoService.listarEventosInfo(idUser);
@@ -93,6 +98,7 @@ public class EventoController {
         return ok(eventos);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/info/orcamentos/{idUser}")
     public ResponseEntity<List<EventoDto>> listarOrcamentos(@PathVariable int idUser) {
         List<EventoDto> eventos = eventoService.listarOrcamentos(idUser);
@@ -104,6 +110,7 @@ public class EventoController {
         return ResponseEntity.ok(eventos);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/orcamento")
     public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam int idEvento) {
         OrcamentoDto orcamento = eventoService.buscarOrcamento(idEvento);
@@ -115,7 +122,7 @@ public class EventoController {
         return ok(eventoService.buscarOrcamento(idEvento));
     }
 
-    
+    @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/orcamento/mandar")
     public ResponseEntity<Boolean> mandarOrcamento(@RequestParam @Valid int idEvento, @RequestParam @Valid double preco) {
         if (eventoService.mandarOrcamento(idEvento, preco)) {
@@ -125,6 +132,7 @@ public class EventoController {
         return ResponseEntity.badRequest().build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/orcamento/verificar/{idEvento}")
     public ResponseEntity<Integer> verificarPagamento(@PathVariable int idEvento) {
         Integer status = eventoService.verificarOrcamento(idEvento);
@@ -136,6 +144,7 @@ public class EventoController {
         return ok().build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/orcamento/pagar/{idEvento}")
     public ResponseEntity<Boolean> pagarOrcamento(@PathVariable int idEvento) {
         if(eventoService.pagarOrcamento(idEvento)){

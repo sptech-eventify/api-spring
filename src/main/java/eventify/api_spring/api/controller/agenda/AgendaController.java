@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller.agenda;
 
 import eventify.api_spring.domain.agenda.Agenda;
 import eventify.api_spring.service.agenda.AgendaService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/agendas")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="5. Agenda", description="Controller com os endpoints de reservas dos buffets")
 public class AgendaController {
 
     @Autowired
     private AgendaService agendaService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping
     public ResponseEntity<List<Agenda>> exibirAgendas() {
         List<Agenda> agenda = agendaService.exibirAgendas();
@@ -32,6 +34,7 @@ public class AgendaController {
         return ok(agenda);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Agenda> criarAgenda(@RequestBody @Valid Agenda agenda) {
         agendaService.criarAgenda(agenda);

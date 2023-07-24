@@ -16,13 +16,14 @@ import java.util.List;
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/imagem")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="7. Imagem", description="Controller com os endpoints que controlam o fluxo de imagens do sistema")
 public class ImagemController {
 
     @Autowired
     private ImagemService imagemService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Void> salvarImagems(@RequestParam List<MultipartFile> imagens, @RequestParam Integer idBuffet) {
         if (imagemService.salvarImagems(imagens, idBuffet)){

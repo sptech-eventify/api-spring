@@ -3,6 +3,7 @@ import eventify.api_spring.domain.chat.Mensagem;
 import eventify.api_spring.dto.chat.ChatListaDto;
 import eventify.api_spring.dto.chat.MensagemDto;
 import eventify.api_spring.service.chat.MensagemService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +17,13 @@ import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/mensagens")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="6. Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
 public class MensagemController {
     @Autowired
     private MensagemService mensagemService;
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/usuario/{idUsuario}/{idBuffet}")
     public ResponseEntity<MensagemDto> mandarMensagemUsuario(@PathVariable int idUsuario, @PathVariable int idBuffet, @RequestParam String text) {
         Mensagem mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, false, null);
@@ -32,6 +34,7 @@ public class MensagemController {
         return ResponseEntity.status(200).body(mensagemDto);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/buffet/{idBuffet}/{idUsuario}")
     public ResponseEntity<MensagemDto> mandarMensagemBuffet(@PathVariable int idUsuario, @PathVariable int idBuffet, @RequestParam String text) {
         Mensagem mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, true, null);
@@ -42,6 +45,7 @@ public class MensagemController {
         return ResponseEntity.status(200).body(mensagemDto);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/usuario-imagem/{idUsuario}/{idBuffet}")
     public ResponseEntity<MensagemDto> mandarMensagemComImagemUsuario(@PathVariable int idUsuario, @PathVariable int idBuffet, @RequestParam String text, @RequestParam("file") List<MultipartFile> imagems) {
         Mensagem mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, false, imagems);
@@ -52,6 +56,7 @@ public class MensagemController {
         return ResponseEntity.status(200).body(mensagemDto);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<MensagemDto>> listarPorUsuario(@PathVariable int idUsuario) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuario(idUsuario);
@@ -63,6 +68,7 @@ public class MensagemController {
         return noContent().build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/buffet/{idBuffet}")
     public ResponseEntity<List<MensagemDto>> listarPorBuffet(@PathVariable int idBuffet) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorBuffet(idBuffet);
@@ -74,6 +80,7 @@ public class MensagemController {
         return noContent().build();
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat/{idUsuario}/{idBuffet}")
     public ResponseEntity<List<MensagemDto>> listarPorUsuarioBuffet(@PathVariable int idUsuario, @PathVariable int idBuffet) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuarioBuffet(idUsuario, idBuffet);
@@ -85,6 +92,7 @@ public class MensagemController {
         return ok(mensagens);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat/{idUsuario}")
     public ResponseEntity<List<ChatListaDto>> listarChatsDoUsuario(@PathVariable int idUsuario) {
         List<ChatListaDto> chats = mensagemService.listarChatsDoUsuario(idUsuario);
@@ -96,6 +104,7 @@ public class MensagemController {
         return ok(chats);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat")
     public ResponseEntity<List<ChatListaDto>> listarTodosOsChats() {
         List<ChatListaDto> chats = mensagemService.listarChat();
@@ -107,6 +116,7 @@ public class MensagemController {
         return ok().body(chats);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/check-chat/{idUsuario}/{idBuffet}")
     public ResponseEntity<Integer> checarQtdMensagens(@PathVariable int idUsuario, @PathVariable int idBuffet) {
         Integer qtdMensagens = mensagemService.checarQtdMensagens(idUsuario, idBuffet);

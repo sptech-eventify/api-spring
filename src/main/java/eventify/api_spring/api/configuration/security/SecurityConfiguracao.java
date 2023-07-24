@@ -47,13 +47,10 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/webjars/**"),
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/actuator/*"),
-            new AntPathRequestMatcher("/usuarios/login"),
-            new AntPathRequestMatcher("/usuarios/cadastrar"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/error/**"),
-
-
-            // PESQUISAS LIVRES
+            new AntPathRequestMatcher("/usuarios/login"),
+            new AntPathRequestMatcher("/usuarios/cadastrar"),
             new AntPathRequestMatcher("/buffets"),
             new AntPathRequestMatcher("/buffets/{idBuffet}"),
             new AntPathRequestMatcher("/buffets/**"),
@@ -64,10 +61,6 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/tipo-eventos"),
             new AntPathRequestMatcher("/faixa-etarias"),
             new AntPathRequestMatcher("/pesquisa"),
-            new AntPathRequestMatcher("/admin"),
-            new AntPathRequestMatcher("/admin/**"),
-            new AntPathRequestMatcher("/eventos/**"),
-            new AntPathRequestMatcher("/mensagens/**")
     };
 
     @Bean

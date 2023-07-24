@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/pesquisa")
 @Tag(name="3. Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
+@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 public class PesquisaController {
     @Autowired
     private PesquisaService pesquisaService;
