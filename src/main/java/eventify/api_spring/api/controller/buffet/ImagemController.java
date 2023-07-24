@@ -3,9 +3,11 @@ package eventify.api_spring.api.controller.buffet;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.http.ResponseEntity;
+import static org.springframework.http.ResponseEntity.*;
 
 import eventify.api_spring.service.buffet.ImagemService;
 
@@ -24,9 +26,9 @@ public class ImagemController {
     @PostMapping
     public ResponseEntity<Void> salvarImagems(@RequestParam List<MultipartFile> imagens, @RequestParam Integer idBuffet) {
         if (imagemService.salvarImagems(imagens, idBuffet)){
-            return ResponseEntity.status(201).build();
+            return created(null).build();
         }
 
-        return ResponseEntity.status(404).build();
+        return badRequest().build();
     }
 }

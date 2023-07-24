@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @SecurityRequirement(name = "requiredAuth")
 @RestController
@@ -25,85 +28,121 @@ public class EventoController {
     @Autowired
     private EventoService eventoService;
 
-    @PostMapping
-    public ResponseEntity<Boolean> criarEvento(@RequestBody @Valid EventoCriacaoDto e) {
-        return ResponseEntity.status(201).body(eventoService.criarEvento(e));
-    }
-
     @GetMapping
     public ResponseEntity<List<Evento>> exibirTodosEventos() {
         List<Evento> eventos = eventoService.exibirTodosEventos();
+
         if (eventos.isEmpty()) {
-            return ResponseEntity.status(204).build();
+            return notFound().build();
         }
-        return ResponseEntity.status(200).body(eventos);
+        
+        return ok(eventos);
+    }
+
+    @PostMapping
+    public ResponseEntity<Boolean> criarEvento(@RequestBody @Valid EventoCriacaoDto evento) {
+        if (eventoService.criarEvento(evento)) {
+            return ok().build();
+        }
+
+        return badRequest().build();
     }
 
     @GetMapping("/{nome}")
     public ResponseEntity<Evento> exibirEvento(@PathVariable String nome) {
-        return ResponseEntity.of(eventoService.exibeEvento(nome));
-    }
+        Evento evento = eventoService.exibeEvento(nome);
 
-    @GetMapping("/contratante/{idUser}/orcamentos")
-    public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idUser) {
-        List<Object[]> result = eventoService.pegarOrcamentos(idUser);
-        if (result.isEmpty()) {
-            return ResponseEntity.noContent().build();
+        if (Objects.isNull(evento)) {
+            return notFound().build();
         }
-        return ResponseEntity.ok(result);
-    }
 
-    @GetMapping("/info/{idUser}")
-    public ResponseEntity<List<EventoDto>> listarEventosInfo(@PathVariable int idUser) {
-        List<EventoDto> lista = eventoService.listarEventosInfo(idUser);
-        if (lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(lista);
-    }
-
-    @GetMapping("/info/orcamentos/{idUser}")
-    public ResponseEntity<List<EventoDto>> listarOrcamentos(@PathVariable int idUser) {
-        List<EventoDto> lista = eventoService.listarOrcamentos(idUser);
-        if (lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(lista);
-    }
-
-    @GetMapping("/orcamento")
-    public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam int idEvento) {
-        return ResponseEntity.ok(eventoService.buscarOrcamento(idEvento));
+        return ok(evento);
     }
 
     @GetMapping("/buffet/orcamento/{idBuffet}")
     public ResponseEntity<List<OrcamentoPropDto>> buscarOrcamentosDoBuffet(@PathVariable int idBuffet) {
         List<OrcamentoPropDto> lista = eventoService.buscarOrcamentosDoBuffet(idBuffet);
+
         if (lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return noContent().build();
         }
-        return ResponseEntity.ok(lista);
+
+        return ok(lista);
     }
 
+
+    @GetMapping("/contratante/{idUser}/orcamentos")
+    public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idUser) {
+        List<Object[]> orcamentos = eventoService.pegarOrcamentos(idUser);
+
+        if (orcamentos.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(orcamentos);
+    }
+
+    @GetMapping("/info/{idUser}")
+    public ResponseEntity<List<EventoDto>> listarEventosInfo(@PathVariable int idUser) {
+        List<EventoDto> eventos = eventoService.listarEventosInfo(idUser);
+
+        if (eventos.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(eventos);
+    }
+
+    @GetMapping("/info/orcamentos/{idUser}")
+    public ResponseEntity<List<EventoDto>> listarOrcamentos(@PathVariable int idUser) {
+        List<EventoDto> eventos = eventoService.listarOrcamentos(idUser);
+
+        if (eventos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(eventos);
+    }
+
+    @GetMapping("/orcamento")
+    public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam int idEvento) {
+        OrcamentoDto orcamento = eventoService.buscarOrcamento(idEvento);
+
+        if (Objects.isNull(orcamento)) {
+            return noContent().build();
+        }
+        
+        return ok(eventoService.buscarOrcamento(idEvento));
+    }
+
+    
     @PutMapping("/orcamento/mandar")
     public ResponseEntity<Boolean> mandarOrcamento(@RequestParam @Valid int idEvento, @RequestParam @Valid double preco) {
         if (eventoService.mandarOrcamento(idEvento, preco)) {
-            return ResponseEntity.ok().build();
+            return ok().build();
         }
+
         return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/orcamento/verificar/{idEvento}")
     public ResponseEntity<Integer> verificarPagamento(@PathVariable int idEvento) {
-        return ResponseEntity.ok(eventoService.verificarOrcamento(idEvento));
+        Integer status = eventoService.verificarOrcamento(idEvento);
+
+        if (Objects.isNull(status)) {
+            return noContent().build();
+        }
+
+        return ok().build();
     }
 
     @PostMapping("/orcamento/pagar/{idEvento}")
     public ResponseEntity<Boolean> pagarOrcamento(@PathVariable int idEvento) {
-        if (eventoService.pagarOrcamento(idEvento)) {
-            return ResponseEntity.ok().build();
+        if(eventoService.pagarOrcamento(idEvento)){
+            return ok().build();
         }
-        return ResponseEntity.badRequest().build();
+
+        return badRequest().build();
     }
 
 }

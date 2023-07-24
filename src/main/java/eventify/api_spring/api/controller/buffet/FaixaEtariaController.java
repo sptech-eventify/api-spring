@@ -2,12 +2,12 @@ package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.FaixaEtaria;
 import eventify.api_spring.service.buffet.FaixaEtariaService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.http.ResponseEntity;
+import static org.springframework.http.ResponseEntity.*;
 
 import java.util.List;
 
@@ -19,19 +19,14 @@ public class FaixaEtariaController {
     @Autowired
     private FaixaEtariaService faixaEtariaService;
 
-    @SecurityRequirement(name = "requiredAuth")
-    @PostMapping
-    public ResponseEntity<FaixaEtaria> criarFaixaEtaria(@RequestBody @Valid FaixaEtaria f) {
-        faixaEtariaService.criarFaixaEtaria(f);
-        return ResponseEntity.status(201).body(f);
-    }
-
     @GetMapping
     public ResponseEntity<List<FaixaEtaria>> exibirFaixaEtaria() {
-         List<FaixaEtaria> faixaEtaria = this.faixaEtariaService.exibirFaixaEtaria();
-         if (faixaEtaria.isEmpty()) {
-             return ResponseEntity.status(204).build();
-         }
-         return ResponseEntity.status(200).body(faixaEtaria);
+        List<FaixaEtaria> faixaEtaria = this.faixaEtariaService.exibirFaixaEtaria();
+
+        if (faixaEtaria.isEmpty()) {
+             return noContent().build();
+        }
+
+        return ok(faixaEtaria);
     }
 }

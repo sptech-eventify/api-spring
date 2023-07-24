@@ -15,140 +15,217 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/buffets")
 @CrossOrigin(origins = "http://localhost:3000")
 @Tag(name="2. Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
+
     @Autowired
     private BuffetService buffetService;
 
     @GetMapping
     public ResponseEntity<List<BuffetDtoResposta>> listar() {
         List<BuffetDtoResposta> buffets = buffetService.listar();
+
         if (buffets.isEmpty()) {
-            return ResponseEntity.status(204).build();
+            return noContent().build();
         }
-        return ResponseEntity.status(200).body(buffets);
+
+        return ok(buffets);
     }
 
-    @GetMapping("/{idBuffet}")
-    public ResponseEntity<BuffetDtoResposta> buscarBuffet(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.buscarBuffet(idBuffet));
-    }
-
-    @GetMapping("/publico/{idBuffet}")
-    public ResponseEntity<BuffetPublicDto> buscarBuffetPublico(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.buscarBuffetPublico(idBuffet));
-    }
-
-    @GetMapping("/tipos")
-    public ResponseEntity<List<String>> listarTipoEventos() {
-        List<String> tipos = buffetService.getTipoEventos();
-        if (tipos.isEmpty()) {
-            return ResponseEntity.status(204).build();
-        }
-        return ResponseEntity.status(200).body(tipos);
-    }
-
-    @GetMapping("/{idBuffet}/avaliacao")
-    public ResponseEntity<Double> listarAvaliacoesEvento(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.getAvaliacaoEvento(idBuffet));
-    }
-
-    @GetMapping("/{idBuffet}/imagem")
-    public ResponseEntity<List<ImagemDTO>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.pegarCaminhoImagem(idBuffet)
-                .stream()
-                .map(img -> new ImagemDTO(img.getId(),img.getCaminho(),img.getNome(), img.getTipo(), true,img.getDataUpload()))
-                .toList());
-    }
-
-    @GetMapping("/datas/{idBuffet}")
-    public ResponseEntity<List<DataDto>> pegarDatasOcupadas(@PathVariable int idBuffet) {
-        return ResponseEntity.status(200).body(buffetService.pegarDatasOcupadas(idBuffet));
-    }
-
-//    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
         Buffet buffetCadastrado = buffetService.cadastrar(buffet);
-        return ResponseEntity.status(201).body(buffetCadastrado);
+
+        return created(null).body(buffetCadastrado);
     }
 
     @PutMapping("/{idBuffet}")
     public ResponseEntity<Buffet> atualizar(@PathVariable int idBuffet, @RequestBody @Valid Buffet buffet) {
        Buffet buffetAtualizado = buffetService.atualizar(idBuffet, buffet);
-        return ResponseEntity.status(200).body(buffetAtualizado);
+
+        return ok(buffetAtualizado);
     }
 
-    @GetMapping("/abandono/{idBuffet}")
-    public ResponseEntity<List<Long>> pegarTaxaDeAbandono(@PathVariable int idBuffet) {
-        List<Long> result = buffetService.pegarTaxaDeAbandono(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+    // Criar delete de buffet
+
+    @GetMapping("/{idBuffet}")
+    public ResponseEntity<BuffetDtoResposta> buscarBuffet(@PathVariable int idBuffet) {
+        BuffetDtoResposta buffet = buffetService.buscarBuffet(idBuffet);
+        
+        if(Objects.isNull(buffet)) {
+            return notFound().build();
         }
-        return ResponseEntity.ok(result);
+
+        return ok(buffet);
     }
 
-    @GetMapping("/satisfacao/{idBuffet}")
-    public ResponseEntity<List<Object>> pegarTaxaDeSatisfacao(@PathVariable int idBuffet) {
-        List<Object> result = buffetService.pegarTaxaDeSatisfacao(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+    @GetMapping("/tipos")
+    public ResponseEntity<List<String>> listarTipoEventos() {
+        List<String> tipos = buffetService.getTipoEventos();
+
+        if (tipos.isEmpty()) {
+            return noContent().build();
         }
-        return ResponseEntity.ok(result);
+
+        return ok(tipos);
     }
 
-    @GetMapping("/financeiro/{idBuffet}")
-    public ResponseEntity<List<Object>> pegarMovimentacaoFinanceira(@PathVariable int idBuffet) {
-        List<Object> result = buffetService.pegarMovimentacaoFinanceira(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+    @GetMapping("/{idBuffet}/avaliacao")
+    public ResponseEntity<Double> listarAvaliacoesEvento(@PathVariable int idBuffet) {
+        Double avaliacao = buffetService.getAvaliacaoEvento(idBuffet);
+        
+        if(Objects.isNull(avaliacao)) {
+            return notFound().build();
         }
-        return ResponseEntity.ok(result);
+
+        return ok(avaliacao);
     }
 
-    @GetMapping("/dados-financeiro/{idBuffet}")
-    public ResponseEntity<List<Object[]>> pegarDadosFinanceiro(@PathVariable int idBuffet) {
-        List<Object[]> result = buffetService.pegarDadosFinanceiro(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.noContent().build();
+    @GetMapping("/{idBuffet}/imagem")
+    public ResponseEntity<List<ImagemDTO>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
+        List<ImagemDTO> imagens = buffetService.pegarCaminhoImagem(idBuffet);
+
+        if (imagens.isEmpty()) {
+            return noContent().build();
+        } else if (Objects.isNull(imagens)) {
+            return notFound().build();
         }
-        return ResponseEntity.ok(result);
+        
+        return ok(imagens);
     }
 
-    @GetMapping("/avaliacoes/{idBuffet}")
-    public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
-        List<Object[]> result = buffetService.pegarAvaliacoes(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.noContent().build();
+    @GetMapping("/publico/{idBuffet}")
+    public ResponseEntity<BuffetPublicDto> buscarBuffetPublico(@PathVariable int idBuffet) {
+        BuffetPublicDto buffet = buffetService.buscarBuffetPublico(idBuffet);
+        
+        if(Objects.isNull(buffet)) {
+            return notFound().build();
         }
-        return ResponseEntity.ok(result);
+
+        return ok(buffet);
+    }
+
+    @GetMapping("/publico/infos")
+    public ResponseEntity<Map<String, List<BuffetInfoDto>>> pegarBuffetInfo() {
+        Map<String, List<BuffetInfoDto>> buffets = buffetService.pegarBuffetInfoPorTipoEvento();
+        
+        if (Objects.isNull(buffets)) {
+            return notFound().build();
+        } else if (buffets.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(buffets);
+    }
+
+    @GetMapping("/datas/{idBuffet}")
+    public ResponseEntity<List<DataDto>> pegarDatasOcupadas(@PathVariable int idBuffet) {
+        List<DataDto> datas = buffetService.pegarDatasOcupadas(idBuffet);
+
+        if (datas.isEmpty()) {
+            return noContent().build();
+        } else if (Objects.isNull(datas)) {
+            return notFound().build();
+        }
+
+        return ok(datas);
     }
 
     @GetMapping("/orcamentos/{idBuffet}")
     public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idBuffet) {
-        List<Object[]> result = buffetService.pegarOrcamentos(idBuffet);
-        if (result.isEmpty()) {
-            return ResponseEntity.noContent().build();
+        List<Object[]> orcamentos = buffetService.pegarOrcamentos(idBuffet);
+        
+        if (Objects.isNull(orcamentos)) {
+            return notFound().build();
+        } else if (orcamentos.isEmpty()) {
+            return noContent().build();
         }
-        return ResponseEntity.ok(result);
-    }
 
-    @GetMapping("/infos")
-    public ResponseEntity<Map<String, List<BuffetInfoDto>>> pegarBuffetInfo() {
-        Map<String, List<BuffetInfoDto>> lista = buffetService.pegarBuffetInfoPorTipoEvento();
-        return ResponseEntity.ok(lista);
+        return ok(orcamentos);
     }
 
     @GetMapping("/proprietario/{idUser}")
     public ResponseEntity<List<BuffetInfoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
-        List<BuffetInfoDto> lista = buffetService.pegarBuffetsProprietario(idUser);
-        if (lista.isEmpty()) {
-            return ResponseEntity.noContent().build();
+        List<BuffetInfoDto> buffets = buffetService.pegarBuffetsProprietario(idUser);
+        
+        if (Objects.isNull(buffets)) {
+            return notFound().build();
+        } else if (buffets.isEmpty()) {
+            return noContent().build();
         }
-        return ResponseEntity.ok(lista);
+
+        return ok(buffets);
+    }
+
+    @GetMapping("/dashboard/abandono/{idBuffet}")
+    public ResponseEntity<List<Long>> pegarTaxaDeAbandono(@PathVariable int idBuffet) {
+        List<Long> taxaAbandono = buffetService.pegarTaxaDeAbandono(idBuffet);
+        
+        if (Objects.isNull(taxaAbandono)) {
+            return notFound().build();
+        } else if (taxaAbandono.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(taxaAbandono);
+    }
+
+    @GetMapping("/dashboard/satisfacao/{idBuffet}")
+    public ResponseEntity<List<Object>> pegarTaxaDeSatisfacao(@PathVariable int idBuffet) {
+        List<Object> taxaSatisfacao = buffetService.pegarTaxaDeSatisfacao(idBuffet);
+
+         if (Objects.isNull(taxaSatisfacao)) {
+            return notFound().build();
+        } else if (taxaSatisfacao.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(taxaSatisfacao);
+    }
+
+    @GetMapping("/dashboard/financeiro/{idBuffet}")
+    public ResponseEntity<List<Object>> pegarMovimentacaoFinanceira(@PathVariable int idBuffet) {
+        List<Object> movimentacaoFinanceira = buffetService.pegarMovimentacaoFinanceira(idBuffet);
+       
+         if (Objects.isNull(movimentacaoFinanceira)) {
+            return notFound().build();
+        } else if (movimentacaoFinanceira.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ResponseEntity.ok(movimentacaoFinanceira);
+    }
+
+    @GetMapping("/dashboard/dados-financeiro/{idBuffet}")
+    public ResponseEntity<List<Object[]>> pegarDadosFinanceiro(@PathVariable int idBuffet) {
+        List<Object[]> dadosFinanceiro = buffetService.pegarDadosFinanceiro(idBuffet);
+        
+        if (Objects.isNull(dadosFinanceiro)) {
+            return notFound().build();
+        } else if (dadosFinanceiro.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(dadosFinanceiro);
+    }
+
+    @GetMapping("/dashboard/avaliacoes/{idBuffet}")
+    public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
+        List<Object[]> avaliacoes = buffetService.pegarAvaliacoes(idBuffet);
+        
+        if (Objects.isNull(avaliacoes)) {
+            return notFound().build();
+        } else if (avaliacoes.isEmpty()) {
+            return noContent().build();
+        }
+
+        return ok(avaliacoes);
     }
 }

@@ -9,6 +9,7 @@ import eventify.api_spring.dto.agenda.AgendaDto;
 import eventify.api_spring.dto.buffet.BuffetDtoResposta;
 import eventify.api_spring.dto.buffet.BuffetInfoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicDto;
+import eventify.api_spring.dto.imagem.ImagemDTO;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.repository.*;
@@ -97,15 +98,24 @@ public class BuffetService {
             Buffet buffet = buffetOpt.get();
             return eventoRepository.findAvaliacaoByBuffet(buffet);
         }
+
         return null;
     }
 
-    public List<Imagem> pegarCaminhoImagem(int idBuffet) {
+    public List<ImagemDTO> pegarCaminhoImagem(int idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
         if (buffetOpt.isPresent()) {
             Buffet buffet = buffetOpt.get();
-            return imagemRepository.findByBuffet(buffet);
+
+            List<ImagemDTO> caminhos = imagemRepository.findByBuffet(buffet)
+                .stream()
+                .map(img -> new ImagemDTO(img.getId(),img.getCaminho(),img.getNome(), img.getTipo(), true,img.getDataUpload()))
+                .toList();
+
+            return caminhos;
         }
+        
         return null;
     }
 

@@ -4,6 +4,7 @@ import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
 import eventify.api_spring.dto.usuario.UsuarioMapper;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,27 +39,40 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> listar() {
+    public List<UsuarioDevolverDTO> listar() {
         List<Usuario> lista = usuarioRepository.findAll();
-        return lista;
+        List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
+
+        for (Usuario user : lista) {
+            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail(), user.getFoto()));
+        }
+
+        return listaDTO;
     }
 
-    public Optional<Usuario> exibir(Integer id) {
-        return usuarioRepository.findById(id);
+    public UsuarioInfoDto exibir(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+
+        if(usuario.isPresent()){
+            return new UsuarioInfoDto(usuario.get().getNome(), usuario.get().getEmail(), usuario.get().getCpf());
+        }
+
+        return null;
     }
 
-    public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuarioCadastrarDTO) {
-        UsuarioDevolverDTO usuarioDevolverDTO = new UsuarioDevolverDTO();
-        Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
+    public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuario) {
+        UsuarioDevolverDTO usuarioResposta = new UsuarioDevolverDTO();
+        Usuario novoUsuario = UsuarioMapper.of(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
         novoUsuario.setIsAtivo(true);
         this.usuarioRepository.save(novoUsuario);
-        usuarioDevolverDTO.setId(novoUsuario.getId());
-        usuarioDevolverDTO.setNome(novoUsuario.getNome());
-        usuarioDevolverDTO.setEmail(novoUsuario.getEmail());
-        return usuarioDevolverDTO;
+        usuarioResposta.setId(novoUsuario.getId());
+        usuarioResposta.setNome(novoUsuario.getNome());
+        usuarioResposta.setEmail(novoUsuario.getEmail());
+
+        return usuarioResposta;
     }
 
     public Boolean banir(int id) {

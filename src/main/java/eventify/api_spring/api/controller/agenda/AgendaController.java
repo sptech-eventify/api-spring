@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.*;
+
 import java.util.List;
 
 @RestController
@@ -22,16 +24,17 @@ public class AgendaController {
     @GetMapping
     public ResponseEntity<List<Agenda>> exibirAgendas() {
         List<Agenda> agenda = agendaService.exibirAgendas();
+
         if (agenda.isEmpty()) {
-            return ResponseEntity.status(204).build();
+            return noContent().build();
         }
 
-        return ResponseEntity.status(200).body(agenda);
+        return ok(agenda);
     }
 
     @PostMapping
-    public ResponseEntity<Agenda> criarAgenda(@RequestBody @Valid Agenda a) {
-        agendaService.criarAgenda(a);
-        return ResponseEntity.status(201).body(a);
+    public ResponseEntity<Agenda> criarAgenda(@RequestBody @Valid Agenda agenda) {
+        agendaService.criarAgenda(agenda);
+        return created(null).body(agenda);
     }
 }

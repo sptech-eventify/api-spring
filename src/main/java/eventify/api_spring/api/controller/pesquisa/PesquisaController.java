@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.*;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -46,9 +48,10 @@ public class PesquisaController {
             List<BuffetDtoResposta> lista = pesquisaService.getTodosBuffets();
 
             if(lista.isEmpty()){
-                return ResponseEntity.notFound().build();
+                return notFound().build();
             }
-            return ResponseEntity.ok(lista);
+
+            return ok(lista);
         }
 
         String nomeTratado = nome != null ? nome : "";
@@ -57,10 +60,10 @@ public class PesquisaController {
         List<BuffetDtoResposta> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
 
         if((listaFiltrada.size()) == 0){
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
-        return ResponseEntity.ok().body(listaFiltrada);
+        return ok(listaFiltrada);
     }
 
     @GetMapping("/notas")
@@ -68,9 +71,9 @@ public class PesquisaController {
         List<Object> lista = pesquisaService.getNotas();
 
         if (lista.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return notFound().build();
         }
 
-        return ResponseEntity.ok().body(lista);
+        return ok(lista);
     }
 }

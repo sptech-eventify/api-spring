@@ -13,11 +13,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.http.ResponseEntity.*;
 
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -31,78 +30,89 @@ public class UsuarioController {
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping
     public ResponseEntity<List<UsuarioDevolverDTO>> listar() {
-        List<Usuario> lista = usuarioService.listar();
-        if (lista.isEmpty()) {
-            return ResponseEntity.status(204).build();
+        List<UsuarioDevolverDTO> usuarios = usuarioService.listar();
+        
+        if (usuarios.isEmpty()) {
+            return noContent().build();
         }
 
-        List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
-
-        for (Usuario user : lista) {
-            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail(), user.getFoto()));
-        }
-
-        return ResponseEntity.status(200).body(listaDTO);
+        return ok(usuarios);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer id) {
-        Optional<Usuario> resposta = usuarioService.exibir(id);
+        UsuarioInfoDto usuario = usuarioService.exibir(id);
 
-        if (resposta.isEmpty())
-            return ResponseEntity.status(204).build();
+        if (Objects.isNull(usuario)) {
+            return notFound().build();
+        }
 
-        UsuarioInfoDto user = new UsuarioInfoDto(resposta.get().getNome(), resposta.get().getEmail(), resposta.get().getCpf());
-
-        return ResponseEntity.status(200).body(user);
+        return ok(usuario);
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<UsuarioDevolverDTO> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario) {
-        return ResponseEntity.status(201).body(usuarioService.cadastrar(usuario));
+    public ResponseEntity<Void> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario) {
+        UsuarioDevolverDTO usuarioResposta = usuarioService.cadastrar(usuario);
+
+        if (Objects.isNull(usuarioResposta)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.created(null).build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @DeleteMapping("/banir")
     public ResponseEntity<Void> banir(int id) {
         if (usuarioService.banir(id)) {
-            return ResponseEntity.status(200).build();
+            return noContent().build();
         }
-        return ResponseEntity.status(404).build();
+
+        return notFound().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/desbanir")
     public ResponseEntity<Void> desbanir(int id) {
         if (usuarioService.desbanir(id)) {
-            return ResponseEntity.status(200).build();
+            return noContent().build();
         }
-        return ResponseEntity.status(404).build();
+
+        return notFound().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PutMapping
     public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario) {
-        if (usuarioService.atualizar(id, usuario) != null) {
-            return ResponseEntity.status(200).body(usuarioService.atualizar(id, usuario));
+        UsuarioCadastrarDTO usuarioAtualizado = usuarioService.atualizar(id, usuario);
+
+        if (Objects.isNull(usuarioAtualizado)) {
+            return notFound().build();
         }
-        return ResponseEntity.status(404).build();
+
+        return ok(usuarioAtualizado);
     }
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
         UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
-        return ResponseEntity.status(200).body(usuarioToken);
+
+        if (Objects.isNull(usuarioToken)) {
+            return notFound().build();
+        }
+
+        return ok(usuarioToken);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PatchMapping("/logof")
     public ResponseEntity<Void> logof(@RequestParam int id) {
         if (usuarioService.logof(id)) {
-            return ResponseEntity.status(200).build();
+            return ok().build();
         }
-        return ResponseEntity.status(404).build();
+
+        return notFound().build();
     }
 
 }

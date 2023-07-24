@@ -32,9 +32,9 @@ public class EventoService {
         return eventos;
     }
 
-    public Optional<Evento> exibeEvento(String nome) {
+    public Evento exibeEvento(String nome) {
         Optional<Evento> evento = eventoRepository.findByBuffet(nome);
-        return evento;
+        return evento.orElse(null);
     }
 
     public Boolean criarEvento(EventoCriacaoDto e) {

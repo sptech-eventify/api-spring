@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.*;
+
 import java.util.List;
 
 @RestController
@@ -19,16 +21,14 @@ public class TipoEventoController {
     @Autowired
     private TipoEventoService tipoEventoService;
 
-    @SecurityRequirement(name = "requiredAuth")
-    @PostMapping
-    public ResponseEntity<TipoEvento> criarTipoEvento(@RequestBody @Valid TipoEvento t) {
-        this.tipoEventoService.criarTipoEvento(t);
-        return ResponseEntity.status(201).body(t);
-    }
-
     @GetMapping
     public ResponseEntity<List<TipoEvento>> exibirTipoEvento() {
-         List<TipoEvento> tipoEventos = this.tipoEventoService.exibirTipoEvento();
-        return ResponseEntity.status(200).body(tipoEventos);
+        List<TipoEvento> tipoEventos = this.tipoEventoService.exibirTipoEvento();
+
+        if(tipoEventos.isEmpty()){
+            return notFound().build();
+        }
+
+        return ok(tipoEventos);
     }
 }

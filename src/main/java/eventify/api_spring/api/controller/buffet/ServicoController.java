@@ -2,11 +2,12 @@ package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.service.buffet.ServicoService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.ResponseEntity.*;
 
 import java.util.List;
 
@@ -19,16 +20,14 @@ public class ServicoController {
     @Autowired
     private ServicoService servicoService;
 
-    @SecurityRequirement(name = "requiredAuth")
-    @PostMapping
-    public ResponseEntity<Servico> criarServico(@RequestBody Servico s) {
-        this.servicoService.salvar(s);
-        return ResponseEntity.status(201).body(s);
-    }
-
     @GetMapping
     public ResponseEntity<List<Servico>> exibirServico() {
-         List<Servico> servicos = this.servicoService.listaServico();
-         return ResponseEntity.status(200).body(servicos);
+        List<Servico> servicos = this.servicoService.listaServico();
+
+        if(servicos.isEmpty()){
+            return notFound().build();
+        }
+
+        return ok(servicos);
     }
 }

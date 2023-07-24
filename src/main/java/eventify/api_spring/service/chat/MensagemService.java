@@ -27,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class MensagemServices {
+public class MensagemService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
