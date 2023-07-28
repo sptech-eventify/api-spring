@@ -5,14 +5,17 @@ import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
+import eventify.api_spring.exception.http.UnauthorizedException;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.mapper.buffet.ImagemMapper;
+import eventify.api_spring.mapper.utils.DataMapper;
 import eventify.api_spring.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -219,33 +222,71 @@ public class BuffetService {
                     })
                     .collect(Collectors.toList());
 
-
-        Map<String, List<BuffetResumoDto>> buffetsPorTipoEvento = buffetsResumo.stream()
-
+        Map<String, List<BuffetResumoDto>> buffets = buffetsResumo.stream()
                 .flatMap(buffetResumo -> buffetResumo.getTiposEventos().stream()
                         .map(tipoEvento -> Map.entry(tipoEvento.getDescricao(), buffetResumo)))
                 .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
-        return buffetsPorTipoEvento;
+        return buffets;
     }
+
+    public List<DataDto> datasOcupadas(Integer idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
+        if (buffetOpt.isPresent()) {
+            List<LocalDate> datas = eventoRepository.findAllDataByBuffet(buffetOpt.get());
+
+            if (datas.isEmpty()) {
+                throw new NoContentException("Não há datas ocupadas");
+            }
+
+            List<DataDto> datasDto = datas.stream().map(DataMapper::toDto).toList();
+
+            return datasDto;
+        }
+
+        throw new NotFoundException("Buffet não encontrado na base de dados");
+    }
+
+    public List<EventoOrcamentoDto> orcamentosPorIdBuffet(Integer idBuffet) {
+        Buffet buffet = buffetRepository.findByIsVisivelTrueAndId(idBuffet);
+
+        if (Objects.nonNull(buffet)) {
+            List<EventoOrcamentoDto> orcamentos = eventoRepository.findAllOrcamentosByBuffetPublico(buffet);
+            
+            if (orcamentos.isEmpty()) {
+                throw new NoContentException("Não há orçamentos");
+            }
+
+            return orcamentos;
+        }
+        
+        throw new NotFoundException("Buffet não encontrado na base de dados");
+    }
+
+    public List<BuffetResumoDto> buffetsPorIdUsuario(Integer idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados"));
+
+        if (usuario.getTipoUsuario() != 2) {
+            throw new UnauthorizedException("Usuário não é um proprietário");
+        }
+
+        List<Buffet> buffets = buffetRepository.findBuffetByUsuario(usuario);
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        return buffets.stream().map(buffetMapper::toResumoDto).toList();
+    }
+
+
 
     public List<Buffet> getBuffetPorPesquisaNome(String q) {
         return buffetRepository.findByNomeContainingIgnoreCase(q);
     }
 
-    public List<DataDto> pegarDatasOcupadas(int idBuffet) {
-        List<DataDto> datasDto = new ArrayList<>();
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isPresent()) {
-            Buffet buffet = buffetOpt.get();
-            List<LocalDate> datas = eventoRepository.findAllDataByBuffet(buffet);
-            for (LocalDate data : datas) {
-                datasDto.add(new DataDto(data.getYear(), data.getMonthValue(), data.getDayOfMonth()));
-            }
-            return datasDto;
-        }
-        return null;
-    }
+    
 
     public List<Long> pegarTaxaDeAbandono(int idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
@@ -304,15 +345,7 @@ public class BuffetService {
         return query.getResultList();
     }
 
-    public List<Object[]> pegarOrcamentos(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        Query query = entityManager.createNativeQuery(String.format("select nome, evento.data_criacao from evento join usuario on evento.id_contratante = usuario.id where id_buffet = %d and status = 1;", idBuffet));
-        return query.getResultList();
-    }
-
+    
     
     
 
@@ -338,11 +371,5 @@ public class BuffetService {
         }
     }
 
-    public List<BuffetResumoDto> pegarBuffetsProprietario(Integer idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(404, "Usuário não encontrado na base de dados", null));
-
-        List<Buffet> buffets = buffetRepository.findBuffetByUsuario(usuario);
-
-        return buffets.stream().map(buffetMapper::toResumoDto).toList();
-    }
+    
 }

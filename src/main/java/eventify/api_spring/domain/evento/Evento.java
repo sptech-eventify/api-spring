@@ -19,7 +19,6 @@ import lombok.Setter;
 
 @Entity
 public class Evento {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

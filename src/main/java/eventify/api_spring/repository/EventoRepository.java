@@ -3,6 +3,7 @@ package eventify.api_spring.repository;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
 
@@ -18,14 +19,17 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     @Query("SELECT ROUND(AVG(e.nota), 2) FROM Evento e WHERE e.buffet = :buffet")
     Double findAvaliacaoByBuffet(@Param("buffet") Buffet buffet);
 
-    @Query("select e from Evento e where e.buffet = :buffet")
+    @Query("SELECT e FROM Evento e WHERE e.buffet = :buffet")
     List<Evento> findByBuffet(Buffet buffet);
 
-    @Query("select e from Evento e where e.buffet.nome = :nome")
+    @Query("SELECT e FROM Evento e WHERE e.buffet.nome = :nome")
     Optional<Evento> findByBuffet(String nome);
 
-    @Query("select e.data from Evento e where e.buffet = :buffet")
-    List<LocalDate> findAllDataByBuffet(Buffet buffet);
+    @Query("SELECT e.data FROM Evento e WHERE e.buffet = :buffet")
+    List<LocalDate> findAllDataByBuffet(@Param("buffet") Buffet buffet);
+
+    @Query("SELECT new eventify.api_spring.dto.evento.EventoOrcamentoDto(u.nome, e.data, e.status) FROM Evento e JOIN Usuario u ON e.contratante = u.id WHERE e.buffet = :buffet")
+    List<EventoOrcamentoDto> findAllOrcamentosByBuffetPublico(@Param("buffet") Buffet buffet);
 
     @Query("SELECT new eventify.api_spring.dto.evento.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), '6') FROM Buffet b " +
             "JOIN b.tiposEventos t " +

@@ -110,7 +110,7 @@ public class BuffetServiceTest {
         when(buffetRepository.findById(idArgumentCaptor.capture())).thenReturn(Optional.of(buffet));
         when(eventoRepository.findAllDataByBuffet(buffetArgumentCaptor.capture())).thenReturn(datas);
 
-        List<DataDto> dataDtos = service.pegarDatasOcupadas(1);
+        List<DataDto> dataDtos = service.datasOcupadas(1);
 
         assertFalse(dataDtos.isEmpty());
         assertEquals(1, idArgumentCaptor.getValue());

@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller.buffet;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.DataDto;
@@ -99,42 +100,24 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/datas/{idBuffet}")
-    public ResponseEntity<List<DataDto>> pegarDatasOcupadas(@PathVariable int idBuffet) {
-        List<DataDto> datas = buffetService.pegarDatasOcupadas(idBuffet);
-
-        if (datas.isEmpty()) {
-            return noContent().build();
-        } else if (Objects.isNull(datas)) {
-            return notFound().build();
-        }
+    public ResponseEntity<List<DataDto>> datasOcupadas(@PathVariable Integer idBuffet) {
+        List<DataDto> datas = buffetService.datasOcupadas(idBuffet);
 
         return ok(datas);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/orcamentos/{idBuffet}")
-    public ResponseEntity<List<Object[]>> pegarOrcamentos(@PathVariable int idBuffet) {
-        List<Object[]> orcamentos = buffetService.pegarOrcamentos(idBuffet);
+    public ResponseEntity<List<EventoOrcamentoDto>> orcamentosPorIdBuffet(@PathVariable Integer idBuffet) {
+        List<EventoOrcamentoDto> orcamentos = buffetService.orcamentosPorIdBuffet(idBuffet);
         
-        if (Objects.isNull(orcamentos)) {
-            return notFound().build();
-        } else if (orcamentos.isEmpty()) {
-            return noContent().build();
-        }
-
         return ok(orcamentos);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/proprietario/{idUser}")
-    public ResponseEntity<List<BuffetResumoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
-        List<BuffetResumoDto> buffets = buffetService.pegarBuffetsProprietario(idUser);
-        
-        if (Objects.isNull(buffets)) {
-            return notFound().build();
-        } else if (buffets.isEmpty()) {
-            return noContent().build();
-        }
+    @GetMapping("/proprietario/{idUsuario}")
+    public ResponseEntity<List<BuffetResumoDto>> buffetsPorIdUsuario(@PathVariable Integer idUsuario) {
+        List<BuffetResumoDto> buffets = buffetService.buffetsPorIdUsuario(idUsuario);
 
         return ok(buffets);
     }
