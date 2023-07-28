@@ -2,7 +2,7 @@ package eventify.api_spring.api.controller.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
-import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
@@ -29,8 +29,8 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping
-    public ResponseEntity<List<UsuarioDevolverDTO>> listar() {
-        List<UsuarioDevolverDTO> usuarios = usuarioService.listar();
+    public ResponseEntity<List<UsuarioDevolverDto>> listar() {
+        List<UsuarioDevolverDto> usuarios = usuarioService.listar();
         
         if (usuarios.isEmpty()) {
             return noContent().build();
@@ -53,7 +53,7 @@ public class UsuarioController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<Void> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario) {
-        UsuarioDevolverDTO usuarioResposta = usuarioService.cadastrar(usuario);
+        UsuarioDevolverDto usuarioResposta = usuarioService.cadastrar(usuario);
 
         if (Objects.isNull(usuarioResposta)) {
             return ResponseEntity.notFound().build();

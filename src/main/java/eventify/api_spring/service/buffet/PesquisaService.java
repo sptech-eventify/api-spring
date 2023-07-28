@@ -1,7 +1,7 @@
 package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
-import eventify.api_spring.dto.buffet.BuffetDtoResposta;
+import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
@@ -21,6 +21,8 @@ public class PesquisaService {
     private EntityManager entityManager;
 
     @Autowired
+    private BuffetMapper buffetMapper;
+
     public PesquisaService(BuffetRepository buffetRepository) {
         this.buffetRepository = buffetRepository;
     }
@@ -34,10 +36,10 @@ public class PesquisaService {
         return false;
     }
 
-    public List<BuffetDtoResposta> getBuffetPorPesquisa(Pesquisa pesquisa) {
+    public List<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa) {
         System.out.println("Pesquisa: " + pesquisa.toString());
 
-        List<BuffetDtoResposta> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
+        List<BuffetRespostaDto> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
                 .filter(buffet -> buffet.getNome() != null &&
                         buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
                 .filter(buffet -> pesquisa.getTipoEvento() == null || pesquisa.getTipoEvento().isEmpty() ||
@@ -59,15 +61,15 @@ public class PesquisaService {
                 .filter(buffet -> pesquisa.getLatitude() == null || pesquisa.getLongitude() == null ||
                         calcularDistancia(pesquisa.getLatitude(), pesquisa.getLongitude(),
                                 buffet.getEndereco().getLatitude(), buffet.getEndereco().getLongitude()) <= 15)
-                .map(BuffetMapper::toDto)
+                .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
 
         return buffetsFiltrados;
     }
 
-    public List<BuffetDtoResposta> getTodosBuffets() {
+    public List<BuffetRespostaDto> getTodosBuffets() {
         return buffetRepository.findAllBuffet().stream()
-                .map(BuffetMapper::toDto)
+                .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +81,6 @@ public class PesquisaService {
     }
 
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
-        // raio médio da Terra em quilômetros
         double raioTerra = 6371;
 
         double difLat = Math.toRadians(lat2 - lat1);

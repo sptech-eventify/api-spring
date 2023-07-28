@@ -5,12 +5,12 @@ import eventify.api_spring.domain.buffet.Imagem;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface ImagemRepository extends JpaRepository<Imagem, Integer> {
 
     @Query("select i from Imagem i where i.buffet = :buffet")
-    public List<Imagem> findByBuffet(Buffet buffet);
-
+    public List<Imagem> findByBuffet(@Param("buffet") Buffet buffet);
 }

@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller.pesquisa;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
-import eventify.api_spring.dto.buffet.BuffetDtoResposta;
+import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class PesquisaController {
     private PesquisaService pesquisaService;
 
     @GetMapping
-    private ResponseEntity<List<BuffetDtoResposta>> buscador(
+    private ResponseEntity<List<BuffetRespostaDto>> buscador(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "faixaEtaria", required = false) List<String> faixaEtaria,
             @RequestParam(value = "tamanho", required = false) Integer tamanho,
@@ -46,7 +46,7 @@ public class PesquisaController {
                 && servico == null
                 && latitude == null
                 && longitude == null){
-            List<BuffetDtoResposta> lista = pesquisaService.getTodosBuffets();
+            List<BuffetRespostaDto> lista = pesquisaService.getTodosBuffets();
 
             if(lista.isEmpty()){
                 return notFound().build();
@@ -58,7 +58,7 @@ public class PesquisaController {
         String nomeTratado = nome != null ? nome : "";
 
         Pesquisa p = new Pesquisa(nomeTratado, faixaEtaria, tamanho, qtdPessoas, tipoEvento, orcMin, orcMax, dataEvento, servico, latitude, longitude);
-        List<BuffetDtoResposta> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
+        List<BuffetRespostaDto> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
 
         if((listaFiltrada.size()) == 0){
             return notFound().build();

@@ -1,10 +1,18 @@
-package eventify.api_spring.dto.usuario;
+package eventify.api_spring.mapper.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
+import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 
 import java.time.LocalDateTime;
 
-public class UsuarioMapper {
+import org.mapstruct.Mapper;
+
+@Mapper(componentModel = "spring")
+public interface UsuarioMapper {
+    UsuarioDevolverDto toDevolverDto(Usuario domain);
+
     public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
         Usuario usuario = new Usuario();
         usuario.setIsAtivo(false);

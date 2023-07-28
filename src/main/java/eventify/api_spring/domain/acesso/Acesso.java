@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-import eventify.api_spring.domain.agenda.Pagina;
-
 @Getter
 @Setter
 @AllArgsConstructor

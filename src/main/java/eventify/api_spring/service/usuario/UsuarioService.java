@@ -3,10 +3,10 @@ package eventify.api_spring.service.usuario;
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
-import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
-import eventify.api_spring.dto.usuario.UsuarioMapper;
+import eventify.api_spring.mapper.usuario.UsuarioMapper;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.repository.UsuarioRepository;
 
@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-// Classe que executa toda regra de negócio e retorna os resultados para Controller
 public class UsuarioService {
     @Autowired
     private GerenciadorTokenJwt gerenciadorTokenJwt;
@@ -39,12 +38,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<UsuarioDevolverDTO> listar() {
+    public List<UsuarioDevolverDto> listar() {
         List<Usuario> lista = usuarioRepository.findAll();
-        List<UsuarioDevolverDTO> listaDTO = new ArrayList<>();
+        List<UsuarioDevolverDto> listaDTO = new ArrayList<>();
 
         for (Usuario user : lista) {
-            listaDTO.add(new UsuarioDevolverDTO(user.getId(), user.getNome(), user.getEmail(), user.getFoto()));
+            listaDTO.add(new UsuarioDevolverDto(user.getId(), user.getNome(), user.getEmail(), user.getFoto()));
         }
 
         return listaDTO;
@@ -60,8 +59,8 @@ public class UsuarioService {
         return null;
     }
 
-    public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuario) {
-        UsuarioDevolverDTO usuarioResposta = new UsuarioDevolverDTO();
+    public UsuarioDevolverDto cadastrar(UsuarioCadastrarDTO usuario) {
+        UsuarioDevolverDto usuarioResposta = new UsuarioDevolverDto();
         Usuario novoUsuario = UsuarioMapper.of(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
@@ -130,7 +129,6 @@ public class UsuarioService {
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
-        System.out.println("Primeiro corte");
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
         if (usuario.isPresent()) {
             if (usuario.get().getIsBanido()) {

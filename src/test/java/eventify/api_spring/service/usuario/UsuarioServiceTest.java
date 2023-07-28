@@ -3,7 +3,7 @@ package eventify.api_spring.service.usuario;
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
-import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
@@ -63,7 +63,7 @@ class UsuarioServiceTest {
 
         when(usuarioRepository.save(usuarioArgumentCaptor.capture())).thenReturn(usuario);
 
-        final UsuarioDevolverDTO resposta = usuarioService.cadastrar(requisicao);
+        final UsuarioDevolverDto resposta = usuarioService.cadastrar(requisicao);
 
         final Usuario usuarioCapture = usuarioArgumentCaptor.getValue();
 
@@ -215,7 +215,7 @@ class UsuarioServiceTest {
     void deve_retornar_uma_lista_vazia() {
         when(usuarioRepository.findAll()).thenReturn(Collections.emptyList());
 
-        final List<UsuarioDevolverDTO> listaUsuario = usuarioService.listar();
+        final List<UsuarioDevolverDto> listaUsuario = usuarioService.listar();
         assertTrue(listaUsuario.isEmpty());
     }
 
@@ -225,7 +225,7 @@ class UsuarioServiceTest {
 
         when(usuarioRepository.findAll()).thenReturn(listaRetornada);
 
-        final List<UsuarioDevolverDTO> listaUsuario = usuarioService.listar();
+        final List<UsuarioDevolverDto> listaUsuario = usuarioService.listar();
         assertEquals(2, listaUsuario.size());
     }
 

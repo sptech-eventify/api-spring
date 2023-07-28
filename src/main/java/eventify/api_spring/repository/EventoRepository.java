@@ -8,26 +8,24 @@ import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
+    @Query("SELECT ROUND(AVG(e.nota), 2) FROM Evento e WHERE e.buffet = :buffet")
+    Double findAvaliacaoByBuffet(@Param("buffet") Buffet buffet);
 
     @Query("select e from Evento e where e.buffet = :buffet")
-    public List<Evento> findByBuffet(Buffet buffet);
+    List<Evento> findByBuffet(Buffet buffet);
 
     @Query("select e from Evento e where e.buffet.nome = :nome")
     Optional<Evento> findByBuffet(String nome);
 
     @Query("select e.data from Evento e where e.buffet = :buffet")
-    public List<LocalDate> findAllDataByBuffet(Buffet buffet);
-
-    @Query("select round(avg(e.nota),2) from Evento e where e.buffet = :buffet")
-    public Double findAvaliacaoByBuffet(Buffet buffet);
+    List<LocalDate> findAllDataByBuffet(Buffet buffet);
 
     @Query("SELECT new eventify.api_spring.dto.evento.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), '6') FROM Buffet b " +
             "JOIN b.tiposEventos t " +

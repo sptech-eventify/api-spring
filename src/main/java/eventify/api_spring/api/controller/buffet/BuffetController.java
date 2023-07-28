@@ -1,10 +1,10 @@
 package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
-import eventify.api_spring.dto.buffet.BuffetDtoResposta;
-import eventify.api_spring.dto.buffet.BuffetInfoDto;
-import eventify.api_spring.dto.buffet.BuffetPublicDto;
-import eventify.api_spring.dto.imagem.ImagemDTO;
+import eventify.api_spring.dto.buffet.BuffetRespostaDto;
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetPublicoDto;
+import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,101 +31,69 @@ public class BuffetController {
     private BuffetService buffetService;
 
     @GetMapping
-    public ResponseEntity<List<BuffetDtoResposta>> listar() {
-        List<BuffetDtoResposta> buffets = buffetService.listar();
-
-        if (buffets.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<BuffetRespostaDto>> listarBuffets() {
+        List<BuffetRespostaDto> buffets = buffetService.listarBuffets();
 
         return ok(buffets);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PostMapping
-    public ResponseEntity<Buffet> cadastrar(@RequestBody @Valid Buffet buffet) {
-        Buffet buffetCadastrado = buffetService.cadastrar(buffet);
-
-        return created(null).body(buffetCadastrado);
+    public ResponseEntity<Buffet> criarBuffet(@RequestBody @Valid Buffet buffet) {
+        Buffet buffetSalvo = buffetService.criarBuffet(buffet);
+        URI location = URI.create("/api/agendas/" + buffetSalvo.getId());
+        
+        return created(location).build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/{idBuffet}")
-    public ResponseEntity<Buffet> atualizar(@PathVariable int idBuffet, @RequestBody @Valid Buffet buffet) {
-       Buffet buffetAtualizado = buffetService.atualizar(idBuffet, buffet);
+    public ResponseEntity<Buffet> atualizarBuffet(@PathVariable Integer idBuffet, @RequestBody @Valid Buffet buffet) {
+        Buffet buffetAtualizado = buffetService.atualizarBuffet(idBuffet, buffet);
 
         return ok(buffetAtualizado);
     }
 
-    // Criar delete de buffet
+    @SecurityRequirement(name = "requiredAuth")
+    @DeleteMapping("/{idBuffet}")
+    public ResponseEntity<Buffet> deletarBuffet(@PathVariable Integer idBuffet) {
+        buffetService.deletarBuffet(idBuffet);
+
+        return noContent().build();
+    }
 
     @GetMapping("/{idBuffet}")
-    public ResponseEntity<BuffetDtoResposta> buscarBuffet(@PathVariable int idBuffet) {
-        BuffetDtoResposta buffet = buffetService.buscarBuffet(idBuffet);
+    public ResponseEntity<BuffetRespostaDto> buscarBuffetPorId(@PathVariable Integer idBuffet) {
+        BuffetRespostaDto buffet = buffetService.buscarBuffetPublicoPorIdResposta(idBuffet);
         
-        if(Objects.isNull(buffet)) {
-            return notFound().build();
-        }
-
         return ok(buffet);
     }
 
-    @GetMapping("/tipos")
-    public ResponseEntity<List<String>> listarTipoEventos() {
-        List<String> tipos = buffetService.getTipoEventos();
-
-        if (tipos.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(tipos);
-    }
-
     @GetMapping("/{idBuffet}/avaliacao")
-    public ResponseEntity<Double> listarAvaliacoesEvento(@PathVariable int idBuffet) {
-        Double avaliacao = buffetService.getAvaliacaoEvento(idBuffet);
-        
-        if(Objects.isNull(avaliacao)) {
-            return notFound().build();
-        }
-
+    public ResponseEntity<Double> avaliacaoBuffet(@PathVariable Integer idBuffet) {
+        Double avaliacao = buffetService.avaliacaoBuffet(idBuffet);
+    
         return ok(avaliacao);
     }
 
     @GetMapping("/{idBuffet}/imagem")
-    public ResponseEntity<List<ImagemDTO>> pegarCaminhoImagemEvento(@PathVariable int idBuffet) {
-        List<ImagemDTO> imagens = buffetService.pegarCaminhoImagem(idBuffet);
+    public ResponseEntity<List<ImagemDto>> caminhoImagemBuffet(@PathVariable Integer idBuffet) {
+        List<ImagemDto> imagens = buffetService.caminhoImagemBuffet(idBuffet);
 
-        if (imagens.isEmpty()) {
-            return noContent().build();
-        } else if (Objects.isNull(imagens)) {
-            return notFound().build();
-        }
-        
         return ok(imagens);
     }
 
     @GetMapping("/publico/{idBuffet}")
-    public ResponseEntity<BuffetPublicDto> buscarBuffetPublico(@PathVariable int idBuffet) {
-        BuffetPublicDto buffet = buffetService.buscarBuffetPublico(idBuffet);
-        
-        if(Objects.isNull(buffet)) {
-            return notFound().build();
-        }
+    public ResponseEntity<BuffetPublicoDto> buscarBuffetPublico(@PathVariable Integer idBuffet) {
+        BuffetPublicoDto buffet = buffetService.buscarBuffetPublico(idBuffet);
 
         return ok(buffet);
     }
 
-    @GetMapping("/publico/infos")
-    public ResponseEntity<Map<String, List<BuffetInfoDto>>> pegarBuffetInfo() {
-        Map<String, List<BuffetInfoDto>> buffets = buffetService.pegarBuffetInfoPorTipoEvento();
+    @GetMapping("/publico/listar")
+    public ResponseEntity<Map<String, List<BuffetResumoDto>>> listarBuffetsResumidosPublico() {
+        Map<String, List<BuffetResumoDto>> buffets = buffetService.listarBuffetsResumidosPublico();
         
-        if (Objects.isNull(buffets)) {
-            return notFound().build();
-        } else if (buffets.isEmpty()) {
-            return noContent().build();
-        }
-
         return ok(buffets);
     }
 
@@ -158,8 +127,8 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/proprietario/{idUser}")
-    public ResponseEntity<List<BuffetInfoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
-        List<BuffetInfoDto> buffets = buffetService.pegarBuffetsProprietario(idUser);
+    public ResponseEntity<List<BuffetResumoDto>> pegarBuffetsProprietario(@PathVariable int idUser) {
+        List<BuffetResumoDto> buffets = buffetService.pegarBuffetsProprietario(idUser);
         
         if (Objects.isNull(buffets)) {
             return notFound().build();

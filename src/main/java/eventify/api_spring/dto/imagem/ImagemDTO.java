@@ -9,12 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ImagemDTO {
+public class ImagemDto {
     private Integer id;
     private String caminho;
     private String nome;
     private String tipo;
     private boolean isAtivo;
     private LocalDateTime dataUpload;
-
 }

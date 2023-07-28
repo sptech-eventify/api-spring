@@ -1,24 +1,82 @@
 package eventify.api_spring.service.agenda;
 
 import eventify.api_spring.domain.agenda.Agenda;
+import eventify.api_spring.dto.agenda.AgendaCriacaoDto;
+import eventify.api_spring.dto.agenda.AgendaDto;
+import eventify.api_spring.mapper.agenda.AgendaMapper;
 import eventify.api_spring.repository.AgendaRepository;
+import eventify.api_spring.service.buffet.BuffetService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException.NotFound;
+import org.springframework.web.server.ResponseStatusException;
 
+import eventify.api_spring.exception.http.ConflictException;
+import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.exception.http.NotFoundException;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 public class AgendaService {
-
     @Autowired
     private AgendaRepository agendaRepository;
 
-    public List<Agenda> exibirAgendas() {
-        return agendaRepository.findAll();
+    @Autowired
+    private BuffetService buffetService;
+
+    @Autowired
+    private AgendaMapper agendaMapper;
+
+    public List<AgendaDto> listarAgendas() {
+        List<Agenda> agendas = agendaRepository.findAll();
+
+        if (agendas.isEmpty()) {
+            throw new NoContentException("Não há eventos cadastrados na base de dados");
+        }
+
+        return agendas.stream().map(agendaMapper::toDto).collect(Collectors.toList());
     }
 
-    public void criarAgenda(Agenda a) {
-        agendaRepository.save(a);
+    public Agenda criarAgenda(AgendaCriacaoDto agendaCriacao) {
+        if (Objects.isNull(buffetService.buscarBuffetPorId(agendaCriacao.getIdBuffet()))) {
+            throw new NotFoundException("Usuário não encontrado na base de dados");
+        }
+
+        LocalDate dataEvento = agendaCriacao.getData().toLocalDate();
+
+        if (agendaRepository.findByBuffetIdAndDataEquals(agendaCriacao.getIdBuffet(), dataEvento).isPresent()) {
+            throw new ConflictException("A data solicitada já está ocupada");
+        }
+
+        Agenda agenda = agendaMapper.toDomain(agendaCriacao);
+        agendaRepository.save(agenda);
+
+        return agenda;
     }
 
+    public AgendaDto buscarAgendaPorId(Integer idAgenda) {
+        Optional<Agenda> agenda = agendaRepository.findById(idAgenda);
 
+        if (agenda.isEmpty()) {
+            throw new NotFoundException("Evento não encontrado na base de dados");
+        }
+
+        return agendaMapper.toDto(agenda.get());
+    }
+
+    public void deletarAgenda(Integer idAgenda) {
+        Optional<Agenda> agenda = agendaRepository.findById(idAgenda);
+
+        if (agenda.isEmpty()) {
+            throw new NotFoundException("Evento não encontrado na base de dados");
+        }
+
+        agendaRepository.deleteById(idAgenda);
+    }
 }

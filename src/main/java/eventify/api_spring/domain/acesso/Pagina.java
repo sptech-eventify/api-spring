@@ -1,9 +1,7 @@
-package eventify.api_spring.domain.agenda;
+package eventify.api_spring.domain.acesso;
 
 import jakarta.persistence.*;
 import java.util.List;
-
-import eventify.api_spring.domain.acesso.Acesso;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

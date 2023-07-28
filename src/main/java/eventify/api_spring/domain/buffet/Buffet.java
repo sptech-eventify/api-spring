@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +19,12 @@ import java.util.Set;
 import eventify.api_spring.domain.agenda.Agenda;
 import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.imagem.ImagemDTO;
+import eventify.api_spring.dto.imagem.ImagemDto;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Entity
 public class Buffet {
@@ -57,23 +66,23 @@ public class Buffet {
 
     private LocalDate dataCriacao;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "buffet_faixa_etaria",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_faixa_etaria"))
     private Set<FaixaEtaria> faixaEtarias = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "buffet_tipo_evento",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_tipo_evento"))
     private Set<TipoEvento> tiposEventos = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "buffet_servico",
             joinColumns = @JoinColumn(name = "id_buffet"),
             inverseJoinColumns = @JoinColumn(name = "id_servico"))
@@ -86,7 +95,7 @@ public class Buffet {
     @OneToMany(mappedBy = "buffet")
     private List<Imagem> imagens = new ArrayList<>();
 
-    @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Agenda> agendas = new ArrayList<>();
 
     public Buffet(Integer id, String nome, String descricao, Integer tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
@@ -107,180 +116,13 @@ public class Buffet {
         this.usuario = usuario;
     }
 
-    public Buffet() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Integer getTamanho() {
-        return tamanho;
-    }
-
-    public void setTamanho(Integer tamanho) {
-        this.tamanho = tamanho;
-    }
-
-    public Integer getQtdPessoas() {
-        return qtdPessoas;
-    }
-
-    public void setQtdPessoas(Integer qtdPessoas) {
-        this.qtdPessoas = qtdPessoas;
-    }
-
-    public String getCaminhoComprovante() {
-        return caminhoComprovante;
-    }
-
-    public void setCaminhoComprovante(String caminhoComprovante) {
-        this.caminhoComprovante = caminhoComprovante;
-    }
-
-    public boolean isResidenciaComprovada() {
-        return residenciaComprovada;
-    }
-
-    public boolean getResidenciaComprovada() {
-        return residenciaComprovada;
-    }
-
-    public void setResidenciaComprovada(boolean residenciaComprovada) {
-        this.residenciaComprovada = residenciaComprovada;
-    }
-
-    public boolean isVisivel() {
-        return isVisivel;
-    }
-
-    public boolean getIsVisivel() {
-        return isVisivel;
-    }
-
-    public void setVisivel(boolean visivel) {
-        isVisivel = visivel;
-    }
-
-    public LocalDate getDataCriacao() {
-        return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
-
-    public Double getPrecoMedioDiaria() {
-        return precoMedioDiaria;
-    }
-
-    public void setPrecoMedioDiaria(Double precoMedioDiaria) {
-        this.precoMedioDiaria = precoMedioDiaria;
-    }
-
-    public Set<FaixaEtaria> getFaixaEtarias() {
-        return faixaEtarias;
-    }
-
-    public void setFaixaEtarias(Set<FaixaEtaria> faixaEtarias) {
-        this.faixaEtarias = faixaEtarias;
-    }
-
-    public Set<TipoEvento> getTiposEventos() {
-        return tiposEventos;
-    }
-
     public List<String> getDescricaoTiposEventos(){
         return tiposEventos.stream().map(TipoEvento::getDescricao).toList();
     }
 
-    public void setTiposEventos(Set<TipoEvento> tiposEventos) {
-        this.tiposEventos = tiposEventos;
-    }
-
-    public Set<Servico> getServicos() {
-        return servicos;
-    }
-
-    public void setServicos(Set<Servico> servicos) {
-        this.servicos = servicos;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public void setImagens(List<Imagem> imagens) {
-        this.imagens = imagens;
-    }
-
-    public List<ImagemDTO> getImagemDto() {
+    public List<ImagemDto> getImagemDto() {
         return imagens.stream()
-                .map(i -> new ImagemDTO(i.getId(), i.getCaminho(), i.getNome(), i.getTipo(), i.isAtivo(), i.getDataUpload()))
+                .map(i -> new ImagemDto(i.getId(), i.getCaminho(), i.getNome(), i.getTipo(), i.isAtivo(), i.getDataUpload()))
                 .toList();
-    }
-
-    public List<Agenda> getAgendas() {
-        return agendas;
-    }
-
-    public void setAgendas(List<Agenda> agendas) {
-        this.agendas = agendas;
-    }
-
-    @Override
-    public String toString() {
-        return "Buffet{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", descricao='" + descricao + '\'' +
-                ", tamanho=" + tamanho +
-                ", precoMedioDiaria=" + precoMedioDiaria +
-                ", qtdPessoas=" + qtdPessoas +
-                ", caminhoComprovante='" + caminhoComprovante + '\'' +
-                ", residenciaComprovada=" + residenciaComprovada +
-                ", isVisivel=" + isVisivel +
-                ", dataCriacao=" + dataCriacao +
-                ", endereco=" + endereco +
-                ", faixaEtarias=" + faixaEtarias +
-                ", tiposEventos=" + tiposEventos +
-                ", servicos=" + servicos +
-                ", usuario=" + usuario +
-                ", imagens=" + imagens +
-                ", agendas=" + agendas +
-                '}';
     }
 }

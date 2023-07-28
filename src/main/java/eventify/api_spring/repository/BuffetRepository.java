@@ -2,87 +2,27 @@ package eventify.api_spring.repository;
 
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.buffet.BuffetInfoDto;
-import eventify.api_spring.dto.buffet.BuffetPublicDto;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-@Repository
 public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     @Query("SELECT b FROM Buffet b")
-    public List<Buffet> findAllBuffet();
-    public List<Buffet>findByNomeContainingIgnoreCase(String q);
+    List<Buffet> findAllBuffet();
 
-    @Validated
-    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetPublicDto(b.nome, " +
-            "u.nome, " +
-            "b.descricao, " +
-            "GROUP_CONCAT(DISTINCT CONCAT(i.caminho, '/', i.nome, '.', i.tipo)), " +
-            "b.precoMedioDiaria, " +
-            "round(avg(e.nota),2), " +
-            "GROUP_CONCAT(DISTINCT ts.descricao)," +
-            "GROUP_CONCAT(DISTINCT fe.descricao)," +
-            "GROUP_CONCAT(DISTINCT te.descricao),  " +
-            "end.latitude, " +
-            "end.longitude," +
-            "end.logradouro," +
-            "end.numero," +
-            "end.bairro," +
-            "end.cidade," +
-            "end.uf," +
-            "end.cep) " +
-            "FROM Buffet b " +
-            "JOIN Usuario u on b.usuario = u " +
-            "JOIN Imagem i on i.buffet = b " +
-            "JOIN Evento e on e.buffet = b " +
-            "JOIN b.servicos as ts " +
-            "JOIN b.faixaEtarias as fe " +
-            "JOIN b.tiposEventos as te " +
-            "JOIN Endereco end on b.endereco = end " +
-            "WHERE b.id = :idBuffet " +
-            "GROUP BY b")
-    BuffetPublicDto findBuffetPublicDtoById(int idBuffet);
+    List<Buffet> findByIsVisivelTrue();
 
-    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetInfoDto(b.id," +
-            "GROUP_CONCAT(DISTINCT te.descricao)," +
-            "b.nome," +
-            "b.precoMedioDiaria," +
-            "b.tamanho," +
-            "b.qtdPessoas," +
-            "ROUND(AVG(e.nota),1) as notaMedia," +
-            "GROUP_CONCAT(DISTINCT CONCAT(i.caminho, i.nome, '.', i.tipo))) " +
-            "FROM Buffet b " +
-            "JOIN Evento e on e.buffet = b " +
-            "JOIN b.tiposEventos as te " +
-            "JOIN Imagem i on i.buffet = b " +
-            "GROUP BY b.nome, " +
-            "b.id")
-    List<BuffetInfoDto> findAllBuffetInfo();
+    Buffet findByIsVisivelTrueAndId( Integer idBuffet);
 
-    @Query("SELECT new eventify.api_spring.dto.buffet.BuffetInfoDto(b.id," +
-            "GROUP_CONCAT(DISTINCT te.descricao)," +
-            "b.nome," +
-            "b.precoMedioDiaria," +
-            "b.tamanho," +
-            "b.qtdPessoas," +
-            "ROUND(AVG(e.nota),1) as notaMedia," +
-            "GROUP_CONCAT(DISTINCT CONCAT(i.caminho, i.nome, '.', i.tipo))) " +
-            "FROM Buffet b " +
-            "JOIN Evento e on e.buffet = b " +
-            "JOIN b.tiposEventos as te " +
-            "JOIN Imagem i on i.buffet = b " +
-            "JOIN Usuario u on b.usuario = u " +
-            "WHERE u.id = :idUser " +
-            "GROUP BY b.nome," +
-            "b.id")
-    List<BuffetInfoDto> findAllBuffetProprietario(int idUser);
+    Double findAvaliacaoByIsVisivelTrueAndId(Integer idBuffet);
 
-    public Buffet findBuffetById(int idBuffet);
+    List<Buffet>findByNomeContainingIgnoreCase(String q);
+
+    List<Buffet> findBuffetByUsuario(Usuario usuario);
+
+    Buffet findBuffetById(Integer idBuffet);
 
     List<Buffet> findAllByNome(String nome);
 

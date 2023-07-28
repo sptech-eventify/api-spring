@@ -1,17 +1,18 @@
 package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
-import eventify.api_spring.domain.buffet.Imagem;
-import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.agenda.AgendaDto;
-import eventify.api_spring.dto.buffet.BuffetDtoResposta;
-import eventify.api_spring.dto.buffet.BuffetInfoDto;
-import eventify.api_spring.dto.buffet.BuffetPublicDto;
-import eventify.api_spring.dto.imagem.ImagemDTO;
+import eventify.api_spring.dto.buffet.BuffetRespostaDto;
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetPublicoDto;
+import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.DataDto;
+import eventify.api_spring.exception.http.ConflictException;
+import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
+import eventify.api_spring.mapper.buffet.ImagemMapper;
 import eventify.api_spring.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -22,11 +23,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BuffetService {
     @Autowired
     private BuffetRepository buffetRepository;
+
     @Autowired
     private EventoRepository eventoRepository;
 
@@ -35,88 +38,199 @@ public class BuffetService {
 
     @Autowired
     private ImagemRepository imagemRepository;
+
+    @Autowired
+    private ImagemMapper imagemMapper;
+
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Autowired
     private EntityManager entityManager;
+    
+    @Autowired
+    private BuffetMapper buffetMapper;
 
-    public List<BuffetDtoResposta> listar() {
-        List<Buffet> buffets = buffetRepository.findAll();
-        List<BuffetDtoResposta> buffetsDto = new ArrayList<>();
-
-        for (Buffet buffet : buffets) {
-            List<AgendaDto> agendasDto = buffet.getAgendas().stream().map(agenda -> new AgendaDto(agenda.getId(), agenda.getData())).toList();
-
-            buffetsDto.add(new BuffetDtoResposta(
-                    buffet.getId(),
-                    buffet.getNome(),
-                    buffet.getDescricao(),
-                    buffet.getPrecoMedioDiaria(),
-                    buffet.getEndereco(),
-                    buffet.getTamanho(),
-                    buffet.getQtdPessoas(),
-                    buffet.getCaminhoComprovante(),
-                    buffet.isResidenciaComprovada(),
-                    buffet.getFaixaEtarias(),
-                    buffet.getTiposEventos(),
-                    buffet.getServicos(),
-                    buffet.getUsuario().getNome(),
-                    agendasDto,
-                    buffet.getImagemDto()
-            ));
-        }
-
-        return buffetsDto;
+    public Buffet buscarBuffetPorId(Integer buffetId) {
+        Optional<Buffet> buffet = buffetRepository.findById(buffetId);
+        
+        return buffet.orElseThrow(() -> new NotFoundException("Buffet não encontrado na base de dados"));
     }
 
-    public BuffetDtoResposta buscarBuffet(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        return buffetOpt.map(BuffetMapper::toDto).orElse(null);
+    public List<BuffetRespostaDto> listarBuffets() {
+        List<BuffetRespostaDto> buffets = buffetRepository.findAll().stream().map(buffetMapper::toRespostaDto).toList();
+        
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        return buffets;
+    }
+
+    public List<BuffetRespostaDto> listarBuffetsPublicos() {
+        List<BuffetRespostaDto> buffets = buffetRepository.findByIsVisivelTrue().stream().map(buffetMapper::toRespostaDto).toList();
+        
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets disponíveis");
+        }
+
+        return buffets;
+    }
+
+    public BuffetRespostaDto buscarBuffetPorIdResposta(Integer id){
+        Buffet buffet = buscarBuffetPorId(id);
+
+        if (Objects.isNull(buffet)) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        return buffetMapper.toRespostaDto(buffet);
+    }
+
+    public BuffetRespostaDto buscarBuffetPublicoPorIdResposta(Integer id){
+        Buffet buffet = buffetRepository.findByIsVisivelTrueAndId(id);
+
+        if (Objects.isNull(buffet)) {
+            throw new NotFoundException("Buffet não encontrado ou não disponível ao público");
+        }
+
+        return buffetMapper.toRespostaDto(buffet);
+    }
+
+    public Buffet criarBuffet(Buffet buffet) {
+        Optional<Usuario> usuario = usuarioRepository.findById(buffet.getUsuario().getId());
+
+        if (usuario.isPresent()) {
+            buffet.setUsuario(usuario.get());
+        } else {
+            throw new NotFoundException("Usuário não encontrado na base de dados");
+        }
+        
+        Endereco endereco = buffet.getEndereco();
+
+        endereco.setDataCriacao(LocalDate.now());
+        endereco.setValidado(false);
+
+        enderecoRepository.save(endereco);
+
+        buffet.setDataCriacao(LocalDate.now());
+        buffet.setVisivel(false);
+        buffetRepository.save(buffet);
+
+        return buffet;
+    }
+
+    public Buffet atualizarBuffet(Integer idBuffet, Buffet buffet) {
+        Optional<Buffet> buffetOptional = buffetRepository.findById(idBuffet);
+
+        if (buffetOptional.isPresent()) {
+            Buffet buffetBanco = buffetOptional.get();
+                
+            if(Objects.isNull(buffetBanco.getEndereco()) && Objects.nonNull(buffet.getEndereco())){
+                Endereco endereco = buffet.getEndereco();
+
+                endereco.setDataCriacao(LocalDate.now());
+                endereco.setValidado(false);
+                enderecoRepository.save(endereco);
+
+                buffetBanco.setEndereco(endereco);
+            }
+
+            buffetRepository.save(buffetBanco);
+
+            return buffetBanco;
+        } else {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+    }
+
+    public Buffet deletarBuffet(Integer id) {
+        Optional<Buffet> buffet = buffetRepository.findById(id);
+
+        if (buffet.isPresent()) {
+            Buffet buffetBanco = buffet.get();
+            
+            if (buffetBanco.getAgendas().isEmpty()){
+                buffetRepository.delete(buffetBanco);
+            } else {
+                throw new ConflictException("Buffet possui eventos marcados");
+            }
+
+            return buffetBanco;
+        } else {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+    }
+
+    public Double avaliacaoBuffet(Integer idBuffet) {
+        Buffet buffet = buffetRepository.findBuffetById(idBuffet);
+
+        if (Objects.isNull(buffet)) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        Double avaliacao = eventoRepository.findAvaliacaoByBuffet(buffet);
+        
+        if (Objects.isNull(avaliacao)) {
+            return 0.0;
+        }
+
+        return avaliacao;
+    }
+
+    public List<ImagemDto> caminhoImagemBuffet(Integer idBuffet) {
+        Buffet buffet = buffetRepository.findByIsVisivelTrueAndId(idBuffet);
+
+        if (Objects.nonNull(buffet)) {
+            List<ImagemDto> caminhos = imagemRepository.findByBuffet(buffet)
+                    .stream().map(imagemMapper::toDto).toList();
+
+            return caminhos;
+        }
+    
+        throw new NotFoundException("Buffet não encontrado ou não disponível ao público");
+    }
+
+    public BuffetPublicoDto buscarBuffetPublico(Integer idBuffet) {
+        Buffet buffetBanco = buffetRepository.findByIsVisivelTrueAndId(idBuffet);
+
+        if (Objects.isNull(buffetBanco)) {
+            throw new NotFoundException("Buffet não encontrado ou não disponível ao público");
+        }
+        
+        BuffetPublicoDto buffet = buffetMapper.toPublicoDto(buffetBanco);
+        buffet.setNotaMediaAvaliacao(avaliacaoBuffet(idBuffet));
+        
+        return buffet;
+    }
+
+    public Map<String, List<BuffetResumoDto>> listarBuffetsResumidosPublico() {
+        List<Buffet> buffetBanco = buffetRepository.findByIsVisivelTrue();
+
+        if (buffetBanco.isEmpty()) {
+            throw new NoContentException("Não há buffets disponíveis");
+        }
+
+        List<BuffetResumoDto> buffetsResumo = buffetBanco.stream().map(buffetMapper::toResumoDto).toList();
+
+        buffetsResumo.stream().map(buffetResumo -> {
+                        buffetResumo.setNotaMediaAvaliacao(avaliacaoBuffet(buffetResumo.getId()));
+                        return buffetResumo;
+                    })
+                    .collect(Collectors.toList());
+
+
+        Map<String, List<BuffetResumoDto>> buffetsPorTipoEvento = buffetsResumo.stream()
+
+                .flatMap(buffetResumo -> buffetResumo.getTiposEventos().stream()
+                        .map(tipoEvento -> Map.entry(tipoEvento.getDescricao(), buffetResumo)))
+                .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+
+        return buffetsPorTipoEvento;
     }
 
     public List<Buffet> getBuffetPorPesquisaNome(String q) {
         return buffetRepository.findByNomeContainingIgnoreCase(q);
-    }
-
-    public List<String> getTipoEventos() {
-        List<Buffet> buffets = buffetRepository.findAll();
-        List<String> tipos = new ArrayList<>();
-        for (Buffet buffet : buffets) {
-            for (TipoEvento evento : buffet.getTiposEventos()) {
-                if (!tipos.contains(evento.getDescricao())) {
-                    tipos.add(evento.getDescricao());
-                }
-            }
-        }
-
-        return tipos;
-    }
-
-    public Double getAvaliacaoEvento(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isPresent()) {
-            Buffet buffet = buffetOpt.get();
-            return eventoRepository.findAvaliacaoByBuffet(buffet);
-        }
-
-        return null;
-    }
-
-    public List<ImagemDTO> pegarCaminhoImagem(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-
-        if (buffetOpt.isPresent()) {
-            Buffet buffet = buffetOpt.get();
-
-            List<ImagemDTO> caminhos = imagemRepository.findByBuffet(buffet)
-                .stream()
-                .map(img -> new ImagemDTO(img.getId(),img.getCaminho(),img.getNome(), img.getTipo(), true,img.getDataUpload()))
-                .toList();
-
-            return caminhos;
-        }
-        
-        return null;
     }
 
     public List<DataDto> pegarDatasOcupadas(int idBuffet) {
@@ -199,45 +313,8 @@ public class BuffetService {
         return query.getResultList();
     }
 
-    public Map<String, List<BuffetInfoDto>> pegarBuffetInfoPorTipoEvento() {
-        List<BuffetInfoDto> buffetInfoLista = buffetRepository.findAllBuffetInfo();
-
-        Map<String, List<BuffetInfoDto>> buffetInfoMap = new HashMap<>();
-
-        for (BuffetInfoDto buffetInfo : buffetInfoLista) {
-            for (String tipoEvento : String.valueOf(buffetInfo.tiposEventos()).split(",")) {
-                tipoEvento = tipoEvento.toLowerCase();
-
-                List<BuffetInfoDto> buffetInfoList = buffetInfoMap.getOrDefault(tipoEvento, new ArrayList<>());
-                buffetInfoList.add(buffetInfo);
-                buffetInfoMap.put(tipoEvento, buffetInfoList);
-            }
-        }
-
-        return buffetInfoMap;
-    }
-
-    public BuffetPublicDto buscarBuffetPublico(int idBuffet) {
-        return buffetRepository.findBuffetPublicDtoById(idBuffet);
-    }
-
-
-    public Buffet cadastrar(Buffet buffet) {
-        Endereco endereco = buffet.getEndereco();
-        endereco.setDataCriacao(LocalDate.now());
-        enderecoRepository.save(endereco);
-        Optional<Usuario> usuario = usuarioRepository.findById(buffet.getUsuario().getId());
-        if (usuario.isPresent()) {
-            buffet.setUsuario(usuario.get());
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado");
-        }
-        buffet.setDataCriacao(LocalDate.now());
-        buffet.setEndereco(endereco);
-        buffet.setVisivel(true);
-        buffetRepository.save(buffet);
-        return buffet;
-    }
+    
+    
 
     public void verificarBuffet(Buffet buffet) {
         if (Objects.isNull(buffet.getNome())) {
@@ -261,77 +338,11 @@ public class BuffetService {
         }
     }
 
-    public Buffet atualizar(Integer idBuffet, Buffet buffet) {
-        if (Objects.isNull(idBuffet)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O id do buffet não pode ser nulo");
-        }
-        if (buffetRepository.existsById(idBuffet)) {
-            Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+    public List<BuffetResumoDto> pegarBuffetsProprietario(Integer idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new ResponseStatusException(404, "Usuário não encontrado na base de dados", null));
 
-            if (buffetOpt.isPresent()) {
-                buffet.setId(idBuffet);
-                Buffet buffetDadosBanco = buffetOpt.get();
-                Optional<Endereco> enderecoOpt = enderecoRepository.findById(buffetDadosBanco.getEndereco().getId());
+        List<Buffet> buffets = buffetRepository.findBuffetByUsuario(usuario);
 
-                Endereco endereco;
-
-                if (enderecoOpt.isEmpty()) {
-                    endereco = buffet.getEndereco();
-                    endereco.setDataCriacao(LocalDate.now());
-                    enderecoRepository.save(endereco);
-                } else {
-                    endereco = enderecoOpt.get();
-                }
-
-                Optional<Usuario> usuario = usuarioRepository.findById(buffet.getUsuario().getId());
-
-                if (usuario.isPresent()) {
-                    buffet.setUsuario(usuario.get());
-                } else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário não encontrado");
-                }
-
-                buffet.setEndereco(endereco);
-                Buffet buffetAtualizado = atualizaBuffet(buffet, buffetDadosBanco);
-                buffetRepository.save(buffetAtualizado);
-                return buffetAtualizado;
-            } else {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Buffet não encontrado");
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Buffet não encontrado");
-    }
-
-    public Buffet atualizaBuffet(Buffet buffet, Buffet buffetBanco) {
-        if (Objects.isNull(buffet.getNome())) {
-            buffet.setNome(buffetBanco.getNome());
-        } else if (Objects.isNull(buffet.getDescricao())) {
-            buffet.setDescricao(buffetBanco.getDescricao());
-        } else if (Objects.isNull(buffet.getTamanho())) {
-            buffet.setTamanho(buffetBanco.getTamanho());
-        } else if (Objects.isNull(buffet.getPrecoMedioDiaria())) {
-            buffet.setPrecoMedioDiaria(buffetBanco.getPrecoMedioDiaria());
-        } else if (Objects.isNull(buffet.getQtdPessoas())) {
-            buffet.setQtdPessoas(buffetBanco.getQtdPessoas());
-        } else if (Objects.isNull(buffet.getCaminhoComprovante())) {
-            buffet.setCaminhoComprovante(buffetBanco.getCaminhoComprovante());
-        } else if (Objects.isNull(buffet.getResidenciaComprovada())) {
-            buffet.setResidenciaComprovada(buffetBanco.getResidenciaComprovada());
-        } else if (buffet.getFaixaEtarias().isEmpty()) {
-            buffet.setFaixaEtarias(buffetBanco.getFaixaEtarias());
-        } else if (buffet.getTiposEventos().isEmpty()) {
-            buffet.setTiposEventos(buffetBanco.getTiposEventos());
-        } else if (buffet.getServicos().isEmpty()) {
-            buffet.setServicos(buffetBanco.getServicos());
-        } else if (Objects.isNull(buffet.getUsuario())) {
-            buffet.setUsuario(buffetBanco.getUsuario());
-        }
-        buffet.setVisivel(buffetBanco.isVisivel());
-        buffet.setDataCriacao(buffetBanco.getDataCriacao());
-        return buffet;
-    }
-
-    public List<BuffetInfoDto> pegarBuffetsProprietario(int idUser) {
-        return buffetRepository.findAllBuffetProprietario(idUser);
+        return buffets.stream().map(buffetMapper::toResumoDto).toList();
     }
 }

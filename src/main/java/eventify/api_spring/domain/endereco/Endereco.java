@@ -21,7 +21,6 @@ import lombok.Setter;
 
 @Entity
 public class Endereco {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,8 +33,7 @@ public class Endereco {
     private String logradouro;
 
     @Schema(example = "285")
-    @Min(1)
-    private Integer numero;
+    private String numero;
 
     @Schema(example = "Aclimação")
     @NotBlank

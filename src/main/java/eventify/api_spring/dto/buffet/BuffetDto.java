@@ -5,7 +5,7 @@ import eventify.api_spring.domain.buffet.FaixaEtaria;
 import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.domain.endereco.Endereco;
-import eventify.api_spring.dto.imagem.ImagemDTO;
+import eventify.api_spring.dto.imagem.ImagemDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +33,6 @@ public class BuffetDto {
     private Set<FaixaEtaria> faixaEtarias;
     private Set<TipoEvento> tipoEventos;
     private Set<Servico> servicos;
-    private List<ImagemDTO> imagens;
+    private List<ImagemDto> imagens;
     private List<Agenda> agendas;
 }
