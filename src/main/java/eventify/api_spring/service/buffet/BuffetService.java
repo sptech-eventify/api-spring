@@ -5,6 +5,11 @@ import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.dashboard.AvaliacaoDto;
+import eventify.api_spring.dto.dashboard.DadosFinanceiro;
+import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
+import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
+import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
@@ -20,9 +25,7 @@ import eventify.api_spring.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -280,96 +283,96 @@ public class BuffetService {
         return buffets.stream().map(buffetMapper::toResumoDto).toList();
     }
 
+    public TaxaAbandonoDto taxaAbandono(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
 
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT id_buffet, abandonos, total FROM vw_kpi_abandono_reserva WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        Object[] result = (Object[]) query.getSingleResult();
+        
+        return new TaxaAbandonoDto(result[0], result[1],  result[2]);
+    }
+
+    public TaxaSatisfacaoDto taxaSatisfacao(Integer idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
+        if (buffetOpt.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT media, total FROM vw_kpi_satisfacao WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        Object[] result = (Object[]) query.getSingleResult();
+        
+        return new TaxaSatisfacaoDto(result[0], result[1]);
+    }
+
+    public MovimentacaoFinanceiraDto movimentacaoFinanceira(Integer idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
+        if (buffetOpt.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT movimentacao, total FROM vw_kpi_movimentacao_financeira WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        Object[] result = (Object[]) query.getSingleResult();
+
+        return new MovimentacaoFinanceiraDto(result[0], result[1]);
+    }
+
+    public List<DadosFinanceiro> dadosFinanceiro(Integer idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+    
+        if (buffetOpt.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+        
+        Query query = entityManager.createNativeQuery("SELECT mes, qtd_eventos, faturamento FROM vw_dados_do_buffet WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> resultList = query.getResultList();
+    
+        List<DadosFinanceiro> dadosFinanceiroList = new ArrayList<>();
+        for (Object[] result : resultList) {
+            Object mes = result[0];
+            Object qtdEventos = result[1];
+            Object faturamento = result[2];
+    
+            dadosFinanceiroList.add(new DadosFinanceiro(mes, qtdEventos, faturamento));
+        }
+    
+        return dadosFinanceiroList;
+    }
+
+    public List<AvaliacaoDto> avaliacoes(Integer idBuffet) {
+        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
+        if (buffetOpt.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado na base de dados");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT nome, nota, avaliacao, data FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> resultList = query.getResultList();
+
+        List<AvaliacaoDto> avaliacoesList = new ArrayList<>();
+        for (Object[] result : resultList) {
+            Object nome = result[0];
+            Object nota = result[1];
+            Object avaliacao = result[2];
+            Object data = result[3];
+    
+            avaliacoesList.add(new AvaliacaoDto(nome, nota, avaliacao, data));
+        }
+
+        return avaliacoesList;
+    }
 
     public List<Buffet> getBuffetPorPesquisaNome(String q) {
         return buffetRepository.findByNomeContainingIgnoreCase(q);
     }
-
-    
-
-    public List<Long> pegarTaxaDeAbandono(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        List<Long> valores = new ArrayList<>();
-        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_abandono_reserva(6, %d);", idBuffet));
-        Object[] result = (Object[]) query.getSingleResult();
-        valores.add((Long) result[0]);
-        valores.add((Long) result[1]);
-        return valores;
-    }
-
-    public List<Object> pegarTaxaDeSatisfacao(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        List<Object> valores = new ArrayList<>();
-        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_satisfacao(6, %d);", idBuffet));
-        Object[] result = (Object[]) query.getSingleResult();
-        valores.add(result[0]);
-        valores.add(result[1]);
-        return valores;
-    }
-
-    public List<Object> pegarMovimentacaoFinanceira(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        List<Object> valores = new ArrayList<>();
-        Query query = entityManager.createNativeQuery(String.format("CALL sp_kpi_movimentacao_financeira(6, %d);", idBuffet));
-        Object[] result = (Object[]) query.getSingleResult();
-        valores.add(result[0]);
-        valores.add(result[1]);
-        return valores;
-    }
-
-    public List<Object[]> pegarDadosFinanceiro(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        Query query = entityManager.createNativeQuery(String.format("CALL sp_dados_do_buffet(6, %d);", idBuffet));
-        return query.getResultList();
-    }
-
-    public List<Object[]> pegarAvaliacoes(int idBuffet) {
-        Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-        if (buffetOpt.isEmpty()) {
-            return null;
-        }
-        Query query = entityManager.createNativeQuery(String.format("CALL sp_avaliacoes_buffet(6, %d);", idBuffet));
-        return query.getResultList();
-    }
-
-    
-    
-    
-
-    public void verificarBuffet(Buffet buffet) {
-        if (Objects.isNull(buffet.getNome())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "O nome não pode ser nulo");
-        } else if (Objects.isNull(buffet.getDescricao())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "A descrição não pode ser nula");
-        } else if (Objects.isNull(buffet.getTamanho())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "O tamanho não pode ser nulo");
-        } else if (Objects.isNull(buffet.getPrecoMedioDiaria())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "O preço médio da diária não pode ser nulo");
-        } else if (Objects.isNull(buffet.getQtdPessoas())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "A quantidade de pessoas não pode ser nula");
-        } else if (Objects.isNull(buffet.getCaminhoComprovante())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "O caminho do comprovante não pode ser nulo");
-        }
-    }
-
-    
 }

@@ -3,6 +3,11 @@ package eventify.api_spring.api.controller.buffet;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.dashboard.AvaliacaoDto;
+import eventify.api_spring.dto.dashboard.DadosFinanceiro;
+import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
+import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
+import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
@@ -18,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -124,70 +128,40 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/abandono/{idBuffet}")
-    public ResponseEntity<List<Long>> pegarTaxaDeAbandono(@PathVariable int idBuffet) {
-        List<Long> taxaAbandono = buffetService.pegarTaxaDeAbandono(idBuffet);
-        
-        if (Objects.isNull(taxaAbandono)) {
-            return notFound().build();
-        } else if (taxaAbandono.isEmpty()) {
-            return noContent().build();
-        }
-
+    public ResponseEntity<TaxaAbandonoDto> taxaAbandono(@PathVariable Integer idBuffet) {
+        TaxaAbandonoDto taxaAbandono = buffetService.taxaAbandono(idBuffet);
+       
         return ok(taxaAbandono);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/satisfacao/{idBuffet}")
-    public ResponseEntity<List<Object>> pegarTaxaDeSatisfacao(@PathVariable int idBuffet) {
-        List<Object> taxaSatisfacao = buffetService.pegarTaxaDeSatisfacao(idBuffet);
-
-         if (Objects.isNull(taxaSatisfacao)) {
-            return notFound().build();
-        } else if (taxaSatisfacao.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<TaxaSatisfacaoDto> taxaSatisfacao(@PathVariable Integer idBuffet) {
+        TaxaSatisfacaoDto taxaSatisfacao = buffetService.taxaSatisfacao(idBuffet);
 
         return ok(taxaSatisfacao);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/financeiro/{idBuffet}")
-    public ResponseEntity<List<Object>> pegarMovimentacaoFinanceira(@PathVariable int idBuffet) {
-        List<Object> movimentacaoFinanceira = buffetService.pegarMovimentacaoFinanceira(idBuffet);
+    public ResponseEntity<MovimentacaoFinanceiraDto> movimentacaoFinanceira(@PathVariable Integer idBuffet) {
+        MovimentacaoFinanceiraDto movimentacaoFinanceira = buffetService.movimentacaoFinanceira(idBuffet);
        
-         if (Objects.isNull(movimentacaoFinanceira)) {
-            return notFound().build();
-        } else if (movimentacaoFinanceira.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ResponseEntity.ok(movimentacaoFinanceira);
+        return ok(movimentacaoFinanceira);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/dados-financeiro/{idBuffet}")
-    public ResponseEntity<List<Object[]>> pegarDadosFinanceiro(@PathVariable int idBuffet) {
-        List<Object[]> dadosFinanceiro = buffetService.pegarDadosFinanceiro(idBuffet);
-        
-        if (Objects.isNull(dadosFinanceiro)) {
-            return notFound().build();
-        } else if (dadosFinanceiro.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<DadosFinanceiro>> dadosFinanceiro(@PathVariable Integer idBuffet) {
+        List<DadosFinanceiro> dadosFinanceiro = buffetService.dadosFinanceiro(idBuffet);
 
         return ok(dadosFinanceiro);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/avaliacoes/{idBuffet}")
-    public ResponseEntity<List<Object[]>> pegarAvaliacoes(@PathVariable int idBuffet) {
-        List<Object[]> avaliacoes = buffetService.pegarAvaliacoes(idBuffet);
-        
-        if (Objects.isNull(avaliacoes)) {
-            return notFound().build();
-        } else if (avaliacoes.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<AvaliacaoDto>> avaliacoes(@PathVariable Integer idBuffet) {
+        List<AvaliacaoDto> avaliacoes = buffetService.avaliacoes(idBuffet);
 
         return ok(avaliacoes);
     }
