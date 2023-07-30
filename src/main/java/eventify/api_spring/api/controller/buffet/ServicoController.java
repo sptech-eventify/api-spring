@@ -16,17 +16,12 @@ import java.util.List;
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="9. Serviço", description="Controller com os endpoints que controlam os serviços do sistema")
 public class ServicoController {
-
     @Autowired
     private ServicoService servicoService;
 
     @GetMapping
-    public ResponseEntity<List<Servico>> exibirServico() {
-        List<Servico> servicos = this.servicoService.listaServico();
-
-        if(servicos.isEmpty()){
-            return notFound().build();
-        }
+    public ResponseEntity<List<Servico>> servicos() {
+        List<Servico> servicos = this.servicoService.servicos();
 
         return ok(servicos);
     }

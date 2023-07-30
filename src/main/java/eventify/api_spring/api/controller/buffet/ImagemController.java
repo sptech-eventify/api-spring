@@ -26,10 +26,8 @@ public class ImagemController {
     @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Void> salvarImagems(@RequestParam List<MultipartFile> imagens, @RequestParam Integer idBuffet) {
-        if (imagemService.salvarImagems(imagens, idBuffet)){
-            return created(null).build();
-        }
+        imagemService.salvarImagens(imagens, idBuffet);
 
-        return badRequest().build();
+        return ok().build();
     }
 }

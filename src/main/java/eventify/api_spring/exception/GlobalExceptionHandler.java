@@ -5,6 +5,8 @@ import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.exception.http.UnauthorizedException;
+import eventify.api_spring.exception.http.UnsupportedMediaException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,5 +43,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoContentException(NoContentException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NO_CONTENT.value(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(UnsupportedMediaException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedMediaException(UnsupportedMediaException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 }

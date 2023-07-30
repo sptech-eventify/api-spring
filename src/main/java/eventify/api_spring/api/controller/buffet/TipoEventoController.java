@@ -12,7 +12,7 @@ import static org.springframework.http.ResponseEntity.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tipo-eventos")
+@RequestMapping("/tipos-eventos")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="Tipo", description="Controller com os endpoints que controlam os tipos de evento do sistema")
 public class TipoEventoController {
@@ -20,13 +20,9 @@ public class TipoEventoController {
     private TipoEventoService tipoEventoService;
 
     @GetMapping
-    public ResponseEntity<List<TipoEvento>> exibirTipoEvento() {
-        List<TipoEvento> tipoEventos = this.tipoEventoService.exibirTipoEvento();
+    public ResponseEntity<List<TipoEvento>> tiposEventos() {
+        List<TipoEvento> tiposEventos = tipoEventoService.tiposEventos();
 
-        if(tipoEventos.isEmpty()){
-            return notFound().build();
-        }
-
-        return ok(tipoEventos);
+        return ok(tiposEventos);
     }
 }
