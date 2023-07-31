@@ -7,7 +7,6 @@ import eventify.api_spring.domain.buffet.FaixaEtaria;
 
 import java.util.List;
 
-@Repository
 public interface FaixaEtariaRepository extends JpaRepository<FaixaEtaria, Integer> {
 
     List<FaixaEtaria> findAllByOrderByIdAsc();

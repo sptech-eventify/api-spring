@@ -6,6 +6,10 @@ import eventify.api_spring.domain.chat.Mensagem;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.chat.ChatListaDto;
 import eventify.api_spring.dto.chat.MensagemDto;
+import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.exception.http.NotFoundException;
+import eventify.api_spring.exception.http.UnsupportedMediaException;
+import eventify.api_spring.mapper.chat.MensagemMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.ImagemChatRepository;
 import eventify.api_spring.repository.MensagemRepository;
@@ -28,59 +32,70 @@ import java.util.Optional;
 
 @Service
 public class MensagemService {
-
     @Autowired
     private UsuarioRepository usuarioRepository;
+
     @Autowired
     private MensagemRepository mensagemRepository;
+    
     @Autowired
     private BuffetRepository buffetRepository;
+    
     @Autowired
     private ImagemChatRepository imagemChatRepository;
 
-    public Mensagem mandarMensagem(int idUsuario, int idBuffet, String text, boolean whoSended, List<MultipartFile> imagens) {
+    public MensagemDto mandarMensagem(int idUsuario, int idBuffet, String text, boolean whoSended, List<MultipartFile> imagens) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
         if (usuarioOpt.isPresent() && buffetOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             Buffet buffet = buffetOpt.get();
+
             Mensagem mensagem = new Mensagem();
             mensagem.setMensagem(text);
             mensagem.setMandadoPor(whoSended);
             mensagem.setData(LocalDateTime.now());
             mensagem.setUsuario(usuario);
             mensagem.setBuffet(buffet);
-            if (imagens != null) {
-                return salvarImagems(imagens, LocalDate.now().toString(), String.valueOf(LocalDateTime.now().getNano()), idUsuario, mensagemRepository.save(mensagem));
+
+            if (Objects.nonNull(imagens)) {
+                Mensagem mensagemEnviada = salvarImagems(imagens, LocalDate.now().toString(), String.valueOf(LocalDateTime.now().getNano()), idUsuario, mensagemRepository.save(mensagem));
+                MensagemDto mensagemDto = MensagemMapper.toDto(mensagemEnviada);
+               
+                return mensagemDto;
             } else {
-                return mensagemRepository.save(mensagem);
+                Mensagem mensagemEnviada = mensagemRepository.save(mensagem);
+                MensagemDto mensagemDto = MensagemMapper.toDto(mensagemEnviada);
+
+                return mensagemDto;
             }
         }
-        return null;
+
+        throw new NotFoundException("Usuário ou Buffet não encontrado");
     }
 
-    public Mensagem salvarImagems(List<MultipartFile> imagens, String data, String nano, int idUsuario, Mensagem mensagem) {
+    public Mensagem salvarImagems(List<MultipartFile> imagens, String data, String nano, Integer idUsuario, Mensagem mensagem) {
         List<ImagemChat> imagemChats = new ArrayList<>();
-        for (MultipartFile imagem : imagens) {
+
+        for (MultipartFile imagem: imagens) {
             try {
                 String nomeSistemaOperacional = System.getProperty("os.name");
-
-                String fileName = data + nano + "id#" +  idUsuario + ".png";
+                String fileName = data + nano + "id" +  idUsuario + ".png";
                 File currentDirectory = new File(System.getProperty("user.dir"));
                 File diretorioPai = currentDirectory.getParentFile();
-                System.setProperty("user.dir", diretorioPai.getAbsolutePath());
-
                 String caminho = "";
+                System.setProperty("user.dir", diretorioPai.getAbsolutePath());
 
                 if (Objects.equals(nomeSistemaOperacional, "Linux")) {
                     caminho = diretorioPai + "//web-app//public//img";
-                }
-                else if (Objects.equals(nomeSistemaOperacional, "Windows")) {
+                } else if (Objects.equals(nomeSistemaOperacional, "Windows")) {
                     caminho = diretorioPai + "\\web-app\\public\\img";
                 }
 
                 Path path = Paths.get(caminho, fileName);
                 Files.write(path, imagem.getBytes());
+                
                 ImagemChat imagemChat = new ImagemChat();
                 imagemChat.setCaminho(path.toString());
                 imagemChat.setAtivo(true);
@@ -90,76 +105,117 @@ public class MensagemService {
                 imagemChat.setMensagem(mensagem);
                 imagemChats.add(imagemChat);
                 mensagem.getImagens().add(imagemChat);
+
                 imagemChatRepository.save(imagemChat);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new UnsupportedMediaException("Não foi possível salvar a imagem");
             }
         }
+        
         return mensagem;
     }
 
-    public List<MensagemDto> listarMensagemPorUsuario(int idUsuario) {
+    public List<MensagemDto> listarMensagemPorUsuario(Integer idUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+
         if (usuarioOpt.isPresent()) {
             Usuario remetente = usuarioOpt.get();
             List<Mensagem> mensagems = mensagemRepository.findAllByUsuario(remetente);
+
             if (mensagems.isEmpty()) {
-                return null;
+                throw new NoContentException("Não há mensagens para este usuário");
             }
+
             return mensagems.stream()
-                    .map(m -> new MensagemDto(m.getId() ,m.getMensagem(), m.isMandadoPor(), m.getData(), m.getUsuario().getId(), m.getBuffet().getId(), m.getImagensDto()))
+                    .map(MensagemMapper::toDto)
                     .toList();
         }
-        return null;
+
+        throw new NotFoundException("Usuário não encontrado");
     }
 
-    public List<MensagemDto> listarMensagemPorBuffet(int idBuffet) {
+    public List<MensagemDto> listarMensagemPorBuffet(Integer idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
         if (buffetOpt.isPresent()) {
             Buffet buffet = buffetOpt.get();
             List<Mensagem> mensagems = mensagemRepository.findAllByBuffet(buffet);
+
             if (mensagems.isEmpty()) {
-                return null;
+                throw new NoContentException("Não há mensagens para este buffet");
             }
+
             return mensagems.stream()
-                    .map(m -> new MensagemDto(m.getId(), m.getMensagem(), m.isMandadoPor(), m.getData(), m.getUsuario().getId(), m.getBuffet().getId(), m.getImagensDto()))
+                    .map(MensagemMapper::toDto)
                     .toList();
         }
-        return null;
+
+        throw new NotFoundException("Buffet não encontrado");
     }
 
-    public List<MensagemDto> listarMensagemPorUsuarioBuffet(int idUsuario, int idBuffet) {
+    public List<MensagemDto> listarMensagemPorUsuarioBuffet(Integer idUsuario, Integer idBuffet) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
         if (usuarioOpt.isPresent() && buffetOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             Buffet buffet = buffetOpt.get();
+
             List<Mensagem> mensagems = mensagemRepository.findAllByUsuarioBuffet(usuario, buffet);
+
             if (mensagems.isEmpty()) {
-                return null;
+                throw new NoContentException("Não há mensagens para este usuário e buffet");
             }
+
             return mensagems.stream()
-                    .map(m -> new MensagemDto(m.getId() ,m.getMensagem(), m.isMandadoPor(), m.getData(), m.getUsuario().getId(), m.getBuffet().getId(), m.getImagensDto()))
+                    .map(MensagemMapper::toDto)
                     .toList();
         }
-        return null;
+
+        throw new NotFoundException("Usuário ou Buffet não encontrado");
     }
 
-    public List<ChatListaDto> listarChatsDoUsuario(int idUsuario) {
-        return mensagemRepository.findAllChatByUsuario(idUsuario);
+    public List<ChatListaDto> listarChatsDoUsuario(Integer idUsuario) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
+
+        if(usuarioOpt.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+        
+        List<ChatListaDto> chats = mensagemRepository.findAllChatByUsuario(idUsuario);
+
+        if (chats.isEmpty()) {
+            throw new NoContentException("Não há chats para este usuário");
+        }
+
+        return chats;
     }
 
     public List<ChatListaDto> listarChat() {
-        return mensagemRepository.findAllChatListaDto();
+        List<ChatListaDto> chats = mensagemRepository.findAllChatListaDto();
+
+        if (chats.isEmpty()) {
+            throw new NoContentException("Não há chats");
+        }
+
+        return chats;
     }
 
-    public Integer checarQtdMensagens(int idUsuario, int idBuffet) {
+    public Integer checarQtdMensagens(Integer idUsuario, Integer idBuffet) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
+
         if (usuarioOpt.isEmpty() || buffetOpt.isEmpty()) {
-            return null;
+            throw new NotFoundException("Usuário ou Buffet não encontrado");
         }
-        return mensagemRepository.countMensagemByBuffetAndUsuario(buffetOpt.get(), usuarioOpt.get());
+
+        Integer quantidade = mensagemRepository.countMensagemByBuffetAndUsuario(buffetOpt.get(), usuarioOpt.get());
+
+        if (Objects.isNull(quantidade)) {
+            throw new NoContentException("Não há mensagens para este usuário e buffet");
+        }
+
+        return quantidade;
     }
 
 }

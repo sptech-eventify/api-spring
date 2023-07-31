@@ -9,8 +9,6 @@ import eventify.api_spring.service.buffet.BuffetService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
-import org.springframework.web.server.ResponseStatusException;
 
 import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;

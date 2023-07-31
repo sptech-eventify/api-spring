@@ -5,6 +5,5 @@ import org.springframework.stereotype.Repository;
 
 import eventify.api_spring.domain.buffet.TipoEvento;
 
-@Repository
 public interface TipoEventoRepository extends JpaRepository<TipoEvento, Integer> {
 }
