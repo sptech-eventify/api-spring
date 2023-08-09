@@ -1,6 +1,13 @@
 package eventify.api_spring.api.controller.usuario;
 
+import eventify.api_spring.dto.endereco.EnderecoDto;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;
+import eventify.api_spring.dto.usuario.UsuarioBanidoDto;
+import eventify.api_spring.dto.utils.ChurnDto;
+import eventify.api_spring.dto.utils.ConversaoReservasDto;
+import eventify.api_spring.dto.utils.ConversaoVisitantesDto;
+import eventify.api_spring.dto.utils.PrecisaoFormularioDto;
+import eventify.api_spring.dto.utils.RetencaoDto;
 import eventify.api_spring.service.usuario.AdministradorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,117 +33,79 @@ public class AdministradorController {
     @GetMapping("/usuarios")
     public ResponseEntity<List<UsuarioAdminDto>> pegarListaUsuarios() {
         List<UsuarioAdminDto> result = administradorService.pegarListaUsuarios();
-        
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
 
         return ok(result);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/usuarios/banidos")
-    public ResponseEntity<List<Object[]>> pegarUsuariosBanidos() {
-        List<Object[]> result = administradorService.pegarUsuariosBanidos();
+    public ResponseEntity<List<UsuarioBanidoDto>> pegarUsuariosBanidos() {
+        List<UsuarioBanidoDto> usuarios = administradorService.pegarUsuariosBanidos();
 
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(result);
+        return ok(usuarios);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/enderecos")
-    public ResponseEntity<List<Object[]>> pegarListaEndereco() {
-        List<Object[]> enderecos = administradorService.pegarListaEndereco();
-
-        if (enderecos.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<EnderecoDto>> pegarListaEndereco() {
+        List<EnderecoDto> enderecos = administradorService.pegarListaEndereco();
         
         return ok(enderecos);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/conversao-cadastros")
-    public ResponseEntity<List<Object[]>> pegarConversaoCadastros() {
-        List<Object[]> result = administradorService.pegarConversaoCadastros();
-
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<ConversaoVisitantesDto>> pegarConversaoCadastros() {
+        List<ConversaoVisitantesDto> cadastros = administradorService.pegarConversaoCadastros();
         
-        return ok(result);
+        return ok(cadastros);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/precisao-formulario")
-    public ResponseEntity<List<Object[]>> pegarPrecisaoFormulario() {
-        List<Object[]> result = administradorService.pegarPrecisaoFormulario();
+    public ResponseEntity<List<PrecisaoFormularioDto>> pegarPrecisaoFormulario() {
+        List<PrecisaoFormularioDto> precisoes = administradorService.pegarPrecisaoFormulario();
 
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(result);
+        return ok(precisoes);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/conversao-reservas")
-    public ResponseEntity<List<Object[]>> pegarConversaoReserva() {
-        List<Object[]> result = administradorService.pegarConversaoReservas();
+    public ResponseEntity<List<ConversaoReservasDto>> pegarConversaoReserva() {
+        List<ConversaoReservasDto> conversaoReservas = administradorService.pegarConversaoReservas();
 
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(result);
+        return ok(conversaoReservas);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/churn")
-    public ResponseEntity<List<Object[]>> pegarChurn() {
-        List<Object[]> result = administradorService.pegarChurn();
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<ChurnDto>> pegarChurn() {
+        List<ChurnDto> churns = administradorService.pegarChurn();
 
-        return ok(result);
+        return ok(churns);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/retencao/buffets")
-    public ResponseEntity<List<Object[]>> pegarRetencaoBuffets() {
-        List<Object[]> result = administradorService.pegarRetencaoBuffets();
+    public ResponseEntity<List<RetencaoDto>> pegarRetencaoBuffets() {
+        List<RetencaoDto> retencoes = administradorService.pegarRetencaoBuffets();
 
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(result);
+        return ok(retencoes);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/retencao/formularios")
-    public ResponseEntity<List<Object[]>> pegarRetencaoFormulario() {
-        List<Object[]> result = administradorService.pegarRetencaoFormulario();
+    public ResponseEntity<List<RetencaoDto>> pegarRetencaoFormulario() {
+        List<RetencaoDto> retencoes = administradorService.pegarRetencaoFormulario();
 
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
-
-        return ok(result);
+        return ok(retencoes);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/retencao/usuarios")
-    public ResponseEntity<List<Object[]>> pegarRetencaoUsuarios() {
-        List<Object[]> result = administradorService.pegarRetencaoUsuarios();
-        if (result.isEmpty()) {
-            return noContent().build();
-        }
+    public ResponseEntity<List<RetencaoDto>> pegarRetencaoUsuarios() {
+        List<RetencaoDto> retencoes = administradorService.pegarRetencaoUsuarios();
 
-        return ok(result);
+        return ok(retencoes);
     }
 }
