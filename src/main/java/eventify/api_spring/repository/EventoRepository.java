@@ -38,7 +38,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "WHERE e.status = 6 " +
             "AND e.contratante.id = :id " +
             "GROUP BY e")
-    List<EventoDto> findAllEventosInfo(int id);
+    List<EventoDto> findAllEventosInfo(@Param("id") Integer id);
 
     @Query("SELECT new eventify.api_spring.dto.evento.EventoDto(e.id, b.nome, e.data, e.preco, e.nota, t.descricao, CONCAT(i.caminho, '/', i.nome, '.', i.tipo), e.status) FROM Buffet b " +
             "JOIN b.tiposEventos t " +
@@ -48,7 +48,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "AND e.contratante.id = :id " +
             "GROUP BY b.nome," +
             "b.id")
-    List<EventoDto> findAllOrcamentos(int id);
+    List<EventoDto> findAllOrcamentos(@Param("id") Integer id);
 
     @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, GROUP_CONCAT(DISTINCT ts.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) " +
             "FROM Buffet b " +
@@ -64,10 +64,10 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "b.id," +
             "e.data," +
             "e.preco")
-    OrcamentoDto findOrcamentoById(int idEvento);
+    OrcamentoDto findOrcamentoById(@Param("idEvento") Integer idEvento);
 
     @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
-    Integer findStatusByEvento(int idEvento);
+    Integer findStatusByEvento(@Param("idEvento") Integer idEvento);
 
     @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)" +
             "FROM Evento e " +
@@ -76,7 +76,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
             "WHERE b.id = :idBuffet AND " +
             "e.status != '6' " +
             "ORDER BY e.status")
-    List<OrcamentoPropDto> findAllOrcamentosByBuffet(int idBuffet);
-
+    List<OrcamentoPropDto> findAllOrcamentosByBuffet(@Param("idBuffet") Integer idBuffet);
 }
 
