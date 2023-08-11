@@ -1,8 +1,8 @@
 package eventify.api_spring.factory.pesquisa;
 
-import eventify.api_spring.domain.Pesquisa;
-
 import java.util.List;
+
+import eventify.api_spring.domain.buffet.Pesquisa;
 
 public class PesquisaTestFactory {
 

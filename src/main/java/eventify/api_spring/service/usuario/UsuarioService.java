@@ -1,13 +1,15 @@
 package eventify.api_spring.service.usuario;
 
 import eventify.api_spring.api.configuration.security.jwt.GerenciadorTokenJwt;
-import eventify.api_spring.domain.Usuario;
-import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
-import eventify.api_spring.dto.usuario.UsuarioDevolverDTO;
-import eventify.api_spring.dto.usuario.UsuarioMapper;
+import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
+import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
+import eventify.api_spring.dto.usuario.UsuarioInfoDto;
+import eventify.api_spring.dto.usuario.UsuarioLoginDto;
+import eventify.api_spring.mapper.usuario.UsuarioMapper;
+import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.repository.UsuarioRepository;
-import eventify.api_spring.service.usuario.dto.UsuarioLoginDto;
-import eventify.api_spring.service.usuario.dto.UsuarioTokenDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +19,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import eventify.api_spring.exception.http.BadRequestException;
+import eventify.api_spring.exception.http.ForbiddenException;
+import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.exception.http.NotFoundException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-// Classe que executa toda regra de negócio e retorna os resultados para Controller
 public class UsuarioService {
     @Autowired
     private GerenciadorTokenJwt gerenciadorTokenJwt;
@@ -36,92 +42,94 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public List<Usuario> listar() {
-        List<Usuario> lista = usuarioRepository.findAll();
-        return lista;
+    public List<UsuarioDevolverDto> listar() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        
+        if (usuarios.isEmpty()) {
+            throw new NoContentException("Não há usuários cadastrados");
+        }
+
+        return usuarios.stream().map(
+            usuario -> new UsuarioDevolverDto(usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getCpf())
+        ).toList();
     }
 
-    public Optional<Usuario> exibir(Integer id) {
-        return usuarioRepository.findById(id);
+    public UsuarioInfoDto exibir(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+
+        if(usuario.isPresent()){
+            return new UsuarioInfoDto(usuario.get().getNome(), usuario.get().getEmail(), usuario.get().getCpf());
+        }
+
+        throw new NotFoundException("Usuário não encontrado");
     }
 
-    public UsuarioDevolverDTO cadastrar(UsuarioCadastrarDTO usuarioCadastrarDTO) {
-        UsuarioDevolverDTO usuarioDevolverDTO = new UsuarioDevolverDTO();
-        Usuario novoUsuario = UsuarioMapper.of(usuarioCadastrarDTO);
+    public UsuarioDevolverDto cadastrar(UsuarioCadastrarDto usuario) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente.isPresent()) {
+            throw new BadRequestException("Email já cadastrado");
+        } else if (usuario.getSenha().length() < 8) {
+            throw new BadRequestException("Senha deve ter no mínimo 8 caracteres");
+        } else if (usuario.getNome().length() < 3) {
+            throw new BadRequestException("Nome deve ter no mínimo 3 caracteres");
+        } else if (usuario.getTipoUsuario() == null) {
+            throw new BadRequestException("Tipo de usuário não pode ser nulo");
+        } else if (usuario.getTipoUsuario() != 1 &&  usuario.getTipoUsuario() != 2) {
+            throw new BadRequestException("Tipo de usuário inválido");
+        }
+
+        Usuario novoUsuario = UsuarioMapper.of(usuario);
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
-        novoUsuario.setAtivo(true);
+        novoUsuario.setIsAtivo(true);
         this.usuarioRepository.save(novoUsuario);
-        usuarioDevolverDTO.setId(novoUsuario.getId());
-        usuarioDevolverDTO.setNome(novoUsuario.getNome());
-        usuarioDevolverDTO.setEmail(novoUsuario.getEmail());
-        return usuarioDevolverDTO;
+
+        return UsuarioMapper.toDevolverDto(novoUsuario);
     }
 
-    public Boolean banir(int id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isEmpty()) {
-            return false;
+    public Boolean banir(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+        
+        if (usuario.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
         }
 
-        Usuario usuario = usuarioOpt.get();
-        usuario.setBanido(true);
-        usuarioRepository.save(usuario);
+        Usuario usuarioAtualizado = usuario.get();
+        usuarioAtualizado.setIsBanido(true);
+        usuarioRepository.save(usuarioAtualizado);
 
         return true;
     }
 
-    public UsuarioCadastrarDTO atualizar(int id, Usuario novoUsuario) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        UsuarioCadastrarDTO usuario = new UsuarioCadastrarDTO();
-        if (usuarioOpt.isPresent()) {
-            if (novoUsuario.getNome() != null) {
-                usuario.setNome(novoUsuario.getNome());
-                usuarioOpt.get().setNome(novoUsuario.getNome());
-            }
-
-            if (novoUsuario.getEmail() != null) {
-                usuario.setEmail(novoUsuario.getEmail());
-                usuarioOpt.get().setEmail(novoUsuario.getEmail());
-            }
-
-            if (novoUsuario.getCpf() != null) {
-                usuario.setCpf(novoUsuario.getCpf());
-                usuarioOpt.get().setCpf(novoUsuario.getCpf());
-            }
-
-            if (novoUsuario.getSenha() != null) {
-                usuario.setSenha(passwordEncoder.encode(novoUsuario.getSenha()));
-                usuarioOpt.get().setSenha(novoUsuario.getSenha());
-            }
-
-            if(novoUsuario.getTipoUsuario() != null) {
-                usuario.setTipoUsuario(novoUsuario.getTipoUsuario());
-                usuarioOpt.get().setTipoUsuario(novoUsuario.getTipoUsuario());
-            }
-
-            usuario.setAtivo(novoUsuario.isAtivo());
-            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
-
-            usuarioOpt.get().setAtivo(novoUsuario.isAtivo());
-            usuarioOpt.get().setBanido(novoUsuario.isBanido());
+    public Void atualizar(Integer idUsuario, Usuario novoUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+        UsuarioCadastrarDto usuarioAtualizado = new UsuarioCadastrarDto();
+        
+        if (usuario.isPresent()) {
+            usuarioAtualizado.setNome(novoUsuario.getNome());
+            usuarioAtualizado.setEmail(novoUsuario.getEmail());
+            usuarioAtualizado.setCpf(novoUsuario.getCpf());
+            usuarioAtualizado.setSenha(novoUsuario.getSenha());
+            usuarioAtualizado.setTipoUsuario(novoUsuario.getTipoUsuario());
         } else {
-            throw new ResponseStatusException(404, "Usuário não encontrado", null);
+            throw new NotFoundException("Usuário não encontrado");
         }
-        usuarioRepository.save(usuarioOpt.get());
-        return usuario;
+
+        usuarioRepository.save(usuario.get());
+        return null;
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
-        System.out.println("Primeiro corte");
         Optional<Usuario> usuario = usuarioRepository.findByEmail(usuarioLoginDto.getEmail());
+
         if (usuario.isPresent()) {
-            if (usuario.get().isBanido()) {
-                throw new ResponseStatusException(403, "Usuário banido", null);
+            if (usuario.get().getIsBanido()) {
+                throw new ForbiddenException("Usuário banido");
             } else {
-                usuario.get().setAtivo(true);
-                usuario.get().setBanido(false);
+                usuario.get().setIsAtivo(true);
+                usuario.get().setIsBanido(false);
                 usuario.get().setUltimoLogin(LocalDateTime.now());
                 usuarioRepository.save(usuario.get());
             }
@@ -146,23 +154,30 @@ public class UsuarioService {
         return UsuarioMapper.of(usuarioAutenticado, token);
     }
 
-    public boolean desbanir(int id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isEmpty()) {
-            return false;
+    public Void desbanir(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+        
+        if (usuario.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
         }
-        usuarioOpt.get().setBanido(false);
-        usuarioRepository.save(usuarioOpt.get());
-        return true;
+        
+        Usuario usuarioAtualizado = usuario.get();
+        usuarioAtualizado.setIsBanido(false);
+        usuarioRepository.save(usuarioAtualizado);
+        
+        return null;
     }
 
-    public boolean logof(int id) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
-        if (usuarioOpt.isEmpty()) {
-            return false;
+    public Boolean logof(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+
+        if (usuario.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
         }
-        usuarioOpt.get().setAtivo(false);
-        usuarioRepository.save(usuarioOpt.get());
+
+        usuario.get().setIsAtivo(false);
+        usuarioRepository.save(usuario.get());
+        
         return true;
     }
 

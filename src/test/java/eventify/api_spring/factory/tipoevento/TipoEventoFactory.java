@@ -1,8 +1,8 @@
 package eventify.api_spring.factory.tipoevento;
 
-import eventify.api_spring.domain.TipoEvento;
-
 import java.util.Set;
+
+import eventify.api_spring.domain.buffet.TipoEvento;
 
 public class TipoEventoFactory {
 

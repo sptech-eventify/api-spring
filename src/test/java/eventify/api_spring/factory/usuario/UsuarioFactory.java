@@ -1,6 +1,6 @@
 package eventify.api_spring.factory.usuario;
 
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
 
 public class UsuarioFactory {
 
@@ -10,8 +10,8 @@ public class UsuarioFactory {
         usuario.setId(1);
         usuario.setNome("Gabriel Santos");
         usuario.setEmail("gabriel@santos.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
+        usuario.setIsAtivo(true);
+        usuario.setIsBanido(false);
         usuario.setTipoUsuario(1);
         usuario.setSenha("123456");
         usuario.setCpf("31509983015");
@@ -24,8 +24,8 @@ public class UsuarioFactory {
         usuario.setId(1);
         usuario.setNome("Paulo José");
         usuario.setEmail("paulin@jose.com");
-        usuario.setAtivo(true);
-        usuario.setBanido(false);
+        usuario.setIsAtivo(true);
+        usuario.setIsBanido(false);
         usuario.setTipoUsuario(1);
         usuario.setSenha("#SenhaDaora");
         usuario.setCpf("14389563556");
@@ -37,8 +37,8 @@ public class UsuarioFactory {
         Usuario usuario = new Usuario();
         usuario.setEmail("gabriel@santos.com");
         usuario.setSenha("123456");
-        usuario.setBanido(false);
-        usuario.setAtivo(false);
+        usuario.setIsBanido(false);
+        usuario.setIsAtivo(false);
 
         return usuario;
     }

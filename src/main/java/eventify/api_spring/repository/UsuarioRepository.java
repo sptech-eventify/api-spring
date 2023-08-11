@@ -1,6 +1,6 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.Usuario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
