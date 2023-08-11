@@ -1,8 +1,6 @@
 package eventify.api_spring.service.usuario;
 
-import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.dto.endereco.EnderecoDto;
-import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.usuario.UsuarioAdminDto;
 import eventify.api_spring.dto.usuario.UsuarioBanidoDto;
 import eventify.api_spring.dto.utils.ChurnDto;
@@ -16,7 +14,6 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import eventify.api_spring.exception.http.NoContentException;
-import eventify.api_spring.exception.http.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;

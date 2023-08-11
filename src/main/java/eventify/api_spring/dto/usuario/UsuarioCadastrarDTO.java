@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 
-public class UsuarioCadastrarDTO {
+public class UsuarioCadastrarDto {
     @Schema(example = "Gabriel Santos")
     @NotBlank
     String nome;
@@ -35,7 +35,7 @@ public class UsuarioCadastrarDTO {
     private Boolean isBanido = false;
 
 
-    public UsuarioCadastrarDTO(String nome, String email, String senha, String cpf, Integer tipoUsuario) {
+    public UsuarioCadastrarDto(String nome, String email, String senha, String cpf, Integer tipoUsuario) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;

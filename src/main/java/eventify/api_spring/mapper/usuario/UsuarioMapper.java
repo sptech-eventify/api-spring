@@ -1,7 +1,7 @@
 package eventify.api_spring.mapper.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 
@@ -11,18 +11,16 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
-    UsuarioDevolverDto toDevolverDto(Usuario domain);
-
-    public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
+    public static Usuario of(UsuarioCadastrarDto usuarioCadastrarDto) {
         Usuario usuario = new Usuario();
         usuario.setIsAtivo(false);
         usuario.setIsBanido(false);
-        usuario.setEmail(usuarioCadastrarDTO.getEmail());
-        usuario.setTipoUsuario(usuarioCadastrarDTO.getTipoUsuario());
-        usuario.setNome(usuarioCadastrarDTO.getNome());
-        usuario.setCpf(usuarioCadastrarDTO.getCpf());
-        usuario.setTipoUsuario(usuarioCadastrarDTO.getTipoUsuario());
-        usuario.setSenha(usuarioCadastrarDTO.getSenha());
+        usuario.setEmail(usuarioCadastrarDto.getEmail());
+        usuario.setTipoUsuario(usuarioCadastrarDto.getTipoUsuario());
+        usuario.setNome(usuarioCadastrarDto.getNome());
+        usuario.setCpf(usuarioCadastrarDto.getCpf());
+        usuario.setTipoUsuario(usuarioCadastrarDto.getTipoUsuario());
+        usuario.setSenha(usuarioCadastrarDto.getSenha());
         usuario.setDataCriacao(LocalDateTime.now());
         return usuario;
     }
@@ -35,5 +33,15 @@ public interface UsuarioMapper {
                 token,
                 usuario.getFoto());
         return usuarioTokenDto;
+    }
+
+    public static UsuarioDevolverDto toDevolverDto(Usuario domain){
+        UsuarioDevolverDto usuarioDevolverDto = new UsuarioDevolverDto();
+        usuarioDevolverDto.setId(domain.getId());
+        usuarioDevolverDto.setNome(domain.getNome());
+        usuarioDevolverDto.setEmail(domain.getEmail());
+        usuarioDevolverDto.setFoto(domain.getFoto());
+
+        return usuarioDevolverDto;
     }
 }

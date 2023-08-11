@@ -11,7 +11,7 @@ import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
-import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.mapper.usuario.UsuarioMapper;
 import eventify.api_spring.mapper.agenda.AgendaMapper;
@@ -46,7 +46,7 @@ public class BuffetMapper {
         dto.setFaixasEtarias(domain.getFaixaEtarias());
         dto.setTiposEventos(domain.getTiposEventos());
         dto.setServicos(domain.getServicos());
-        dto.setUsuario(usuarioMapper.toDevolverDto(domain.getUsuario()));
+        dto.setUsuario(UsuarioMapper.toDevolverDto(domain.getUsuario()));
         dto.setAgendas(domain.getAgendas().stream().map(agendaMapper::toDto).collect(Collectors.toList()));
         dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
 
@@ -92,7 +92,7 @@ public class BuffetMapper {
         return dto;
     }
 
-    public static Usuario of(UsuarioCadastrarDTO usuarioCadastrarDTO) {
+    public static Usuario of(UsuarioCadastrarDto usuarioCadastrarDTO) {
         Usuario usuario = new Usuario();
         usuario.setIsAtivo(false);
         usuario.setIsBanido(false);

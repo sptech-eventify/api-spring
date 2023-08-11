@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
-import eventify.api_spring.dto.usuario.UsuarioCadastrarDTO;
+import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
@@ -9,14 +9,13 @@ import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.service.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.ResponseEntity.*;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -32,87 +31,60 @@ public class UsuarioController {
     public ResponseEntity<List<UsuarioDevolverDto>> listar() {
         List<UsuarioDevolverDto> usuarios = usuarioService.listar();
         
-        if (usuarios.isEmpty()) {
-            return noContent().build();
-        }
-
         return ok(usuarios);
     }
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer id) {
-        UsuarioInfoDto usuario = usuarioService.exibir(id);
-
-        if (Objects.isNull(usuario)) {
-            return notFound().build();
-        }
+    public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer idUsuario) {
+        UsuarioInfoDto usuario = usuarioService.exibir(idUsuario);
 
         return ok(usuario);
     }
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<Void> cadastrar(@RequestBody @Valid UsuarioCadastrarDTO usuario) {
+    public ResponseEntity<Void> cadastrar(@RequestBody UsuarioCadastrarDto usuario) {
         UsuarioDevolverDto usuarioResposta = usuarioService.cadastrar(usuario);
+        URI location = URI.create(String.format("/usuarios/%s", usuarioResposta.getId() ));
 
-        if (Objects.isNull(usuarioResposta)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(location).build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @DeleteMapping("/banir")
-    public ResponseEntity<Void> banir(int id) {
-        if (usuarioService.banir(id)) {
-            return noContent().build();
-        }
+    @DeleteMapping("/banir/{idUsuario}")
+    public ResponseEntity<Void> banir(@PathVariable Integer idUsuario) {
+        usuarioService.banir(idUsuario);
 
-        return notFound().build();
+        return ok().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PostMapping("/desbanir")
-    public ResponseEntity<Void> desbanir(int id) {
-        if (usuarioService.desbanir(id)) {
-            return noContent().build();
-        }
+    @PostMapping("/desbanir/{idUsuario}")
+    public ResponseEntity<Void> desbanir(@PathVariable Integer idUsuario) {
+        usuarioService.desbanir(idUsuario);
 
-        return notFound().build();
+        return ok().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PutMapping
-    public ResponseEntity<UsuarioCadastrarDTO> atualizar(@RequestParam int id, @RequestBody Usuario usuario) {
-        UsuarioCadastrarDTO usuarioAtualizado = usuarioService.atualizar(id, usuario);
+    @PutMapping("/{idUsuario}")
+    public ResponseEntity<Void> atualizar(@PathVariable Integer idUsuario, @RequestBody Usuario usuario) {
+        usuarioService.atualizar(idUsuario, usuario);
 
-        if (Objects.isNull(usuarioAtualizado)) {
-            return notFound().build();
-        }
-
-        return ok(usuarioAtualizado);
+        return ok().build();
     }
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto) {
         UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
 
-        if (Objects.isNull(usuarioToken)) {
-            return notFound().build();
-        }
-
         return ok(usuarioToken);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PatchMapping("/logof")
-    public ResponseEntity<Void> logof(@RequestParam int id) {
-        if (usuarioService.logof(id)) {
-            return ok().build();
-        }
-
-        return notFound().build();
+    @PatchMapping("/logof/{idUsuario}")
+    public ResponseEntity<Boolean> logof(@PathVariable Integer idUsuario) {
+        return ok(usuarioService.logof(idUsuario));
     }
 
 }
