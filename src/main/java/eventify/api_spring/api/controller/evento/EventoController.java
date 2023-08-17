@@ -36,7 +36,6 @@ public class EventoController {
         return ok(eventos);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Void> criarEvento(@RequestBody @Valid EventoCriacaoDto evento) {
         Evento eventoCriado = eventoService.criarEvento(evento);
@@ -45,7 +44,6 @@ public class EventoController {
         return created(location).build();
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{idEvento}")
     public ResponseEntity<EventoDto> eventoPorId(@PathVariable Integer idEvento) {
         EventoDto evento = eventoService.eventoPorId(idEvento);
@@ -53,7 +51,6 @@ public class EventoController {
         return ok(evento);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/buffet/orcamento/{idBuffet}")
     public ResponseEntity<List<OrcamentoPropDto>> buscarOrcamentosDoBuffet(@PathVariable Integer idBuffet) {
         List<OrcamentoPropDto> lista = eventoService.buscarOrcamentosDoBuffet(idBuffet);
@@ -61,7 +58,6 @@ public class EventoController {
         return ok(lista);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/contratante/{idUsuario}/orcamentos")
     public ResponseEntity<List<OrcamentoContratanteDto>> pegarOrcamentos(@PathVariable Integer idUsuario) {
         List<OrcamentoContratanteDto> orcamentos = eventoService.pegarOrcamentos(idUsuario);
@@ -69,7 +65,6 @@ public class EventoController {
         return ok(orcamentos);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/info/{idUsuario}")
     public ResponseEntity<List<EventoDto>> listarEventosInfo(@PathVariable Integer idUsuario) {
         List<EventoDto> eventos = eventoService.listarEventosInfo(idUsuario);
@@ -77,7 +72,6 @@ public class EventoController {
         return ok(eventos);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/info/orcamentos/{idUsuario}")
     public ResponseEntity<List<EventoDto>> listarOrcamentos(@PathVariable Integer idUsuario) {
         List<EventoDto> eventos = eventoService.listarOrcamentos(idUsuario);
@@ -85,7 +79,6 @@ public class EventoController {
         return ResponseEntity.ok(eventos);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/orcamento")
     public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam Integer idEvento) {
         OrcamentoDto orcamento = eventoService.buscarOrcamento(idEvento);
@@ -93,7 +86,6 @@ public class EventoController {
         return ok(orcamento);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/orcamento/mandar")
     public ResponseEntity<Void> mandarOrcamento(@RequestParam @Valid Integer idEvento, @RequestParam @Valid Double preco) {
         eventoService.mandarOrcamento(idEvento, preco);
@@ -101,7 +93,6 @@ public class EventoController {
         return ok().build();
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/orcamento/verificar/{idEvento}")
     public ResponseEntity<Integer> verificarPagamento(@PathVariable Integer idEvento) {
         Integer status = eventoService.verificarOrcamento(idEvento);
@@ -109,7 +100,6 @@ public class EventoController {
         return ok(status);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PutMapping("/orcamento/pagar/{idEvento}")
     public ResponseEntity<Boolean> pagarOrcamento(@PathVariable Integer idEvento) {
         eventoService.pagarOrcamento(idEvento);

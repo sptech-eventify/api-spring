@@ -4,7 +4,7 @@ import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
-import eventify.api_spring.dto.dashboard.DadosFinanceiro;
+import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
@@ -152,8 +152,8 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/dados-financeiro/{idBuffet}")
-    public ResponseEntity<List<DadosFinanceiro>> dadosFinanceiro(@PathVariable Integer idBuffet) {
-        List<DadosFinanceiro> dadosFinanceiro = buffetService.dadosFinanceiro(idBuffet);
+    public ResponseEntity<List<DadosFinanceiroDto>> dadosFinanceiro(@PathVariable Integer idBuffet) {
+        List<DadosFinanceiroDto> dadosFinanceiro = buffetService.dadosFinanceiro(idBuffet);
 
         return ok(dadosFinanceiro);
     }

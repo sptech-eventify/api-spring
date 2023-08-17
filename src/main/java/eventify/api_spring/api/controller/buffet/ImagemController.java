@@ -23,7 +23,6 @@ public class ImagemController {
     @Autowired
     private ImagemService imagemService;
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Void> salvarImagems(@RequestParam List<MultipartFile> imagens, @RequestParam Integer idBuffet) {
         imagemService.salvarImagens(imagens, idBuffet);
