@@ -6,7 +6,7 @@ import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
-import eventify.api_spring.dto.dashboard.DadosFinanceiro;
+import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
@@ -325,7 +325,7 @@ public class BuffetService {
         return new MovimentacaoFinanceiraDto(result[0], result[1]);
     }
 
-    public List<DadosFinanceiro> dadosFinanceiro(Integer idBuffet) {
+    public List<DadosFinanceiroDto> dadosFinanceiro(Integer idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
     
         if (buffetOpt.isEmpty()) {
@@ -336,13 +336,13 @@ public class BuffetService {
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> resultList = query.getResultList();
     
-        List<DadosFinanceiro> dadosFinanceiroList = new ArrayList<>();
+        List<DadosFinanceiroDto> dadosFinanceiroList = new ArrayList<>();
         for (Object[] result : resultList) {
             Object mes = result[0];
             Object qtdEventos = result[1];
             Object faturamento = result[2];
     
-            dadosFinanceiroList.add(new DadosFinanceiro(mes, qtdEventos, faturamento));
+            dadosFinanceiroList.add(new DadosFinanceiroDto(mes, qtdEventos, faturamento));
         }
     
         return dadosFinanceiroList;

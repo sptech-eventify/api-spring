@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DadosFinanceiro {
+public class DadosFinanceiroDto {
     private Object mes;
     private Object qtdEventos;
     private Object faturamento;

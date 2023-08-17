@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
+@SecurityRequirement(name = "requiredAuth")
 @RequestMapping("/mensagens")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="6. Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
@@ -21,7 +22,6 @@ public class MensagemController {
     @Autowired
     private MensagemService mensagemService;
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/usuario/{idUsuario}/{idBuffet}")
     public ResponseEntity<MensagemDto> mandarMensagemUsuario(@PathVariable Integer idUsuario, @PathVariable Integer idBuffet, @RequestParam String text) {
         MensagemDto mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, false, null);
@@ -29,7 +29,6 @@ public class MensagemController {
         return ok(mensagem);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/buffet/{idBuffet}/{idUsuario}")
     public ResponseEntity<MensagemDto> mandarMensagemBuffet(@PathVariable Integer idUsuario, @PathVariable Integer idBuffet, @RequestParam String text) {
         MensagemDto mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, true, null);
@@ -37,7 +36,6 @@ public class MensagemController {
         return ok(mensagem);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping("/usuario-imagem/{idUsuario}/{idBuffet}")
     public ResponseEntity<MensagemDto> mandarMensagemComImagemUsuario(@PathVariable Integer idUsuario, @PathVariable Integer idBuffet, @RequestParam String text, @RequestParam("file") List<MultipartFile> imagems) {
         MensagemDto mensagem = mensagemService.mandarMensagem(idUsuario, idBuffet, text, false, imagems);
@@ -45,7 +43,6 @@ public class MensagemController {
         return ok(mensagem);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/usuario/{idUsuario}")
     public ResponseEntity<List<MensagemDto>> listarPorUsuario(@PathVariable Integer idUsuario) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuario(idUsuario);
@@ -53,7 +50,6 @@ public class MensagemController {
         return ok(mensagens);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/buffet/{idBuffet}")
     public ResponseEntity<List<MensagemDto>> listarPorBuffet(@PathVariable Integer idBuffet) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorBuffet(idBuffet);
@@ -61,7 +57,6 @@ public class MensagemController {
         return ok(mensagens);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat/{idUsuario}/{idBuffet}")
     public ResponseEntity<List<MensagemDto>> listarPorUsuarioBuffet(@PathVariable Integer idUsuario, @PathVariable Integer idBuffet) {
         List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuarioBuffet(idUsuario, idBuffet);
@@ -69,7 +64,6 @@ public class MensagemController {
         return ok(mensagens);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat/{idUsuario}")
     public ResponseEntity<List<ChatListaDto>> listarChatsDoUsuario(@PathVariable Integer idUsuario) {
         List<ChatListaDto> chats = mensagemService.listarChatsDoUsuario(idUsuario);
@@ -77,7 +71,6 @@ public class MensagemController {
         return ok(chats);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/chat")
     public ResponseEntity<List<ChatListaDto>> listarTodosOsChats() {
         List<ChatListaDto> chats = mensagemService.listarChat();
@@ -85,7 +78,6 @@ public class MensagemController {
         return ok(chats);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/check-chat/{idUsuario}/{idBuffet}")
     public ResponseEntity<Integer> checarQtdMensagens(@PathVariable Integer idUsuario, @PathVariable Integer idBuffet) {
         Integer qtdMensagens = mensagemService.checarQtdMensagens(idUsuario, idBuffet);
