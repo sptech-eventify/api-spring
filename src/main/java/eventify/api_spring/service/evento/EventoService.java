@@ -3,8 +3,11 @@ package eventify.api_spring.service.evento;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.domain.pagamento.Pagamento;
+import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.evento.EventoCriacaoDto;
 import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.evento.PagamentoEventoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
@@ -13,6 +16,7 @@ import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.evento.EventoMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.EventoRepository;
+import eventify.api_spring.repository.PagamentoRepository;
 import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -21,6 +25,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +43,9 @@ public class EventoService {
 
     @Autowired
     private BuffetRepository buffetRepository;
+
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
 
     public List<EventoDto> exibirTodosEventos() {
         List<Evento> eventos = eventoRepository.findAll();
@@ -207,4 +215,36 @@ public class EventoService {
 
         return null;
     }
+
+    public Void pagamentoRotina() {
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_eventos_ontem");
+        List<Object[]> resultList = query.getResultList();
+
+        List<PagamentoEventoDto> eventosList = new ArrayList<>();
+        for (Object[] result : resultList) {
+            Object idEvento = result[0];
+            Object data = result[1];
+            Object preco = result[2];
+            Object idProprietario = result[3];
+            Object idContratante = result[4];
+    
+            eventosList.add(new PagamentoEventoDto(idEvento, data, preco, true, idProprietario, idContratante));
+        }
+
+        for (PagamentoEventoDto evento : eventosList) {
+            Pagamento pagamento = new Pagamento();
+            pagamento.setIsPagoContrato(true);
+            pagamento.setIsPagoBuffet(true);
+            pagamento.setDataPago(LocalDateTime.now());
+
+            pagamentoRepository.save(pagamento);
+
+            Evento eventoAtualizado = eventoRepository.findById((Integer) evento.getIdEvento()).get();   
+            eventoAtualizado.setPagamento(pagamento);
+            eventoRepository.save(eventoAtualizado);         
+        }
+
+        return null;
+    }
+
 }
