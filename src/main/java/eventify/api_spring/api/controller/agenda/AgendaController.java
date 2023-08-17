@@ -15,6 +15,7 @@ import static org.springframework.http.ResponseEntity.*;
 import java.net.URI;
 import java.util.List;
 
+@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/agendas")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
@@ -24,7 +25,6 @@ public class AgendaController {
     @Autowired
     private AgendaService agendaService;
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping
     public ResponseEntity<List<AgendaDto>> listarAgendas() {
         List<AgendaDto> agenda = agendaService.listarAgendas();
@@ -32,7 +32,6 @@ public class AgendaController {
         return ok(agenda);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @PostMapping
     public ResponseEntity<Agenda> criarAgenda(@RequestBody AgendaCriacaoDto agenda) {
         Agenda agendaSalva = agendaService.criarAgenda(agenda);
@@ -41,7 +40,6 @@ public class AgendaController {
         return created(location).build();
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{idAgenda}")
     public ResponseEntity<AgendaDto> buscarAgendaPorId(@PathVariable Integer idAgenda) {
         AgendaDto agenda = agendaService.buscarAgendaPorId(idAgenda);
@@ -49,7 +47,6 @@ public class AgendaController {
         return ok(agenda);
     }
 
-    @SecurityRequirement(name = "requiredAuth")
     @DeleteMapping("/{idAgenda}")
     public ResponseEntity<Void> deletarAgenda(@PathVariable Integer idAgenda) {
         agendaService.deletarAgenda(idAgenda);
