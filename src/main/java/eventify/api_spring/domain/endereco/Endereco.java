@@ -4,20 +4,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@ToString
 @Entity
 public class Endereco {
     @Id
@@ -28,26 +28,21 @@ public class Endereco {
     private boolean isValidado;
 
     @Schema(example = "R. Gualaxo")
-    @NotBlank
     private String logradouro;
 
     @Schema(example = "285")
     private String numero;
 
     @Schema(example = "Aclimação")
-    @NotBlank
     private String bairro;
 
     @Schema(example = "São Paulo")
-    @NotBlank
     private String cidade;
 
     @Schema(example = "SP")
-    @NotBlank
     private String uf;
 
     @Schema(example = "01533-010")
-    @NotBlank
     private String cep;
 
     @Schema(example = "-23.574011")
@@ -56,6 +51,6 @@ public class Endereco {
     @Schema(example = "46.6388203")
     private Double longitude;
 
-    @Schema(example = "2023-05-20 17:49:12")
-    private LocalDate dataCriacao;
+    @Schema(example = "2023-05-20T17:49:12")
+    private LocalDateTime dataCriacao;
 }

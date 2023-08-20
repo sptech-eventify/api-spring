@@ -21,7 +21,6 @@ import java.util.List;
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 @Tag(name="5. Agenda", description="Controller com os endpoints de reservas dos buffets")
 public class AgendaController {
-
     @Autowired
     private AgendaService agendaService;
 

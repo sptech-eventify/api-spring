@@ -13,7 +13,6 @@ import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
-import eventify.api_spring.service.evento.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,9 +34,6 @@ public class BuffetController {
 
     @Autowired
     private BuffetService buffetService;
-
-    @Autowired
-    private EventoService eventoService;
 
     @GetMapping
     public ResponseEntity<List<BuffetRespostaDto>> listarBuffets() {
