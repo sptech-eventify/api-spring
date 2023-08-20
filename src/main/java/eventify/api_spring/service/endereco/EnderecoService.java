@@ -33,6 +33,7 @@ public class EnderecoService {
 
     public Endereco cadastrarEndereco(Endereco endereco) {
         endereco.setValidado(false);
+        System.out.println(endereco.toString());
         enderecoRepository.save(endereco);
 
         return endereco;

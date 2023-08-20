@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,7 +115,7 @@ public class BuffetService {
         
         Endereco endereco = buffet.getEndereco();
 
-        endereco.setDataCriacao(LocalDate.now());
+        endereco.setDataCriacao(LocalDateTime.now());
         endereco.setValidado(false);
 
         enderecoRepository.save(endereco);
@@ -135,7 +136,7 @@ public class BuffetService {
             if(Objects.isNull(buffetBanco.getEndereco()) && Objects.nonNull(buffet.getEndereco())){
                 Endereco endereco = buffet.getEndereco();
 
-                endereco.setDataCriacao(LocalDate.now());
+                endereco.setDataCriacao(LocalDateTime.now());
                 endereco.setValidado(false);
                 enderecoRepository.save(endereco);
 

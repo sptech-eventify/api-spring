@@ -11,12 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@ToString
 @Entity
 public class Endereco {
     @Id
@@ -50,6 +51,6 @@ public class Endereco {
     @Schema(example = "46.6388203")
     private Double longitude;
 
-    @Schema(example = "2023-05-20 17:49:12")
+    @Schema(example = "2023-05-20T17:49:12")
     private LocalDateTime dataCriacao;
 }
