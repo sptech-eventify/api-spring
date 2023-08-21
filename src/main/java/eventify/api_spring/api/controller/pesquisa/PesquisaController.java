@@ -22,7 +22,7 @@ public class PesquisaController {
     private PesquisaService pesquisaService;
 
     @GetMapping
-    private ResponseEntity<List<BuffetRespostaDto>> buscador(
+    private ResponseEntity<List<BuffetRespostaDto>> buscador (
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "faixaEtaria", required = false) List<String> faixaEtaria,
             @RequestParam(value = "tamanho", required = false) Integer tamanho,
@@ -35,22 +35,9 @@ public class PesquisaController {
             @RequestParam(value = "latitude", required = false) Double latitude,
             @RequestParam(value = "longitude", required = false) Double longitude) {
 
-        if(nome == null
-                && faixaEtaria == null
-                && tamanho == null
-                && qtdPessoas == null
-                && tipoEvento == null
-                && orcMin == null
-                && orcMax == null
-                && dataEvento == null
-                && servico == null
-                && latitude == null
-                && longitude == null){
+        if(nome == null && faixaEtaria == null && tamanho == null && qtdPessoas == null && tipoEvento == null
+            && orcMin == null && orcMax == null && dataEvento == null && servico == null && latitude == null && longitude == null){
             List<BuffetRespostaDto> lista = pesquisaService.getTodosBuffets();
-
-            if(lista.isEmpty()){
-                return notFound().build();
-            }
 
             return ok(lista);
         }
@@ -60,20 +47,12 @@ public class PesquisaController {
         Pesquisa p = new Pesquisa(nomeTratado, faixaEtaria, tamanho, qtdPessoas, tipoEvento, orcMin, orcMax, dataEvento, servico, latitude, longitude);
         List<BuffetRespostaDto> listaFiltrada = pesquisaService.getBuffetPorPesquisa(p);
 
-        if((listaFiltrada.size()) == 0){
-            return notFound().build();
-        }
-
         return ok(listaFiltrada);
     }
 
     @GetMapping("/notas")
     public ResponseEntity<List<Object>> getNotas() {
         List<Object> lista = pesquisaService.getNotas();
-
-        if (lista.isEmpty()){
-            return notFound().build();
-        }
 
         return ok(lista);
     }

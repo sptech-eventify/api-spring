@@ -10,6 +10,8 @@ import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eventify.api_spring.exception.http.NoContentException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,7 @@ public class PesquisaService {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -64,19 +67,33 @@ public class PesquisaService {
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
 
+        if (buffetsFiltrados.isEmpty()) {
+            throw new NoContentException("Não há buffets que atendam aos critérios da pesquisa");
+        }
+
         return buffetsFiltrados;
     }
 
     public List<BuffetRespostaDto> getTodosBuffets() {
-        return buffetRepository.findAllBuffet().stream()
+        List<BuffetRespostaDto> buffets = buffetRepository.findAllBuffet().stream()
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        return buffets;
     }
 
     public List<Object> getNotas(){
-        String sql = "SELECT * FROM vw_notas_buffet";
-        Query query = entityManager.createNativeQuery(sql);
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_notas_buffet");
         List<Object> resultados = query.getResultList();
+
+        if (resultados.isEmpty()){
+            throw new NoContentException("Não há notas cadastradas");
+        }
+
         return resultados;
     }
 
