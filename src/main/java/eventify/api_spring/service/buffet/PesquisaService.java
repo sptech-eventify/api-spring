@@ -7,7 +7,12 @@ import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import eventify.api_spring.exception.http.NoContentException;
@@ -39,9 +44,11 @@ public class PesquisaService {
         return false;
     }
 
-    public List<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa) {
-        System.out.println("Pesquisa: " + pesquisa.toString());
+    private Pageable createPageRequestUsing(Integer page, Integer size) {
+        return PageRequest.of(page, size);
+    }
 
+    public Page<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa, Integer page, Integer size) {
         List<BuffetRespostaDto> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
                 .filter(buffet -> buffet.getNome() != null &&
                         buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
@@ -67,14 +74,20 @@ public class PesquisaService {
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
 
+        Pageable pageRequest = createPageRequestUsing(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), buffetsFiltrados.size());
+
+        List<BuffetRespostaDto> pageContent = buffetsFiltrados.subList(start, end);
+
         if (buffetsFiltrados.isEmpty()) {
             throw new NoContentException("Não há buffets que atendam aos critérios da pesquisa");
         }
 
-        return buffetsFiltrados;
+        return new PageImpl<>(pageContent, pageRequest, buffetsFiltrados.size());
     }
 
-    public List<BuffetRespostaDto> getTodosBuffets() {
+    public Page<BuffetRespostaDto> getTodosBuffets(Integer page, Integer size) {
         List<BuffetRespostaDto> buffets = buffetRepository.findAllBuffet().stream()
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
@@ -83,7 +96,17 @@ public class PesquisaService {
             throw new NoContentException("Não há buffets cadastrados");
         }
 
-        return buffets;
+        Pageable pageRequest = createPageRequestUsing(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), buffets.size());
+
+        List<BuffetRespostaDto> pageContent = buffets.subList(start, end);
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets que atendam aos critérios da pesquisa");
+        }
+
+        return new PageImpl<>(pageContent, pageRequest, buffets.size());
     }
 
     public List<Object> getNotas(){

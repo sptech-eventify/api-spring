@@ -48,10 +48,10 @@ public class PesquisaServiceTeste {
 
         when(buffetRepository.findAllBuffet()).thenReturn(buffets);
 
-        final List<BuffetRespostaDto> buffetPesquisado = service.getBuffetPorPesquisa(pesquisa);
-        for(BuffetRespostaDto buffet : buffetPesquisado) {
-            System.out.println(buffet.getDescricao());
-        }
+        // final List<BuffetRespostaDto> buffetPesquisado = service.getBuffetPorPesquisa(pesquisa);
+        // for(BuffetRespostaDto buffet : buffetPesquisado) {
+        //     System.out.println(buffet.getDescricao());
+        // }
 
         /*
         ---> Cancelado por conta do algoritmo de pesquisa
