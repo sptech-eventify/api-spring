@@ -63,9 +63,14 @@ public class PesquisaController {
     }
 
     @GetMapping("/notas")
-    public ResponseEntity<List<Object>> getNotas() {
-        List<Object> lista = pesquisaService.getNotas();
+    public ResponseEntity<Page<Object>> getNotas(@RequestParam(defaultValue = "0", value = "page", required = true) Integer page,
+                                                 @RequestParam(defaultValue = "10", value = "size", required = true) Integer size) {
+        Page<Object> lista = pesquisaService.getNotas(page, size);
 
-        return ok(lista);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Page-Number", String.valueOf(lista.getNumber()));
+        headers.add("X-Page-Size", String.valueOf(lista.getSize()));
+
+        return ok().headers(headers).body(lista);
     }
 }
