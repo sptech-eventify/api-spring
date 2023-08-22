@@ -4,7 +4,6 @@ import eventify.api_spring.domain.buffet.Imagem;
 import eventify.api_spring.exception.http.UnsupportedMediaException;
 import eventify.api_spring.repository.ImagemRepository;
 
-import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

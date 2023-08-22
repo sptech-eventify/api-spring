@@ -7,8 +7,15 @@ import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import eventify.api_spring.exception.http.NoContentException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +40,15 @@ public class PesquisaService {
                 return true;
             }
         }
+
         return false;
     }
 
-    public List<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa) {
-        System.out.println("Pesquisa: " + pesquisa.toString());
+    private Pageable createPageRequestUsing(Integer page, Integer size) {
+        return PageRequest.of(page, size);
+    }
 
+    public Page<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa, Integer page, Integer size) {
         List<BuffetRespostaDto> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
                 .filter(buffet -> buffet.getNome() != null &&
                         buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
@@ -64,20 +74,56 @@ public class PesquisaService {
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
 
-        return buffetsFiltrados;
+        Pageable pageRequest = createPageRequestUsing(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), buffetsFiltrados.size());
+
+        List<BuffetRespostaDto> pageContent = buffetsFiltrados.subList(start, end);
+
+        if (buffetsFiltrados.isEmpty()) {
+            throw new NoContentException("Não há buffets que atendam aos critérios da pesquisa");
+        }
+
+        return new PageImpl<>(pageContent, pageRequest, buffetsFiltrados.size());
     }
 
-    public List<BuffetRespostaDto> getTodosBuffets() {
-        return buffetRepository.findAllBuffet().stream()
+    public Page<BuffetRespostaDto> getTodosBuffets(Integer page, Integer size) {
+        List<BuffetRespostaDto> buffets = buffetRepository.findAllBuffet().stream()
                 .map(buffetMapper::toRespostaDto)
                 .collect(Collectors.toList());
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        Pageable pageRequest = createPageRequestUsing(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), buffets.size());
+
+        List<BuffetRespostaDto> pageContent = buffets.subList(start, end);
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets que atendam aos critérios da pesquisa");
+        }
+
+        return new PageImpl<>(pageContent, pageRequest, buffets.size());
     }
 
-    public List<Object> getNotas(){
-        String sql = "SELECT * FROM vw_notas_buffet";
-        Query query = entityManager.createNativeQuery(sql);
+    public Page<Object> getNotas(Integer page, Integer size){
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_notas_buffet");
         List<Object> resultados = query.getResultList();
-        return resultados;
+
+        if (resultados.isEmpty()){
+            throw new NoContentException("Não há notas cadastradas");
+        }
+
+        Pageable pageRequest = createPageRequestUsing(page, size);
+        int start = (int) pageRequest.getOffset();
+        int end = Math.min((start + pageRequest.getPageSize()), resultados.size());
+
+        List<Object> pageContent = resultados.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageRequest, resultados.size());
     }
 
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
