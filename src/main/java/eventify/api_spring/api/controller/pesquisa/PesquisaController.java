@@ -6,7 +6,6 @@ import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,14 +62,9 @@ public class PesquisaController {
     }
 
     @GetMapping("/notas")
-    public ResponseEntity<Page<Object>> getNotas(@RequestParam(defaultValue = "0", value = "page", required = true) Integer page,
-                                                 @RequestParam(defaultValue = "10", value = "size", required = true) Integer size) {
-        Page<Object> lista = pesquisaService.getNotas(page, size);
+    public ResponseEntity<List<Object>> getNotas() {
+        List<Object> lista = pesquisaService.getNotas();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Page-Number", String.valueOf(lista.getNumber()));
-        headers.add("X-Page-Size", String.valueOf(lista.getSize()));
-
-        return ok().headers(headers).body(lista);
+        return ok(lista);
     }
 }

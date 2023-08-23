@@ -109,21 +109,15 @@ public class PesquisaService {
         return new PageImpl<>(pageContent, pageRequest, buffets.size());
     }
 
-    public Page<Object> getNotas(Integer page, Integer size){
+    public List<Object> getNotas(){
         Query query = entityManager.createNativeQuery("SELECT * FROM vw_notas_buffet");
-        List<Object> resultados = query.getResultList();
+        List<Object> notas = query.getResultList();
 
-        if (resultados.isEmpty()){
+        if (notas.isEmpty()){
             throw new NoContentException("Não há notas cadastradas");
         }
 
-        Pageable pageRequest = createPageRequestUsing(page, size);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), resultados.size());
-
-        List<Object> pageContent = resultados.subList(start, end);
-
-        return new PageImpl<>(pageContent, pageRequest, resultados.size());
+        return notas;
     }
 
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
