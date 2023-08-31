@@ -17,10 +17,12 @@ import static org.springframework.http.ResponseEntity.*;
 import java.net.URI;
 import java.util.List;
 
+// Finalzada
+
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name = "1. Usuário", description = "Controller com os endpoints de usuário, controlando o fluxo de entrada, saída, criação, atualização e remoção de usuários")
+@Tag(name = "Usuário", description = "Controller com os endpoints de usuário, controla o fluxo de entrada, saída, criação, atualização e remoção de usuários")
 public class UsuarioController {
 
     @Autowired
@@ -36,8 +38,8 @@ public class UsuarioController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer idUsuario) {
-        UsuarioInfoDto usuario = usuarioService.exibir(idUsuario);
+    public ResponseEntity<UsuarioInfoDto> exibir(@PathVariable Integer id) {
+        UsuarioInfoDto usuario = usuarioService.exibir(id);
 
         return ok(usuario);
     }
@@ -51,25 +53,25 @@ public class UsuarioController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @DeleteMapping("/banir/{idUsuario}")
-    public ResponseEntity<Void> banir(@PathVariable Integer idUsuario) {
-        usuarioService.banir(idUsuario);
+    @DeleteMapping("/banir/{id}")
+    public ResponseEntity<Void> banir(@PathVariable Integer id) {
+        usuarioService.banir(id);
 
         return ok().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PostMapping("/desbanir/{idUsuario}")
-    public ResponseEntity<Void> desbanir(@PathVariable Integer idUsuario) {
-        usuarioService.desbanir(idUsuario);
+    @PostMapping("/desbanir/{id}")
+    public ResponseEntity<Void> desbanir(@PathVariable Integer id) {
+        usuarioService.desbanir(id);
 
         return ok().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PutMapping("/{idUsuario}")
-    public ResponseEntity<Void> atualizar(@PathVariable Integer idUsuario, @RequestBody Usuario usuario) {
-        usuarioService.atualizar(idUsuario, usuario);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable Integer id, @RequestBody Usuario usuario) {
+        usuarioService.atualizar(id, usuario);
 
         return ok().build();
     }
@@ -82,9 +84,9 @@ public class UsuarioController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PatchMapping("/logof/{idUsuario}")
-    public ResponseEntity<Boolean> logof(@PathVariable Integer idUsuario) {
-        return ok(usuarioService.logof(idUsuario));
+    @PatchMapping("/logof/{id}")
+    public ResponseEntity<Boolean> logof(@PathVariable Integer id) {
+        return ok(usuarioService.logof(id));
     }
 
 }

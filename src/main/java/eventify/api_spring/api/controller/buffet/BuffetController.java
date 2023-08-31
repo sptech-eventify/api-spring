@@ -24,12 +24,14 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+// Finalizada
+
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("/buffets")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="2. Buffet", description="Controller com os endpoints de buffet")
+@Tag(name="Buffet", description="Controller com os endpoints de buffet")
 public class BuffetController {
 
     @Autowired
@@ -52,45 +54,45 @@ public class BuffetController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @PutMapping("/{idBuffet}")
-    public ResponseEntity<Buffet> atualizarBuffet(@PathVariable Integer idBuffet, @RequestBody @Valid Buffet buffet) {
-        Buffet buffetAtualizado = buffetService.atualizarBuffet(idBuffet, buffet);
+    @PutMapping("/{id}")
+    public ResponseEntity<Buffet> atualizarBuffet(@PathVariable Integer id, @RequestBody @Valid Buffet buffet) {
+        Buffet buffetAtualizado = buffetService.atualizarBuffet(id, buffet);
 
         return ok(buffetAtualizado);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @DeleteMapping("/{idBuffet}")
-    public ResponseEntity<Buffet> deletarBuffet(@PathVariable Integer idBuffet) {
-        buffetService.deletarBuffet(idBuffet);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Buffet> deletarBuffet(@PathVariable Integer id) {
+        buffetService.deletarBuffet(id);
 
         return noContent().build();
     }
 
-    @GetMapping("/{idBuffet}")
-    public ResponseEntity<BuffetRespostaDto> buscarBuffetPorId(@PathVariable Integer idBuffet) {
-        BuffetRespostaDto buffet = buffetService.buscarBuffetPublicoPorIdResposta(idBuffet);
+    @GetMapping("/{id}")
+    public ResponseEntity<BuffetRespostaDto> buscarBuffetPorId(@PathVariable Integer id) {
+        BuffetRespostaDto buffet = buffetService.buscarBuffetPublicoPorIdResposta(id);
         
         return ok(buffet);
     }
 
-    @GetMapping("/{idBuffet}/avaliacao")
-    public ResponseEntity<Double> avaliacaoBuffet(@PathVariable Integer idBuffet) {
-        Double avaliacao = buffetService.avaliacaoBuffet(idBuffet);
+    @GetMapping("/{id}/avaliacao")
+    public ResponseEntity<Double> avaliacaoBuffet(@PathVariable Integer id) {
+        Double avaliacao = buffetService.avaliacaoBuffet(id);
     
         return ok(avaliacao);
     }
 
-    @GetMapping("/{idBuffet}/imagem")
-    public ResponseEntity<List<ImagemDto>> caminhoImagemBuffet(@PathVariable Integer idBuffet) {
-        List<ImagemDto> imagens = buffetService.caminhoImagemBuffet(idBuffet);
+    @GetMapping("/{id}/imagem")
+    public ResponseEntity<List<ImagemDto>> caminhoImagemBuffet(@PathVariable Integer id) {
+        List<ImagemDto> imagens = buffetService.caminhoImagemBuffet(id);
 
         return ok(imagens);
     }
 
-    @GetMapping("/publico/{idBuffet}")
-    public ResponseEntity<BuffetPublicoDto> buscarBuffetPublico(@PathVariable Integer idBuffet) {
-        BuffetPublicoDto buffet = buffetService.buscarBuffetPublico(idBuffet);
+    @GetMapping("/publico/{id}")
+    public ResponseEntity<BuffetPublicoDto> buscarBuffetPublico(@PathVariable Integer id) {
+        BuffetPublicoDto buffet = buffetService.buscarBuffetPublico(id);
 
         return ok(buffet);
     }
@@ -103,65 +105,65 @@ public class BuffetController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/datas/{idBuffet}")
-    public ResponseEntity<List<DataDto>> datasOcupadas(@PathVariable Integer idBuffet) {
-        List<DataDto> datas = buffetService.datasOcupadas(idBuffet);
+    @GetMapping("/datas/{id}")
+    public ResponseEntity<List<DataDto>> datasOcupadas(@PathVariable Integer id) {
+        List<DataDto> datas = buffetService.datasOcupadas(id);
 
         return ok(datas);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/orcamentos/{idBuffet}")
-    public ResponseEntity<List<EventoOrcamentoDto>> orcamentosPorIdBuffet(@PathVariable Integer idBuffet) {
-        List<EventoOrcamentoDto> orcamentos = buffetService.orcamentosPorIdBuffet(idBuffet);
+    @GetMapping("/orcamentos/{id}")
+    public ResponseEntity<List<EventoOrcamentoDto>> orcamentosPorId(@PathVariable Integer id) {
+        List<EventoOrcamentoDto> orcamentos = buffetService.orcamentosPorIdBuffet(id);
         
         return ok(orcamentos);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/proprietario/{idUsuario}")
-    public ResponseEntity<List<BuffetResumoDto>> buffetsPorIdUsuario(@PathVariable Integer idUsuario) {
-        List<BuffetResumoDto> buffets = buffetService.buffetsPorIdUsuario(idUsuario);
+    @GetMapping("/proprietario/{id}")
+    public ResponseEntity<List<BuffetResumoDto>> buffetsPorIdUsuario(@PathVariable Integer id) {
+        List<BuffetResumoDto> buffets = buffetService.buffetsPorIdUsuario(id);
 
         return ok(buffets);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/dashboard/abandono/{idBuffet}")
-    public ResponseEntity<TaxaAbandonoDto> taxaAbandono(@PathVariable Integer idBuffet) {
-        TaxaAbandonoDto taxaAbandono = buffetService.taxaAbandono(idBuffet);
+    @GetMapping("/dashboard/abandono/{id}")
+    public ResponseEntity<TaxaAbandonoDto> taxaAbandono(@PathVariable Integer id) {
+        TaxaAbandonoDto taxaAbandono = buffetService.taxaAbandono(id);
        
         return ok(taxaAbandono);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/dashboard/satisfacao/{idBuffet}")
-    public ResponseEntity<TaxaSatisfacaoDto> taxaSatisfacao(@PathVariable Integer idBuffet) {
-        TaxaSatisfacaoDto taxaSatisfacao = buffetService.taxaSatisfacao(idBuffet);
+    @GetMapping("/dashboard/satisfacao/{id}")
+    public ResponseEntity<TaxaSatisfacaoDto> taxaSatisfacao(@PathVariable Integer id) {
+        TaxaSatisfacaoDto taxaSatisfacao = buffetService.taxaSatisfacao(id);
 
         return ok(taxaSatisfacao);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/dashboard/financeiro/{idBuffet}")
-    public ResponseEntity<MovimentacaoFinanceiraDto> movimentacaoFinanceira(@PathVariable Integer idBuffet) {
-        MovimentacaoFinanceiraDto movimentacaoFinanceira = buffetService.movimentacaoFinanceira(idBuffet);
+    @GetMapping("/dashboard/financeiro/{id}")
+    public ResponseEntity<MovimentacaoFinanceiraDto> movimentacaoFinanceira(@PathVariable Integer id) {
+        MovimentacaoFinanceiraDto movimentacaoFinanceira = buffetService.movimentacaoFinanceira(id);
        
         return ok(movimentacaoFinanceira);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/dashboard/dados-financeiro/{idBuffet}")
-    public ResponseEntity<List<DadosFinanceiroDto>> dadosFinanceiro(@PathVariable Integer idBuffet) {
-        List<DadosFinanceiroDto> dadosFinanceiro = buffetService.dadosFinanceiro(idBuffet);
+    @GetMapping("/dashboard/dados-financeiro/{id}")
+    public ResponseEntity<List<DadosFinanceiroDto>> dadosFinanceiro(@PathVariable Integer id) {
+        List<DadosFinanceiroDto> dadosFinanceiro = buffetService.dadosFinanceiro(id);
 
         return ok(dadosFinanceiro);
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @GetMapping("/dashboard/avaliacoes/{idBuffet}")
-    public ResponseEntity<List<AvaliacaoDto>> avaliacoes(@PathVariable Integer idBuffet) {
-        List<AvaliacaoDto> avaliacoes = buffetService.avaliacoes(idBuffet);
+    @GetMapping("/dashboard/avaliacoes/{id}")
+    public ResponseEntity<List<AvaliacaoDto>> avaliacoes(@PathVariable Integer id) {
+        List<AvaliacaoDto> avaliacoes = buffetService.avaliacoes(id);
 
         return ok(avaliacoes);
     }

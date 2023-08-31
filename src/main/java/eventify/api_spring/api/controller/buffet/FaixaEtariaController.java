@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import static org.springframework.http.ResponseEntity.*;
 
+// Finalizada
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/faixas-etarias")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="8. Faixa Etária", description="Controller com os endpoints que controlam as configuraçõs de faixa etária do sistema")
+@Tag(name="Faixa Etária", description="Controller de endpoints das configuraçõs de faixa etária do sistema")
 public class FaixaEtariaController {
     @Autowired
     private FaixaEtariaService faixaEtariaService;
