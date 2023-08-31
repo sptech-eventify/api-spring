@@ -15,11 +15,13 @@ import static org.springframework.http.ResponseEntity.*;
 import java.net.URI;
 import java.util.List;
 
+// Finalizada
+
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/agendas")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="5. Agenda", description="Controller com os endpoints de reservas dos buffets")
+@Tag(name="Agenda", description="Controller com os endpoints de reserva dos buffets")
 public class AgendaController {
 
     @Autowired
@@ -40,16 +42,16 @@ public class AgendaController {
         return created(location).build();
     }
 
-    @GetMapping("/{idAgenda}")
-    public ResponseEntity<AgendaDto> buscarAgendaPorId(@PathVariable Integer idAgenda) {
-        AgendaDto agenda = agendaService.buscarAgendaPorId(idAgenda);
+    @GetMapping("/{id}")
+    public ResponseEntity<AgendaDto> buscarAgendaPorId(@PathVariable Integer id) {
+        AgendaDto agenda = agendaService.buscarAgendaPorId(id);
 
         return ok(agenda);
     }
 
-    @DeleteMapping("/{idAgenda}")
-    public ResponseEntity<Void> deletarAgenda(@PathVariable Integer idAgenda) {
-        agendaService.deletarAgenda(idAgenda);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarAgenda(@PathVariable Integer id) {
+        agendaService.deletarAgenda(id);
 
         return noContent().build();
     }

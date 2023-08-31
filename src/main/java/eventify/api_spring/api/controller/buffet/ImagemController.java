@@ -11,13 +11,15 @@ import static org.springframework.http.ResponseEntity.*;
 
 import eventify.api_spring.service.buffet.ImagemService;
 
+// Finalizada
+
 import java.util.List;
 
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/imagem")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="7. Imagem", description="Controller com os endpoints que controlam o fluxo de imagens do sistema")
+@Tag(name="Imagem", description="Controller com os endpoints que controlam o fluxo de imagens do sistema")
 public class ImagemController {
 
     @Autowired

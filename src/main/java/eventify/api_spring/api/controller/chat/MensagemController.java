@@ -10,6 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+// Finalizada
+
 import org.springframework.http.ResponseEntity;
 import static org.springframework.http.ResponseEntity.*;
 
@@ -17,7 +19,7 @@ import static org.springframework.http.ResponseEntity.*;
 @SecurityRequirement(name = "requiredAuth")
 @RequestMapping("/mensagens")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="6. Mensagem", description="Controller com os endpoints que controlam os chats do sistema")
+@Tag(name="Mensagem", description="Controller com os endpoints dos chats do sistema")
 public class MensagemController {
     @Autowired
     private MensagemService mensagemService;
@@ -43,16 +45,16 @@ public class MensagemController {
         return ok(mensagem);
     }
 
-    @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<MensagemDto>> listarPorUsuario(@PathVariable Integer idUsuario) {
-        List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuario(idUsuario);
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<MensagemDto>> listarPorUsuario(@PathVariable Integer id) {
+        List<MensagemDto> mensagens = mensagemService.listarMensagemPorUsuario(id);
     
         return ok(mensagens);
     }
 
-    @GetMapping("/buffet/{idBuffet}")
-    public ResponseEntity<List<MensagemDto>> listarPorBuffet(@PathVariable Integer idBuffet) {
-        List<MensagemDto> mensagens = mensagemService.listarMensagemPorBuffet(idBuffet);
+    @GetMapping("/buffet/{id}")
+    public ResponseEntity<List<MensagemDto>> listarPorBuffet(@PathVariable Integer id) {
+        List<MensagemDto> mensagens = mensagemService.listarMensagemPorBuffet(id);
 
         return ok(mensagens);
     }

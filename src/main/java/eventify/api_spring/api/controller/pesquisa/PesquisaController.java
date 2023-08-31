@@ -13,9 +13,11 @@ import static org.springframework.http.ResponseEntity.*;
 import java.time.LocalDate;
 import java.util.List;
 
+// Finalizada
+
 @RestController
 @RequestMapping("/pesquisa")
-@Tag(name="3. Pesquisa", description="Controller com os endpoints que controlam as pesquisas do sistema")
+@Tag(name="Pesquisa", description="Controller com os endpoints de pesquisas do sistema")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 public class PesquisaController {
     @Autowired
