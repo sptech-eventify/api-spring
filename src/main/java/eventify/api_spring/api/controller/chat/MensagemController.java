@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-// Finalizada
-
 import org.springframework.http.ResponseEntity;
 import static org.springframework.http.ResponseEntity.*;
 

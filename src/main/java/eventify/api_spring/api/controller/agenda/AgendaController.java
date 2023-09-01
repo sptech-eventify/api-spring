@@ -15,8 +15,6 @@ import static org.springframework.http.ResponseEntity.*;
 import java.net.URI;
 import java.util.List;
 
-// Finalizada
-
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/agendas")

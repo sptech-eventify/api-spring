@@ -17,8 +17,6 @@ import static org.springframework.http.ResponseEntity.*;
 import java.net.URI;
 import java.util.List;
 
-// Finalzada
-
 @RestController
 @RequestMapping("/usuarios")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
