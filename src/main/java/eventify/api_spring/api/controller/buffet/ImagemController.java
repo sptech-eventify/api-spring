@@ -10,9 +10,6 @@ import org.springframework.http.ResponseEntity;
 import static org.springframework.http.ResponseEntity.*;
 
 import eventify.api_spring.service.buffet.ImagemService;
-
-// Finalizada
-
 import java.util.List;
 
 @SecurityRequirement(name = "requiredAuth")

@@ -6,7 +6,6 @@ import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,6 @@ import static org.springframework.http.ResponseEntity.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
-// Finalizada
 
 @RestController
 @RequestMapping("/pesquisa")
