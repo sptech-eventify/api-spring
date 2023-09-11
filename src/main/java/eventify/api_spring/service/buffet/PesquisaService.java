@@ -9,6 +9,7 @@ import eventify.api_spring.dto.utils.objects.HashTable;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
