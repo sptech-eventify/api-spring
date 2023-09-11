@@ -4,13 +4,11 @@ import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
-import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.utils.objects.HashTable;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
