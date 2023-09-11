@@ -1,7 +1,9 @@
 package eventify.api_spring.api.controller.pesquisa;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
+import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,14 +64,16 @@ public class PesquisaController {
     }
 
     @GetMapping("/notas")
-    public ResponseEntity<Page<Object>> getNotas(@RequestParam(defaultValue = "0", value = "page", required = true) Integer page,
-                                                 @RequestParam(defaultValue = "10", value = "size", required = true) Integer size) {
-        Page<Object> lista = pesquisaService.getNotas(page, size);
+    public ResponseEntity<List<Object>> getNotas() {
+        List<Object> lista = pesquisaService.getNotas();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Page-Number", String.valueOf(lista.getNumber()));
-        headers.add("X-Page-Size", String.valueOf(lista.getSize()));
+        return ok(lista);
+    }
 
-        return ok().headers(headers).body(lista);
+    @GetMapping("/buffets/{nota}")
+    public ResponseEntity<List<BuffetConsultaDto>> getNotasPorNota(@PathVariable("nota") Integer nota) {
+        List<BuffetConsultaDto> lista = pesquisaService.getBuffetsPorNota(nota);
+
+        return ok(lista);
     }
 }

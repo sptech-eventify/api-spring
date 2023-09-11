@@ -1,11 +1,14 @@
 package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
+import eventify.api_spring.domain.buffet.TipoEvento;
+import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
+import eventify.api_spring.dto.imagem.ImagemDto;
+import eventify.api_spring.dto.utils.objects.HashTable;
 import eventify.api_spring.mapper.buffet.BuffetMapper;
 import eventify.api_spring.repository.BuffetRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import eventify.api_spring.exception.http.NoContentException;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +35,9 @@ public class PesquisaService {
 
     @Autowired
     private BuffetMapper buffetMapper;
+
+    @Autowired
+    private TipoEventoService tipoEventoService;
 
     public PesquisaService(BuffetRepository buffetRepository) {
         this.buffetRepository = buffetRepository;
@@ -109,21 +118,90 @@ public class PesquisaService {
         return new PageImpl<>(pageContent, pageRequest, buffets.size());
     }
 
-    public Page<Object> getNotas(Integer page, Integer size){
-        Query query = entityManager.createNativeQuery("SELECT * FROM vw_notas_buffet");
-        List<Object> resultados = query.getResultList();
+    public List<ImagemDto> converterImagens(String imagens) {
+        List<ImagemDto> lista = new ArrayList<>();
 
-        if (resultados.isEmpty()){
+        String[] imagensArray = imagens.split(",");
+
+        for (String imagem : imagensArray) {
+            ImagemDto imagemDto = new ImagemDto();
+            imagemDto.setCaminho(imagem);
+            lista.add(imagemDto);
+        }
+
+        return lista;
+    }
+
+    public List<TipoEvento> converterEventos(String tiposEventos) {
+        List<TipoEvento> lista = new ArrayList<>();
+        List<TipoEvento> eventosExistentes = tipoEventoService.tiposEventos();
+
+        String[] tipos = tiposEventos.split(",");
+
+        for (String tipo : tipos) {
+            for (TipoEvento evento : eventosExistentes) {
+                if (evento.getDescricao().equalsIgnoreCase(tipo)) {
+                    lista.add(evento);
+                }
+            }
+        }
+
+        return lista;
+    }
+
+    public List<BuffetConsultaDto> getBuffetConsultaDto() {
+        List<BuffetConsultaDto> lista = new ArrayList<>();
+    
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
+        List<Object[]> buffets = query.getResultList();
+    
+        for (Object[] buffet : buffets) {    
+            BuffetConsultaDto buffetResumoDto = new BuffetConsultaDto();
+            buffetResumoDto.setId((Integer) buffet[0]);
+            buffetResumoDto.setTiposEventos(this.converterEventos((String) buffet[1]));
+            buffetResumoDto.setNome((String) buffet[2]);
+            buffetResumoDto.setPrecoMedioDiaria(((BigDecimal) buffet[3]).doubleValue());
+    
+            Double nota = (Double) buffet[4];
+
+            if (Objects.isNull(buffet[4])) {
+                buffetResumoDto.setNotaMediaAvaliacao(0.0);
+            } else {
+                buffetResumoDto.setNotaMediaAvaliacao(nota);
+            }
+    
+            buffetResumoDto.setImagens(converterImagens((String) buffet[5]));
+    
+            lista.add(buffetResumoDto);
+        }
+    
+        return lista;
+    }
+
+    public List<Object> getNotas(){
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_notas_buffet");
+        List<Object> notas = query.getResultList();
+
+        if (notas.isEmpty()){
             throw new NoContentException("Não há notas cadastradas");
         }
 
-        Pageable pageRequest = createPageRequestUsing(page, size);
-        int start = (int) pageRequest.getOffset();
-        int end = Math.min((start + pageRequest.getPageSize()), resultados.size());
+        return notas;
+    }
 
-        List<Object> pageContent = resultados.subList(start, end);
+    public List<BuffetConsultaDto> getBuffetsPorNota(Integer nota) {
+        HashTable hashTable = new HashTable(6);
+        List<BuffetConsultaDto> lista = this.getBuffetConsultaDto();
 
-        return new PageImpl<>(pageContent, pageRequest, resultados.size());
+        if (lista.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        for (BuffetConsultaDto buffet : lista) {
+            hashTable.insere(buffet);
+        }
+
+        return hashTable.busca(nota);
     }
 
     public static double calcularDistancia(double lat1, double long1, double lat2, double long2) {
