@@ -1,19 +1,21 @@
 package eventify.api_spring.dto.utils.objects;
 
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
+
 public class Node {
-    private int info;
+    private BuffetResumoDto info;
     private Node next;
 
-    public Node(int info) {
+    public Node(BuffetResumoDto info) {
         this.info = info;
         this.next = null;
     }
 
-    public int getInfo() {
+    public BuffetResumoDto getInfo() {
         return this.info;
     }
 
-    public void setInfo(int info) {
+    public void setInfo(BuffetResumoDto info) {
         this.info = info;
     }
 

@@ -67,4 +67,11 @@ public class PesquisaController {
 
         return ok(lista);
     }
+
+    @GetMapping("/buffets/{nota}")
+    public ResponseEntity<List<BuffetRespostaDto>> getNotasPorNota(@PathVariable("nota") Integer nota) {
+        List<BuffetRespostaDto> lista = pesquisaService.getBuffetsPorNota(nota);
+
+        return ok(lista);
+    }
 }

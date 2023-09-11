@@ -2,6 +2,8 @@ package eventify.api_spring.dto.utils.objects;
 
 import java.util.Objects;
 
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
+
 public class HashTable {
     private ListaLigada tab[];
 
@@ -13,16 +15,17 @@ public class HashTable {
         }
     }
 
-    public int funcaoHash(int valor) {
-        return valor % this.tab.length;
+    // Dentro da funcao Hash, o valor retornado deverá ser o inteiro do valor passado como parâmetro
+    public int funcaoHash(Double valor) {
+        return valor.intValue();
     }
 
-    public void insere(int valor) {
-        this.tab[this.funcaoHash(valor)].insereNode(new Node(valor));
+    public void insere(BuffetResumoDto valor) {
+        this.tab[this.funcaoHash(valor.getNotaMediaAvaliacao())].insereNode(new Node(valor));
     }
 
     public boolean busca(int x) {
-        Node resultado = this.tab[this.funcaoHash(x)].buscaNode(x);
+        Node resultado = this.tab[x];
 
         if (Objects.nonNull(resultado)) {
             return true;

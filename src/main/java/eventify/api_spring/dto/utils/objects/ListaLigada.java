@@ -6,7 +6,7 @@ public class ListaLigada {
     private Node head;
 
     public ListaLigada() {
-        this.head = new Node(0);
+        this.head = null;
     }
 
     public Node getHead() {

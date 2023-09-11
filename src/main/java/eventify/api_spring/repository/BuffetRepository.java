@@ -3,7 +3,6 @@ package eventify.api_spring.repository;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.usuario.Usuario;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
