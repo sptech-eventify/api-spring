@@ -23,7 +23,7 @@ import static org.springframework.http.ResponseEntity.*;
 @RestController
 @RequestMapping("/eventos")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="4. Evento", description="Controller com os endpoints de evento")
+@Tag(name="Evento", description="Controller com os endpoints de evento")
 public class EventoController {
 
     @Autowired
@@ -44,9 +44,9 @@ public class EventoController {
         return created(location).build();
     }
 
-    @GetMapping("/{idEvento}")
-    public ResponseEntity<EventoDto> eventoPorId(@PathVariable Integer idEvento) {
-        EventoDto evento = eventoService.eventoPorId(idEvento);
+    @GetMapping("/{id}")
+    public ResponseEntity<EventoDto> eventoPorId(@PathVariable Integer id) {
+        EventoDto evento = eventoService.eventoPorId(id);
 
         return ok(evento);
     }
@@ -80,29 +80,29 @@ public class EventoController {
     }
 
     @GetMapping("/orcamento")
-    public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam Integer idEvento) {
-        OrcamentoDto orcamento = eventoService.buscarOrcamento(idEvento);
+    public ResponseEntity<OrcamentoDto>buscarOrcamento(@RequestParam Integer id) {
+        OrcamentoDto orcamento = eventoService.buscarOrcamento(id);
         
         return ok(orcamento);
     }
 
     @PutMapping("/orcamento/mandar")
-    public ResponseEntity<Void> mandarOrcamento(@RequestParam @Valid Integer idEvento, @RequestParam @Valid Double preco) {
-        eventoService.mandarOrcamento(idEvento, preco);
+    public ResponseEntity<Void> mandarOrcamento(@RequestParam @Valid Integer id, @RequestParam @Valid Double preco) {
+        eventoService.mandarOrcamento(id, preco);
         
         return ok().build();
     }
 
-    @PutMapping("/orcamento/verificar/{idEvento}")
-    public ResponseEntity<Integer> verificarPagamento(@PathVariable Integer idEvento) {
-        Integer status = eventoService.verificarOrcamento(idEvento);
+    @PutMapping("/orcamento/verificar/{id}")
+    public ResponseEntity<Integer> verificarPagamento(@PathVariable Integer id) {
+        Integer status = eventoService.verificarOrcamento(id);
 
         return ok(status);
     }
 
-    @PutMapping("/orcamento/pagar/{idEvento}")
-    public ResponseEntity<Boolean> pagarOrcamento(@PathVariable Integer idEvento) {
-        eventoService.pagarOrcamento(idEvento);
+    @PutMapping("/orcamento/pagar/{id}")
+    public ResponseEntity<Boolean> pagarOrcamento(@PathVariable Integer id) {
+        eventoService.pagarOrcamento(id);
 
         return ok().build();
     }
