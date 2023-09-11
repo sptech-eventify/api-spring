@@ -1,7 +1,9 @@
 package eventify.api_spring.api.controller.pesquisa;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
+import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
+import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +71,8 @@ public class PesquisaController {
     }
 
     @GetMapping("/buffets/{nota}")
-    public ResponseEntity<List<BuffetRespostaDto>> getNotasPorNota(@PathVariable("nota") Integer nota) {
-        List<BuffetRespostaDto> lista = pesquisaService.getBuffetsPorNota(nota);
+    public ResponseEntity<List<BuffetConsultaDto>> getNotasPorNota(@PathVariable("nota") Integer nota) {
+        List<BuffetConsultaDto> lista = pesquisaService.getBuffetsPorNota(nota);
 
         return ok(lista);
     }

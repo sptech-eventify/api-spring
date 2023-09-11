@@ -2,6 +2,7 @@ package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.domain.buffet.TipoEvento;
+import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
@@ -21,8 +22,10 @@ import org.springframework.stereotype.Service;
 
 import eventify.api_spring.exception.http.NoContentException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -148,26 +151,32 @@ public class PesquisaService {
         return lista;
     }
 
-    public List<BuffetResumoDto> getBuffetResumoDto() {
-        List<BuffetResumoDto> lista = new ArrayList<>();
-
+    public List<BuffetConsultaDto> getBuffetConsultaDto() {
+        List<BuffetConsultaDto> lista = new ArrayList<>();
+    
         Query query = entityManager.createNativeQuery("SELECT * FROM vw_buffet_info");
         List<Object[]> buffets = query.getResultList();
-
-        for (Object[] buffet : buffets) {
-            BuffetResumoDto buffetResumoDto = new BuffetResumoDto();
+    
+        for (Object[] buffet : buffets) {    
+            BuffetConsultaDto buffetResumoDto = new BuffetConsultaDto();
             buffetResumoDto.setId((Integer) buffet[0]);
             buffetResumoDto.setTiposEventos(this.converterEventos((String) buffet[1]));
             buffetResumoDto.setNome((String) buffet[2]);
-            buffetResumoDto.setPrecoMedioDiaria((Double) buffet[3]);
-            buffetResumoDto.setTamanho((Integer) buffet[4]);
-            buffetResumoDto.setQtdPessoas((Integer) buffet[5]);
-            buffetResumoDto.setNotaMediaAvaliacao((Double) buffet[6]);
-            buffetResumoDto.setImagens(converterImagens((String) buffet[7]));
+            buffetResumoDto.setPrecoMedioDiaria(((BigDecimal) buffet[3]).doubleValue());
+    
+            Double nota = (Double) buffet[4];
 
+            if (Objects.isNull(buffet[4])) {
+                buffetResumoDto.setNotaMediaAvaliacao(0.0);
+            } else {
+                buffetResumoDto.setNotaMediaAvaliacao(nota);
+            }
+    
+            buffetResumoDto.setImagens(converterImagens((String) buffet[5]));
+    
             lista.add(buffetResumoDto);
         }
-
+    
         return lista;
     }
 
@@ -182,12 +191,16 @@ public class PesquisaService {
         return notas;
     }
 
-    public List<BuffetResumoDto> getBuffetsPorNota(Integer nota) {
+    public List<BuffetConsultaDto> getBuffetsPorNota(Integer nota) {
         HashTable hashTable = new HashTable(6);
-        List<BuffetResumoDto> lista = this.getBuffetResumoDto();
+        List<BuffetConsultaDto> lista = this.getBuffetConsultaDto();
 
-        for (BuffetResumoDto buffet : lista) {
-            hashTable.insere(buffet.getNotaMediaAvaliacao());
+        if (lista.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        for (BuffetConsultaDto buffet : lista) {
+            hashTable.insere(buffet);
         }
 
         return hashTable.busca(nota);

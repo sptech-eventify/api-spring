@@ -1,8 +1,9 @@
 package eventify.api_spring.dto.utils.objects;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 
 public class HashTable {
     private ListaLigada tab[];
@@ -20,28 +21,21 @@ public class HashTable {
         return valor.intValue();
     }
 
-    public void insere(BuffetResumoDto valor) {
-        this.tab[this.funcaoHash(valor.getNotaMediaAvaliacao())].insereNode(new Node(valor));
+    public void insere(BuffetConsultaDto valor) {
+        int indice = this.funcaoHash(valor.getNotaMediaAvaliacao());
+        this.tab[indice].insereNode(new Node(valor));
     }
 
-    public boolean busca(int x) {
-        Node resultado = this.tab[x];
+    public List<BuffetConsultaDto> busca(int indice) {
+        List<BuffetConsultaDto> buffets = new ArrayList<>();
 
-        if (Objects.nonNull(resultado)) {
-            return true;
+        Node atual = this.tab[indice].getHead().getNext();
+
+        while (atual != null) {
+            buffets.add(atual.getInfo());
+            atual = atual.getNext();
         }
 
-        return false;
-    }
-
-    public boolean remove (int x) {
-        return this.tab[this.funcaoHash(x)].removeNode(x);
-    }
-
-    public void exibe() {
-        for (int i = 0; i < this.tab.length; i++) {
-            System.out.println("Posição " + i + ":");
-            this.tab[i].exibe();
-        }
+        return buffets;
     }
 }
