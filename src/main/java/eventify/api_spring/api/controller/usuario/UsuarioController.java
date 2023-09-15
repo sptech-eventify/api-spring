@@ -6,12 +6,14 @@ import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
+import eventify.api_spring.service.Acesso.AcessoService;
 import eventify.api_spring.service.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import static org.springframework.http.ResponseEntity.*;
 
 import java.net.URI;
@@ -26,11 +28,14 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    AcessoService logAcessoService;
+
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping
     public ResponseEntity<List<UsuarioDevolverDto>> listar() {
         List<UsuarioDevolverDto> usuarios = usuarioService.listar();
-        
+
         return ok(usuarios);
     }
 
@@ -45,17 +50,9 @@ public class UsuarioController {
     @PostMapping("/cadastrar")
     public ResponseEntity<Void> cadastrar(@RequestBody UsuarioCadastrarDto usuario) {
         UsuarioDevolverDto usuarioResposta = usuarioService.cadastrar(usuario);
-        URI location = URI.create(String.format("/usuarios/%s", usuarioResposta.getId() ));
+        URI location = URI.create(String.format("/usuarios/%s", usuarioResposta.getId()));
 
         return ResponseEntity.created(location).build();
-    }
-
-    @SecurityRequirement(name = "requiredAuth")
-    @DeleteMapping("/banir/{id}")
-    public ResponseEntity<Void> banir(@PathVariable Integer id) {
-        usuarioService.banir(id);
-
-        return ok().build();
     }
 
     @SecurityRequirement(name = "requiredAuth")
@@ -85,6 +82,22 @@ public class UsuarioController {
     @PatchMapping("/logof/{id}")
     public ResponseEntity<Boolean> logof(@PathVariable Integer id) {
         return ok(usuarioService.logof(id));
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @DeleteMapping("/banir/{id}")
+    public ResponseEntity<Void> banir(@PathVariable Integer id) {
+        usuarioService.banir(id);
+
+        return ok().build();
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @DeleteMapping("/desativar/{id}")
+    public ResponseEntity<Void> desativar(@PathVariable Integer id) {
+        usuarioService.desativar(id);
+
+        return ok().build();
     }
 
 }

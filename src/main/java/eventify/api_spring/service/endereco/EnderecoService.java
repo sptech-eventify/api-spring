@@ -23,7 +23,7 @@ public class EnderecoService {
 
     public Endereco exibirEnderecoPorId(Integer id) {
         Optional<Endereco> endereco = enderecoRepository.findById(id);
-        
+
         if (endereco.isEmpty()) {
             throw new NotFoundException("Endereço não encontrado na base de dados");
         }
@@ -51,16 +51,15 @@ public class EnderecoService {
         return null;
     }
 
-    public Void deletarEndereco(Integer id) {
+    public void deletarEndereco(Integer id) {
         Optional<Endereco> endereco = enderecoRepository.findById(id);
 
         if (endereco.isEmpty()) {
             throw new NoContentException("Endereço não encontrado na base de dados");
         }
-
-        enderecoRepository.delete(endereco.get());
-
-        return null;
+        Endereco enderecoAtualizado = endereco.get();
+        enderecoAtualizado.setValidado(false);
+        enderecoRepository.save(enderecoAtualizado);
     }
 
 }

@@ -54,19 +54,19 @@ public class BuffetService {
 
     @Autowired
     private EntityManager entityManager;
-    
+
     @Autowired
     private BuffetMapper buffetMapper;
 
     public Buffet buscarBuffetPorId(Integer buffetId) {
         Optional<Buffet> buffet = buffetRepository.findById(buffetId);
-        
+
         return buffet.orElseThrow(() -> new NotFoundException("Buffet não encontrado na base de dados"));
     }
 
     public List<BuffetRespostaDto> listarBuffets() {
         List<BuffetRespostaDto> buffets = buffetRepository.findAll().stream().map(buffetMapper::toRespostaDto).toList();
-        
+
         if (buffets.isEmpty()) {
             throw new NoContentException("Não há buffets cadastrados");
         }
@@ -76,7 +76,7 @@ public class BuffetService {
 
     public List<BuffetRespostaDto> listarBuffetsPublicos() {
         List<BuffetRespostaDto> buffets = buffetRepository.findByIsVisivelTrue().stream().map(buffetMapper::toRespostaDto).toList();
-        
+
         if (buffets.isEmpty()) {
             throw new NoContentException("Não há buffets disponíveis");
         }
@@ -112,7 +112,7 @@ public class BuffetService {
         } else {
             throw new NotFoundException("Usuário não encontrado na base de dados");
         }
-        
+
         Endereco endereco = buffet.getEndereco();
 
         endereco.setDataCriacao(LocalDateTime.now());
@@ -132,7 +132,7 @@ public class BuffetService {
 
         if (buffetOptional.isPresent()) {
             Buffet buffetBanco = buffetOptional.get();
-                
+
             if(Objects.isNull(buffetBanco.getEndereco()) && Objects.nonNull(buffet.getEndereco())){
                 Endereco endereco = buffet.getEndereco();
 
@@ -156,9 +156,10 @@ public class BuffetService {
 
         if (buffet.isPresent()) {
             Buffet buffetBanco = buffet.get();
-            
+
             if (buffetBanco.getAgendas().isEmpty()){
-                buffetRepository.delete(buffetBanco);
+                buffetBanco.setVisivel(false);
+                buffetRepository.save(buffetBanco);
             } else {
                 throw new ConflictException("Buffet possui eventos marcados");
             }
@@ -177,7 +178,7 @@ public class BuffetService {
         }
 
         Double avaliacao = eventoRepository.findAvaliacaoByBuffet(buffet);
-        
+
         if (Objects.isNull(avaliacao)) {
             return 0.0;
         }
@@ -194,7 +195,7 @@ public class BuffetService {
 
             return caminhos;
         }
-    
+
         throw new NotFoundException("Buffet não encontrado ou não disponível ao público");
     }
 
@@ -204,10 +205,10 @@ public class BuffetService {
         if (Objects.isNull(buffetBanco)) {
             throw new NotFoundException("Buffet não encontrado ou não disponível ao público");
         }
-        
+
         BuffetPublicoDto buffet = buffetMapper.toPublicoDto(buffetBanco);
         buffet.setNotaMediaAvaliacao(avaliacaoBuffet(idBuffet));
-        
+
         return buffet;
     }
 
@@ -257,14 +258,14 @@ public class BuffetService {
 
         if (Objects.nonNull(buffet)) {
             List<EventoOrcamentoDto> orcamentos = eventoRepository.findAllOrcamentosByBuffetPublico(buffet);
-            
+
             if (orcamentos.isEmpty()) {
                 throw new NoContentException("Não há orçamentos");
             }
 
             return orcamentos;
         }
-        
+
         throw new NotFoundException("Buffet não encontrado na base de dados");
     }
 
@@ -294,7 +295,7 @@ public class BuffetService {
         Query query = entityManager.createNativeQuery("SELECT id_buffet, abandonos, total FROM vw_kpi_abandono_reserva WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         Object[] result = (Object[]) query.getSingleResult();
-        
+
         return new TaxaAbandonoDto(result[0], result[1],  result[2]);
     }
 
@@ -308,7 +309,7 @@ public class BuffetService {
         Query query = entityManager.createNativeQuery("SELECT media, total FROM vw_kpi_satisfacao WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         Object[] result = (Object[]) query.getSingleResult();
-        
+
         return new TaxaSatisfacaoDto(result[0], result[1]);
     }
 
@@ -328,24 +329,24 @@ public class BuffetService {
 
     public List<DadosFinanceiroDto> dadosFinanceiro(Integer idBuffet) {
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
-    
+
         if (buffetOpt.isEmpty()) {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
-        
+
         Query query = entityManager.createNativeQuery("SELECT mes, qtd_eventos, faturamento FROM vw_dados_do_buffet WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> resultList = query.getResultList();
-    
+
         List<DadosFinanceiroDto> dadosFinanceiroList = new ArrayList<>();
         for (Object[] result : resultList) {
             Object mes = result[0];
             Object qtdEventos = result[1];
             Object faturamento = result[2];
-    
+
             dadosFinanceiroList.add(new DadosFinanceiroDto(mes, qtdEventos, faturamento));
         }
-    
+
         return dadosFinanceiroList;
     }
 
@@ -366,7 +367,7 @@ public class BuffetService {
             Object nota = result[1];
             Object avaliacao = result[2];
             Object data = result[3];
-    
+
             avaliacoesList.add(new AvaliacaoDto(nome, nota, avaliacao, data));
         }
 

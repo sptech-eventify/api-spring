@@ -5,11 +5,14 @@ import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class Pagina {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +23,11 @@ public class Pagina {
     
     @OneToMany(mappedBy = "pagina")
     private List<Acesso> acesso;
+
+    public Pagina(String nome, String uri) {
+        this.nome = nome;
+        this.uri = uri;
+    }
+
+
 }

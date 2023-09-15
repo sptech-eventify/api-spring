@@ -4,7 +4,6 @@ import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.domain.pagamento.Pagamento;
-import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.evento.EventoCriacaoDto;
 import eventify.api_spring.dto.evento.EventoDto;
 import eventify.api_spring.dto.evento.PagamentoEventoDto;

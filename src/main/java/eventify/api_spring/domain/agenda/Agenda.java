@@ -21,11 +21,12 @@ public class Agenda {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @FutureOrPresent
     private LocalDateTime data;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_buffet")
     private Buffet buffet;
+
+    private Boolean isAtivo;
+
 }

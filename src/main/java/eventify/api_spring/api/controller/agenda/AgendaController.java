@@ -52,4 +52,5 @@ public class AgendaController {
 
         return noContent().build();
     }
+
 }

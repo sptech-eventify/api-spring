@@ -98,6 +98,7 @@ public class Buffet {
     @OneToMany(mappedBy = "buffet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Agenda> agendas = new ArrayList<>();
 
+
     public Buffet(Integer id, String nome, String descricao, Integer tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;

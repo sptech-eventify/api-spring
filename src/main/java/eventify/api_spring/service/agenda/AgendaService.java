@@ -7,6 +7,7 @@ import eventify.api_spring.mapper.agenda.AgendaMapper;
 import eventify.api_spring.repository.AgendaRepository;
 import eventify.api_spring.service.buffet.BuffetService;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,14 +68,14 @@ public class AgendaService {
 
         return agendaMapper.toDto(agenda.get());
     }
-
     public void deletarAgenda(Integer idAgenda) {
         Optional<Agenda> agenda = agendaRepository.findById(idAgenda);
 
         if (agenda.isEmpty()) {
             throw new NotFoundException("Evento não encontrado na base de dados");
         }
-
-        agendaRepository.deleteById(idAgenda);
+        Agenda agendaAtualizada = agenda.get();
+        agendaAtualizada.setIsAtivo(false);
+        agendaRepository.save(agendaAtualizada);
     }
 }
