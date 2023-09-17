@@ -103,6 +103,18 @@ public class UsuarioService {
         return true;
     }
 
+    public void desativar(Integer idUsuario) {
+        Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
+
+        if (usuario.isEmpty()) {
+            throw new NotFoundException("Usuário não encontrado");
+        }
+        Usuario usuarioAtualizado = usuario.get();
+        usuarioAtualizado.setIsAtivo(false);
+        usuarioRepository.save(usuarioAtualizado);
+
+    }
+
     public Void atualizar(Integer idUsuario, Usuario novoUsuario) {
         Optional<Usuario> usuario = usuarioRepository.findById(idUsuario);
         UsuarioCadastrarDto usuarioAtualizado = new UsuarioCadastrarDto();

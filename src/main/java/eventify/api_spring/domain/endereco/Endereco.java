@@ -53,4 +53,6 @@ public class Endereco {
 
     @Schema(example = "2023-05-20T17:49:12")
     private LocalDateTime dataCriacao;
+
+    private Boolean isAtivo;
 }

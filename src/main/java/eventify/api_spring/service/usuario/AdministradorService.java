@@ -28,7 +28,7 @@ public class AdministradorService {
 
     public List<UsuarioAdminDto> pegarListaUsuarios() {
         List<UsuarioAdminDto> usuarios = usuarioRepository.findAllUsuarioLista();
-    
+
         if (usuarios.isEmpty()) {
             throw new NoContentException("Não há usuários cadastrados");
         }
@@ -39,7 +39,7 @@ public class AdministradorService {
     public List<UsuarioBanidoDto> pegarUsuariosBanidos() {
         Query query = entityManager.createNativeQuery(String.format("SELECT nome, tipo_usuario, cpf FROM usuario WHERE is_banido = 1 ORDER BY data_criacao;"));
         List<Object[]> resultList = query.getResultList();
-            
+
         List<UsuarioBanidoDto> usuarios = new ArrayList<>();
         for (Object[] result : resultList) {
             Object nome = result[0];
@@ -48,7 +48,7 @@ public class AdministradorService {
 
             usuarios.add(new UsuarioBanidoDto(nome.toString(), tipoUsuario.toString(), cpf.toString()));
         }
-        
+
         if (usuarios.isEmpty()) {
             throw new NoContentException("Não há usuários banidos");
         }
@@ -56,28 +56,46 @@ public class AdministradorService {
         return usuarios;
     }
 
+    // método recursivo para mapear os endereços
+    private List<EnderecoDto> mapearEndereco(List<Object[]> resultList, List<EnderecoDto> enderecos, int index) {
+
+        if (index == resultList.size()) {
+            return enderecos;
+        }
+
+        Object[] result = resultList.get(index);
+
+        Object id = result[0];
+        Object isValidado = result[1];
+        Object logradouro = result[2];
+        Object numero = result[3];
+        Object bairro = result[4];
+        Object cidade = result[5];
+        Object uf = result[6];
+        Object cep = result[7];
+        Object latitude = result[8];
+        Object longitude = result[9];
+        Object dataCriacao = result[10];
+
+        enderecos.add(new EnderecoDto(id, isValidado, logradouro, numero, bairro, cidade, uf, cep, latitude, longitude, dataCriacao));
+
+        return mapearEndereco(resultList, enderecos, index + 1);
+    }
+
     public List<EnderecoDto> pegarListaEndereco() {
         Query query = entityManager.createNativeQuery(String.format("SELECT * FROM endereco WHERE is_validado = 0;"));
         List<Object[]> resultList = query.getResultList();
 
-        List<EnderecoDto> enderecos = new ArrayList<>();
-        for (Object[] result : resultList) {
-            Object id = result[0];
-            Object isValidado = result[1];
-            Object logradouro = result[2];
-            Object numero = result[3];
-            Object bairro = result[4];
-            Object cidade = result[5];
-            Object uf = result[6];
-            Object cep = result[7];
-            Object latitude = result[8];
-            Object longitude = result[9];
-            Object dataCriacao = result[10];
-
-            enderecos.add(new EnderecoDto(id, isValidado, logradouro, numero, bairro, cidade, uf, cep, latitude, longitude, dataCriacao));
+        if (resultList.isEmpty()) {
+            throw new NoContentException("Não há endereços cadastrados");
         }
 
+        List<EnderecoDto> enderecos = new ArrayList<>();
+
+        enderecos = mapearEndereco(resultList, enderecos, 0);
+
         if (enderecos.isEmpty()) {
+            System.out.println("Não há endereços cadastrados");
             throw new NoContentException("Não há endereços cadastrados");
         }
 
@@ -125,7 +143,7 @@ public class AdministradorService {
     public List<ConversaoReservasDto> pegarConversaoReservas() {
         Query query = entityManager.createNativeQuery(String.format("SELECT * FROM vw_kpi_conversao_de_reservas"));
         List<Object[]> resultList = query.getResultList();
-    
+
         List<ConversaoReservasDto> conversaoReservas = new ArrayList<>();
         for (Object[] result : resultList) {
             Object qtdOrcamentosFechados = result[0];
