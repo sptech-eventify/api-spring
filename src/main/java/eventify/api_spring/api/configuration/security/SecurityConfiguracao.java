@@ -58,8 +58,8 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/pesquisa/barra-pesquisa/**"),
             new AntPathRequestMatcher("/tipo-eventos"),
             new AntPathRequestMatcher("/servicos"),
-            new AntPathRequestMatcher("/tipo-eventos"),
-            new AntPathRequestMatcher("/faixa-etarias"),
+            new AntPathRequestMatcher("/tipos-eventos"),
+            new AntPathRequestMatcher("/faixas-etarias"),
             new AntPathRequestMatcher("/pesquisa"),
     };
 
