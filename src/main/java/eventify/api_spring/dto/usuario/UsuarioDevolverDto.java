@@ -13,5 +13,5 @@ public class UsuarioDevolverDto {
     private Integer id;
     private String nome;
     private String email;
-    private String foto;
+    private String imagem;
 }
