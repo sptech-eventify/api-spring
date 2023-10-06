@@ -31,7 +31,7 @@ public interface UsuarioMapper {
                 usuario.getNome(),
                 usuario.getEmail(),
                 token,
-                usuario.getFoto());
+                usuario.getImagem());
         return usuarioTokenDto;
     }
 
@@ -40,7 +40,7 @@ public interface UsuarioMapper {
         usuarioDevolverDto.setId(domain.getId());
         usuarioDevolverDto.setNome(domain.getNome());
         usuarioDevolverDto.setEmail(domain.getEmail());
-        usuarioDevolverDto.setFoto(domain.getFoto());
+        usuarioDevolverDto.setImagem(domain.getImagem());
 
         return usuarioDevolverDto;
     }

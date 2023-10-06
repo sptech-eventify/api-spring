@@ -30,7 +30,7 @@ public class Usuario {
     private Integer tipoUsuario;
     private Boolean isAtivo;
     private Boolean isBanido;
-    private String foto;
+    private String imagem;
     private LocalDateTime dataCriacao;
     private LocalDateTime ultimoLogin;
 }

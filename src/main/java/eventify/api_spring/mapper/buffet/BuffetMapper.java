@@ -112,7 +112,7 @@ public class BuffetMapper {
                 usuario.getNome(),
                 usuario.getEmail(),
                 token,
-                usuario.getFoto());
+                usuario.getImagem());
         return usuarioTokenDto;
     }
 }
