@@ -28,6 +28,4 @@ public class Pagina {
         this.nome = nome;
         this.uri = uri;
     }
-
-
 }

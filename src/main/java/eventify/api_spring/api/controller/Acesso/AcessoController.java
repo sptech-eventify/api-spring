@@ -1,13 +1,9 @@
-package eventify.api_spring.api.controller.Acesso;
+package eventify.api_spring.api.controller.acesso;
 
-import eventify.api_spring.domain.acesso.Pagina;
-import eventify.api_spring.dto.agenda.AgendaDto;
 import eventify.api_spring.service.Acesso.AcessoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -17,14 +13,12 @@ import static org.springframework.http.ResponseEntity.ok;
 public class AcessoController {
 
     @Autowired
-    private AcessoService AcessoService;
+    private AcessoService acessoService;
 
     @PostMapping("/{idPagina}")
     public ResponseEntity<Void> logAcesso(@PathVariable Integer idPagina) {
-        AcessoService.gerarLog(idPagina);
+        acessoService.gerarLog(idPagina);
 
-        return ResponseEntity.ok().build();
+        return ok().build();
     }
-
-
 }
