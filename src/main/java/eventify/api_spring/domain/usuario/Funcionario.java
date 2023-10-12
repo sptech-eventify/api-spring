@@ -43,6 +43,11 @@ public class Funcionario {
     private Boolean isVisivel;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_nivel_acesso")
-    private Integer idNivelAcesso;
+    @PrimaryKeyJoinColumn
+    private NivelAcesso nivelAcesso;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Usuario usuario;
+
 }

@@ -8,6 +8,9 @@ import lombok.Setter;
 
 import java.time.Instant;
 
+import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.domain.usuario.Usuario;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,19 +21,16 @@ public class ExecutorTarefa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_usuario")
     private Integer id;
 
     @NotBlank
-    private Instant  tempoExecutado;
+    private Instant tempoExecutado;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_funcionario")
-    private Integer idExecutorFuncionario;
+    @JoinColumn(name = "id_funcionario")
+    private Funcionario funcionario;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_usuario")
-    private Integer idExecutorUsuario;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuário;
 }

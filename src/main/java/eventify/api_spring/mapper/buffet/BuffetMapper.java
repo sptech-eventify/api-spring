@@ -14,6 +14,7 @@ import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.mapper.usuario.UsuarioMapper;
+import eventify.api_spring.service.buffet.PesquisaService;
 import eventify.api_spring.mapper.agenda.AgendaMapper;
 import eventify.api_spring.mapper.endereco.EnderecoMapper;
 
@@ -45,7 +46,7 @@ public class BuffetMapper {
         dto.setResidenciaComprovada(domain.isResidenciaComprovada());
         dto.setFaixasEtarias(domain.getFaixaEtarias());
         dto.setTiposEventos(domain.getTiposEventos());
-        dto.setServicos(domain.getServicos());
+        dto.setServicos(BuffetServicoMapper.toSetServico(domain.getServicos()));
         dto.setUsuario(UsuarioMapper.toDevolverDto(domain.getUsuario()));
         dto.setAgendas(domain.getAgendas().stream().map(agendaMapper::toDto).collect(Collectors.toList()));
         dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
@@ -62,7 +63,7 @@ public class BuffetMapper {
         dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
         dto.setPrecoMedioDiaria(domain.getPrecoMedioDiaria());
         dto.setNotaMediaAvaliacao(null);
-        dto.setServicos(domain.getServicos().stream().collect(Collectors.toList()));
+        dto.setServicos(BuffetServicoMapper.toListServico(domain.getServicos()).stream().collect(Collectors.toList()));
         dto.setFaixasEtarias(domain.getFaixaEtarias().stream().collect(Collectors.toList()));
         dto.setTiposEventos(domain.getTiposEventos().stream().collect(Collectors.toList()));
         dto.setLatitude(domain.getEndereco().getLatitude());
