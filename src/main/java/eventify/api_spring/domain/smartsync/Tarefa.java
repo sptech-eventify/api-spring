@@ -48,5 +48,5 @@ public class Tarefa {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "id_bucket")
-    private Integer idBucket;
+    private Bucket bucket;
 }

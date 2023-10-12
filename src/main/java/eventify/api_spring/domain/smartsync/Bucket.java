@@ -1,5 +1,8 @@
 package eventify.api_spring.domain.smartsync;
 
+import eventify.api_spring.domain.buffet.BuffetServico;
+import eventify.api_spring.domain.evento.Evento;
+import eventify.api_spring.service.buffet.BuffetService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +16,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Bucket {
 
@@ -30,9 +32,9 @@ public class Bucket {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "id_buffet_servico")
-    private Integer idBuffetServico;
+    private BuffetServico buffetServico;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "id_evento")
-    private Integer idEvento;
+    private Evento evento;
 }

@@ -12,6 +12,9 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.domain.usuario.Usuario;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -34,18 +37,14 @@ public class Comentario {
     private Boolean isVisivel;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_funcionario_gestor")
-    private Integer idFuncionarioGestor;
+    @PrimaryKeyJoinColumn
+    private Funcionario funcionario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_funcionario")
-    private Integer idFuncionario;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_usuario")
-    private Integer idUsuario;
+    @PrimaryKeyJoinColumn
+    private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tarefa")
-    private Integer idTarefa;
+    private Tarefa tarefa;
 }

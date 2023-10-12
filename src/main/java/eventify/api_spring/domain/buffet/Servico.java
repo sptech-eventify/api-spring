@@ -1,5 +1,8 @@
 package eventify.api_spring.domain.buffet;
 
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
@@ -21,4 +24,8 @@ public class Servico {
 
     @Schema(example = "Estacionamento")
     private String descricao;
+
+    @OneToMany(mappedBy = "servico")
+    @JsonIgnore
+    private Set<BuffetServico> buffetServicos;
 }

@@ -1,5 +1,6 @@
 package eventify.api_spring.domain.buffet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -82,12 +83,10 @@ public class Buffet {
             inverseJoinColumns = @JoinColumn(name = "id_tipo_evento"))
     private Set<TipoEvento> tiposEventos = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "buffet_servico",
-            joinColumns = @JoinColumn(name = "id_buffet"),
-            inverseJoinColumns = @JoinColumn(name = "id_servico"))
-    private Set<Servico> servicos = new HashSet<>();
-    
+    @OneToMany(mappedBy = "buffet")
+    @JsonIgnore
+    private Set<BuffetServico> servicos = new HashSet<>();
+
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
@@ -99,7 +98,7 @@ public class Buffet {
     private List<Agenda> agendas = new ArrayList<>();
 
 
-    public Buffet(Integer id, String nome, String descricao, Integer tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<Servico> servicos, Usuario usuario) {
+    public Buffet(Integer id, String nome, String descricao, Integer tamanho, Double precoMedioDiaria, Integer qtdPessoas, String caminhoComprovante, boolean residenciaComprovada, boolean isVisivel, LocalDate dataCriacao, Endereco endereco, Set<FaixaEtaria> faixaEtarias, Set<TipoEvento> tiposEventos, Set<BuffetServico> servicos, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
