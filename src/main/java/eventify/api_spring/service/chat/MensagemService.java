@@ -45,6 +45,7 @@ public class MensagemService {
     private ImagemChatRepository imagemChatRepository;
 
     public MensagemDto mandarMensagem(int idUsuario, int idBuffet, String text, boolean whoSended, List<MultipartFile> imagens) {
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
         Optional<Buffet> buffetOpt = buffetRepository.findById(idBuffet);
 

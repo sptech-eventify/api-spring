@@ -6,6 +6,7 @@ import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
+import eventify.api_spring.exception.http.*;
 import eventify.api_spring.mapper.usuario.UsuarioMapper;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.repository.UsuarioRepository;
@@ -18,11 +19,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import eventify.api_spring.exception.http.BadRequestException;
-import eventify.api_spring.exception.http.ForbiddenException;
-import eventify.api_spring.exception.http.NoContentException;
-import eventify.api_spring.exception.http.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -138,7 +134,7 @@ public class UsuarioService {
 
         if (usuario.isPresent()) {
             if (usuario.get().getIsBanido()) {
-                throw new ForbiddenException("Usuário banido");
+                throw new UnauthorizedException("Usuário banido");
             } else {
                 usuario.get().setIsAtivo(true);
                 usuario.get().setIsBanido(false);

@@ -1,5 +1,6 @@
 package eventify.api_spring.service.buffet;
 
+import eventify.api_spring.domain.buffet.BuffetServico;
 import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.domain.buffet.TipoEvento;
 import eventify.api_spring.dto.buffet.BuffetConsultaDto;
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,7 +60,18 @@ public class PesquisaService {
         return PageRequest.of(page, size);
     }
 
+    public static List<String> getDescricaoServicos(Set<BuffetServico> listaOriginal) {
+        List<String> descricoes = new ArrayList<>();
+
+        for (BuffetServico buffetServico : listaOriginal) {
+            descricoes.add(buffetServico.getServico().getDescricao());
+        }
+
+        return descricoes;
+    }
+
     public Page<BuffetRespostaDto> getBuffetPorPesquisa(Pesquisa pesquisa, Integer page, Integer size) {
+        List<String> servicos = new ArrayList<>();
         List<BuffetRespostaDto> buffetsFiltrados = buffetRepository.findAllBuffet().stream()
                 .filter(buffet -> buffet.getNome() != null &&
                         buffet.getNome().toLowerCase().contains(pesquisa.getNome().toLowerCase()))
@@ -72,8 +85,8 @@ public class PesquisaService {
                                 pesquisa.getFaixaEtaria().stream().anyMatch(f -> f.equalsIgnoreCase(faixaEtaria.getDescricao()))))
                 .filter(buffet -> pesquisa.getServico() == null || pesquisa.getServico().isEmpty() ||
                         buffet.getServicos().isEmpty() ||
-                        buffet.getServicos().stream().anyMatch(servico ->
-                                pesquisa.getServico().stream().anyMatch(s -> s.equalsIgnoreCase(servico.getDescricao()))))
+                        getDescricaoServicos(buffet.getServicos()).stream().anyMatch(servico ->
+                                pesquisa.getServico().stream().anyMatch(s -> s.equalsIgnoreCase(servico))))
                 .filter(buffet -> pesquisa.getQtdPessoas() == null || pesquisa.getQtdPessoas() <= buffet.getQtdPessoas())
                 .filter(buffet -> pesquisa.getOrcMin() == null || pesquisa.getOrcMin() <= buffet.getPrecoMedioDiaria())
                 .filter(buffet -> pesquisa.getOrcMax() == null || pesquisa.getOrcMax() >= buffet.getPrecoMedioDiaria())

@@ -54,22 +54,19 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
                         "b.id")
         List<EventoDto> findAllOrcamentos(@Param("id") Integer id);
 
-        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, GROUP_CONCAT(DISTINCT ts.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) "
-                        +
-                        "FROM Buffet b " +
-                        "JOIN Evento e ON e.buffet = b\n" +
-                        "JOIN Usuario u ON e.contratante = u\n" +
-                        "JOIN b.endereco en\n" +
-                        "JOIN b.servicos ts\n" +
-                        "JOIN b.faixaEtarias fe\n" +
-                        "JOIN b.tiposEventos te\n" +
-                        "WHERE e.id = :idEvento\n" +
-                        "GROUP BY u.nome," +
-                        "b.nome," +
-                        "b.id," +
-                        "e.data," +
-                        "e.preco")
+        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, " +
+                "GROUP_CONCAT(DISTINCT ts.servico.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) " +
+                "FROM Buffet b " +
+                "JOIN Evento e ON e.buffet.id = b.id " +
+                "JOIN Usuario u ON e.contratante.id = u.id " +
+                "JOIN b.endereco en " +
+                "JOIN b.faixaEtarias fe " +
+                "JOIN b.tiposEventos te " +
+                "JOIN b.servicos ts " +
+                "WHERE e.id = :idEvento " +
+                "GROUP BY u.nome, b.nome, b.id, e.data, e.preco")
         OrcamentoDto findOrcamentoById(@Param("idEvento") Integer idEvento);
+
 
         @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
         Integer findStatusByEvento(@Param("idEvento") Integer idEvento);
