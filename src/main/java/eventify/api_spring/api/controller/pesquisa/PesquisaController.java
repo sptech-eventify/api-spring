@@ -19,14 +19,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pesquisa")
-@Tag(name="Pesquisa", description="Controller com os endpoints de pesquisas do sistema")
+@Tag(name = "Pesquisa", description = "Controller com os endpoints de pesquisas do sistema")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 public class PesquisaController {
     @Autowired
     private PesquisaService pesquisaService;
 
     @GetMapping
-    private ResponseEntity<Page<BuffetRespostaDto>> buscador (
+    private ResponseEntity<Page<BuffetRespostaDto>> buscador(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "faixaEtaria", required = false) List<String> faixaEtaria,
             @RequestParam(value = "tamanho", required = false) Integer tamanho,
@@ -42,10 +42,10 @@ public class PesquisaController {
             @RequestParam(defaultValue = "10", value = "size", required = true) Integer size) {
 
         HttpHeaders headers = new HttpHeaders();
-        
 
-        if(nome == null && faixaEtaria == null && tamanho == null && qtdPessoas == null && tipoEvento == null
-            && orcMin == null && orcMax == null && dataEvento == null && servico == null && latitude == null && longitude == null){
+
+        if (nome == null && faixaEtaria == null && tamanho == null && qtdPessoas == null && tipoEvento == null
+                && orcMin == null && orcMax == null && dataEvento == null && servico == null && latitude == null && longitude == null) {
             Page<BuffetRespostaDto> lista = pesquisaService.getTodosBuffets(page, size);
 
             headers.add("X-Page-Number", String.valueOf(lista.getNumber()));

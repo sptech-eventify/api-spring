@@ -1,4 +1,4 @@
-package eventify.api_spring.service.acesso;
+package eventify.api_spring.service.Acesso;
 
 import eventify.api_spring.domain.acesso.Acesso;
 import eventify.api_spring.domain.acesso.Pagina;
