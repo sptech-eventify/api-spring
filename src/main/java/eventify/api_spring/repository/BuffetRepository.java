@@ -2,9 +2,12 @@ package eventify.api_spring.repository;
 
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.usuario.Usuario;
+import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +34,8 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     List<Buffet> findAllByNomeContaining(String nome);
 
     List<Buffet> findAllByUsuario(Usuario usuario);
+
+    @Procedure(procedureName = "sp_transacoes")
+    @Transactional
+    List<Object[]> spTransacoes(@Param("idBuffet") Integer idBuffet);
 }
