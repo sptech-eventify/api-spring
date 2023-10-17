@@ -35,7 +35,7 @@ public class BuffetMapper {
     public BuffetRespostaDto toRespostaDto(Buffet domain){
         BuffetRespostaDto dto = new BuffetRespostaDto();
         
-        dto.setId(domain.getUsuario().getId());
+        dto.setId(domain.getId());
         dto.setNome(domain.getNome());
         dto.setDescricao(domain.getDescricao());
         dto.setPrecoMedioDiaria(domain.getPrecoMedioDiaria());
