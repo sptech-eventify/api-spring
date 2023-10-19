@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -42,6 +43,9 @@ public class Tarefa {
 
     @NotNull
     private LocalDate dataEstimada;
+
+    @NotNull
+    private LocalDateTime dataConclusao;
 
     @NotNull
     private LocalDate dataCriacao;

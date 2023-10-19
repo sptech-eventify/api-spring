@@ -1,10 +1,10 @@
-package eventify.api_spring.api.controller.Acesso;
+package eventify.api_spring.api.controller.acesso;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import eventify.api_spring.service.Acesso.AcessoService;
+import eventify.api_spring.service.acesso.AcessoService;
 
 import static org.springframework.http.ResponseEntity.ok;
 

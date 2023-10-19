@@ -6,7 +6,7 @@ import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
 import eventify.api_spring.dto.usuario.UsuarioLoginDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
-import eventify.api_spring.service.Acesso.AcessoService;
+import eventify.api_spring.service.acesso.AcessoService;
 import eventify.api_spring.service.usuario.UsuarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

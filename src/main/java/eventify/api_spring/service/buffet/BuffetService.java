@@ -5,6 +5,7 @@ import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
@@ -376,5 +377,15 @@ public class BuffetService {
 
     public List<Buffet> getBuffetPorPesquisaNome(String q) {
         return buffetRepository.findByNomeContainingIgnoreCase(q);
+    }
+
+    public BuffetSmartSyncResumoDto resumoBuffet(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        return buffetMapper.toBuffetSmartSyncResumo(buffet.get());
     }
 }
