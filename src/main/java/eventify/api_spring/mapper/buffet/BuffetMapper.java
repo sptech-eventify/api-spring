@@ -14,7 +14,6 @@ import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.mapper.usuario.UsuarioMapper;
-import eventify.api_spring.service.buffet.PesquisaService;
 import eventify.api_spring.mapper.agenda.AgendaMapper;
 import eventify.api_spring.mapper.endereco.EnderecoMapper;
 
@@ -25,9 +24,6 @@ public class BuffetMapper {
 
     @Autowired
     private AgendaMapper agendaMapper;
-
-    @Autowired
-    private UsuarioMapper usuarioMapper;
 
     @Autowired 
     private ImagemMapper imagemMapper;

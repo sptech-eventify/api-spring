@@ -1,7 +1,6 @@
 package eventify.api_spring.api.controller.smartsync;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,17 +8,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import eventify.api_spring.service.smartsync.FileService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @RequestMapping("/file")
 @CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
@@ -32,24 +29,15 @@ public class FileController {
 
     @Transactional
     @GetMapping("/{idBuffet}")
-    public ResponseEntity<?> retornarDados(@PathVariable Integer idBuffet) {
-        try {
-            File dados = fileService.retornarCsv(idBuffet);
-            System.out.println(dados.getAbsolutePath());
-            
-            byte[] bytes = Files.readAllBytes(dados.toPath());
-            ByteArrayResource resource = new ByteArrayResource(bytes);
+    public ResponseEntity<byte[]> retornarDados(@PathVariable Integer idBuffet) {
+        String dados = fileService.retornarCsv(idBuffet);
+        String nomeBuffet = fileService.retornarNomeBuffet(idBuffet);
+        byte[] csvBytes = dados.getBytes();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + dados.getName());
-
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .contentLength(bytes.length)
-                    .body(resource);
-
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(nomeBuffet + ".csv").build());
+        
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
 }
