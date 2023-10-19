@@ -10,6 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class File {
+    private String pagante;
+    private String cpf;
+    private String email;
     private Double valor;
     private Integer is_gasto;
     private String motivo;

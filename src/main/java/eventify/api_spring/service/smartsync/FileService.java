@@ -1,63 +1,62 @@
 package eventify.api_spring.service.smartsync;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.repository.BuffetRepository;
 import jakarta.transaction.Transactional;
 
 @Service
 public class FileService {
-    private final static String PATH = "src/main/java/com/eventify/data/";
-    private final static String FILE_NAME = "transacoes";
-
     @Autowired
     private BuffetRepository buffetRepository;
 
     @Transactional
-    public List<eventify.api_spring.domain.smartsync.File> consultarTransacoes(Integer idBuffet) {
-        List<eventify.api_spring.domain.smartsync.File> ocorrencias = new ArrayList<>();
+    public List<File> consultarTransacoes(Integer idBuffet) {
+        List<File> ocorrencias = new ArrayList<>();
         List<Object[]> transacoes = buffetRepository.spTransacoes(idBuffet);
 
         for (Object[] transacao : transacoes) {
-            BigDecimal valor = (BigDecimal) transacao[0];
-            Long isGastoLong = (Long) transacao[1];
-            Integer is_gasto = isGastoLong.intValue(); // Converta Long para Integer
-            String motivo = (String) transacao[2];
-            String data = (String) transacao[3];
-        
-            ocorrencias.add(new eventify.api_spring.domain.smartsync.File(valor.doubleValue(), is_gasto, motivo, data));
+            String pagante = (String) transacao[0];
+            String cpf = (String) transacao[1];
+            String email = (String) transacao[2];
+            BigDecimal valor = (BigDecimal) transacao[3];
+            Long isGastoLong = (Long) transacao[4];
+            String motivo = (String) transacao[5];
+            String data = (String) transacao[6];
+
+            Integer is_gasto = isGastoLong.intValue();
+
+            ocorrencias.add(new File(pagante, cpf, email, valor.doubleValue(), is_gasto, motivo, data));
         }
 
         return ocorrencias;
     }
     
-    public File retornarCsv(Integer idBuffet) throws IOException {
-        List<eventify.api_spring.domain.smartsync.File> transacoes = consultarTransacoes(idBuffet);
+    public String retornarCsv(Integer idBuffet) {
+        List<File> transacoes = consultarTransacoes(idBuffet);
 
-        return createCSVFile(transacoes, idBuffet);
+        return gerarDadosFormatoCsv(transacoes, idBuffet);
     }
 
-    private File createCSVFile(List<eventify.api_spring.domain.smartsync.File> transacoes, Integer idBuffet) throws IOException {
-        File csvFile = new File(PATH + FILE_NAME + idBuffet + ".csv");
+    private String gerarDadosFormatoCsv(List<File> transacoes, Integer idBuffet) {
+        String arquivo = "pagante;cpf;email;valor;is_gasto;motivo;data\n";
 
-        try (Writer writer = new FileWriter(csvFile)) {
-            writer.write("valor;is_gasto;motivo;data\n");
-
-            for (eventify.api_spring.domain.smartsync.File linha : transacoes) {
-                writer.write(linha.getValor() + ";" + linha.getIs_gasto() + ";" + linha.getMotivo() + ";" + linha.getData() + "\n");
-            }
+        for (File linha : transacoes) {
+            arquivo += String.format("%s;%s;%s;%.2f;%d;%s;%s\n", linha.getPagante(), linha.getCpf(), linha.getEmail(), linha.getValor(), linha.getIs_gasto(), linha.getMotivo(), linha.getData());
         }
-        
-        return csvFile;
+
+        return arquivo;
+    }
+
+    public String retornarNomeBuffet(Integer idBuffet) {
+        String nome = buffetRepository.findById(idBuffet).get().getNome();
+
+        return nome.replaceAll(" ", "_").replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 }

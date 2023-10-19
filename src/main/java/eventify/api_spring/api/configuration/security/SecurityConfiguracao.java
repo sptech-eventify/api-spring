@@ -62,7 +62,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/faixas-etarias"),
             new AntPathRequestMatcher("/administrador/enderecos"),
             new AntPathRequestMatcher("/pesquisa"),
-            new AntPathRequestMatcher("/logAcesso/**"),
+            new AntPathRequestMatcher("/logAcesso/**")
     };
 
     @Bean
