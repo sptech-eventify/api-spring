@@ -1,16 +1,19 @@
 package eventify.api_spring.mapper.buffet;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioTokenDto;
 import eventify.api_spring.mapper.usuario.UsuarioMapper;
@@ -85,6 +88,21 @@ public class BuffetMapper {
         dto.setQtdPessoas(domain.getQtdPessoas());
         dto.setNotaMediaAvaliacao(null);
         dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
+
+        return dto;
+    }
+
+    public BuffetSmartSyncResumoDto toBuffetSmartSyncResumo(Buffet domain) {
+        BuffetSmartSyncResumoDto dto = new BuffetSmartSyncResumoDto();
+
+        dto.setId(domain.getId());
+        dto.setNome(domain.getNome());
+        dto.setCapacidade(domain.getQtdPessoas());
+        dto.setTamanho(domain.getTamanho());
+        dto.setRua(domain.getEndereco().getLogradouro());
+        dto.setBairro(domain.getEndereco().getBairro());
+        dto.setNumero(domain.getEndereco().getNumero());
+        dto.setServicos(BuffetServicoMapper.toListServico(domain.getServicos()).stream().collect(Collectors.toList()));
 
         return dto;
     }

@@ -3,6 +3,7 @@ package eventify.api_spring.api.controller.buffet;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
+import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
@@ -164,5 +165,13 @@ public class BuffetController {
         List<AvaliacaoDto> avaliacoes = buffetService.avaliacoes(id);
 
         return ok(avaliacoes);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/{id}")
+    public ResponseEntity<BuffetSmartSyncResumoDto> resumoBuffet(@PathVariable Integer id){
+        BuffetSmartSyncResumoDto buffet = buffetService.resumoBuffet(id);
+
+        return ok(buffet);
     }
 }
