@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface ComentarioRepository  extends JpaRepository<Comentario, Integer> {
 
-    @Query("SELECT c FROM Comentario c WHERE c.buffet.id = :id")
-    List<Comentario> findAllByBuffetId(Integer id);
 }

@@ -23,13 +23,6 @@ public class ComentarioController {
         return ResponseEntity.ok(comentarios);
     }
 
-    @GetMapping("/buffet/{idBuffet}")
-    public ResponseEntity<List<Comentario>> exibirTodosComentariosPorBuffetId(@PathVariable Integer idBuffet) {
-        List<Comentario> comentarios = comentarioService.exibirTodosComentariosPorBuffetId(idBuffet);
-
-        return ResponseEntity.ok(comentarios);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<Comentario> exibirComentarioPorId(@PathVariable Integer id) {
         Comentario comentario = comentarioService.exibirComentarioPorId(id);
