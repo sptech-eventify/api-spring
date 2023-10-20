@@ -2,7 +2,6 @@ package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.endereco.Endereco;
-import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
@@ -13,10 +12,12 @@ import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
-import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
+import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
+import eventify.api_spring.dto.smartsync.ImpressaoDto;
+import eventify.api_spring.dto.smartsync.VisualizacaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;
@@ -420,5 +421,77 @@ public class BuffetService {
         }
 
         return atividadesDto;
+    }
+
+    public Double calcularTaxaCrescimento(Double mesAtual, Double mesAnterior) {
+        return (Double)((mesAtual - mesAnterior) / mesAnterior) * 100;
+    }
+
+    public ImpressaoDto consultarImpressoes(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        List<AcessoDto> acessosDto = new ArrayList<>();
+        
+        Query queryAcessos = entityManager.createNativeQuery("SELECT * FROM vw_acessos_buffet WHERE id_buffet = :idBuffet");
+        queryAcessos.setParameter("idBuffet", idBuffet);
+        List<Object[]> acessos = queryAcessos.getResultList();
+
+        for (Object[] acesso : acessos) {
+            Integer id = (Integer) acesso[0];
+            String ano_s = (String) acesso[1]; 
+            Integer ano = Integer.parseInt(ano_s);
+            String mes = (String) acesso[2];
+            Long qtdAcessos = (Long) acesso[4];
+
+            acessosDto.add(new AcessoDto(id, ano, mes, qtdAcessos));
+        }
+
+        List<Double> indiceAcessos = acessosDto.stream().map(acesso -> (double) acesso.getQtdAcessos()).collect(Collectors.toList());
+        Double indiceAcesso = calcularTaxaCrescimento(indiceAcessos.get(indiceAcessos.size() - 1),  indiceAcessos.get(indiceAcessos.size() - 2));
+
+        List<VisualizacaoDto> visualizacoesDto = new ArrayList<>();
+
+        Query queryVisualizacoes = entityManager.createNativeQuery("SELECT * FROM vw_visualizacoes_buffet WHERE id_buffet = :idBuffet");
+        queryVisualizacoes.setParameter("idBuffet", idBuffet);
+        List<Object[]> visualizacoes = queryVisualizacoes.getResultList();
+
+        for (Object[] visualizacao : visualizacoes) {
+            Integer id = (Integer) visualizacao[0];
+            String ano_s = (String) visualizacao[1]; 
+            Integer ano = Integer.parseInt(ano_s);            
+            String mes = (String) visualizacao[2];
+            Long qtdVisualizacoes = (Long) visualizacao[4];
+
+            visualizacoesDto.add(new VisualizacaoDto(id, ano, mes, qtdVisualizacoes));
+        }
+
+        List<Double> indiceVisualizacoes = visualizacoesDto.stream().map(visualizacao -> (double) visualizacao.getQtdVisualizacoes()).collect(Collectors.toList());
+        Double indiceVisualizacao = calcularTaxaCrescimento(indiceVisualizacoes.get(indiceVisualizacoes.size() - 1),  indiceVisualizacoes.get(indiceVisualizacoes.size() - 2));
+
+
+        List<eventify.api_spring.dto.smartsync.AvaliacaoDto> avaliacoesDto = new ArrayList<>();
+        
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> avalicoes = query.getResultList();
+
+        for (Object[] avaliacao : avalicoes) {
+            Integer id = (Integer) avaliacao[0];
+            String ano_s = (String) avaliacao[1]; 
+            Integer ano = Integer.parseInt(ano_s);   
+            String mes = (String) avaliacao[2];
+            Long qtdAvaliacoes = (Long) avaliacao[4];
+
+            avaliacoesDto.add(new eventify.api_spring.dto.smartsync.AvaliacaoDto(id, ano, mes, qtdAvaliacoes));
+        }
+
+        List<Double> indiceAvaliacoes = avaliacoesDto.stream().map(avaliacao -> (double) avaliacao.getQtdAvaliacao()).collect(Collectors.toList());
+        Double indiceAvaliacao = calcularTaxaCrescimento(indiceAvaliacoes.get(indiceAvaliacoes.size() - 1),  indiceAvaliacoes.get(indiceAvaliacoes.size() - 2));
+
+        return new ImpressaoDto(acessosDto, indiceAcesso, visualizacoesDto, indiceVisualizacao, avaliacoesDto, indiceAvaliacao);     
     }
 }
