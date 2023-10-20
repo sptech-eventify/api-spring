@@ -38,4 +38,8 @@ public interface BuffetRepository extends JpaRepository<Buffet, Integer> {
     @Procedure(procedureName = "sp_transacoes")
     @Transactional
     List<Object[]> spTransacoes(@Param("idBuffet") Integer idBuffet);
+
+    @Procedure(procedureName = "sp_atividades")
+    @Transactional
+    List<Object[]> spAtividades(@Param("idBuffet") Integer idBuffet);
 }

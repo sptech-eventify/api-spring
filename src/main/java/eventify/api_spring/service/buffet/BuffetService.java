@@ -2,6 +2,7 @@ package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.endereco.Endereco;
+import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
@@ -14,6 +15,7 @@ import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
+import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;
@@ -25,6 +27,8 @@ import eventify.api_spring.mapper.utils.DataMapper;
 import eventify.api_spring.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -387,5 +391,29 @@ public class BuffetService {
         }
 
         return buffetMapper.toBuffetSmartSyncResumo(buffet.get());
+    }
+
+    @Transactional
+    public List<AtividadeDto> consultarAtividades(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+        
+        List<Object[]> atividades = buffetRepository.spAtividades(idBuffet);
+
+        List<AtividadeDto> atividadesDto = new ArrayList<>();
+
+        for (Object[] atividade : atividades) {
+            Character id = (Character) atividade[0];
+            String nome = (String) atividade[1];
+            String descricao = (String) atividade[2];
+            String data = (String) atividade[3];
+
+            atividadesDto.add(new AtividadeDto(id, nome, descricao, data));
+        }
+
+        return atividadesDto;
     }
 }
