@@ -15,6 +15,7 @@ import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
+import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
 import eventify.api_spring.service.smartsync.FileService;
@@ -198,6 +199,15 @@ public class BuffetController {
         List<AtividadeDto> logs = buffetService.consultarAtividades(id);
 
         return ok(logs);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/impressoes/{id}")
+    @Transactional
+    public ResponseEntity<ImpressaoDto> consultarImpressoes(@PathVariable Integer id){
+        ImpressaoDto impressoes = buffetService.consultarImpressoes(id);
+
+        return ok(impressoes);
     }
 
 }
