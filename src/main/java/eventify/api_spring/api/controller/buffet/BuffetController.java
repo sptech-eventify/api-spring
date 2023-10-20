@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
@@ -12,10 +13,13 @@ import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
+import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
+import eventify.api_spring.service.smartsync.FileService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +39,9 @@ public class BuffetController {
 
     @Autowired
     private BuffetService buffetService;
+
+    @Autowired
+    private FileService fileService;
 
     @GetMapping
     public ResponseEntity<List<BuffetRespostaDto>> listarBuffets() {
@@ -173,5 +180,22 @@ public class BuffetController {
         BuffetSmartSyncResumoDto buffet = buffetService.resumoBuffet(id);
 
         return ok(buffet);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/transacoes/{id}")
+    public ResponseEntity<List<File>> consultarTransacoes(@PathVariable Integer id){
+        List<File> log = fileService.consultarTransacoes(id);
+
+        return ok(log);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/atividades/{id}")
+    @Transactional
+    public ResponseEntity<List<AtividadeDto>> consultarAtividades(@PathVariable Integer id){
+        List<AtividadeDto> logs = buffetService.consultarAtividades(id);
+
+        return ok(logs);
     }
 }
