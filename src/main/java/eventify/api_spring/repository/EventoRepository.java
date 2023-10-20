@@ -6,9 +6,11 @@ import eventify.api_spring.dto.evento.EventoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
+import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -54,29 +56,35 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
                         "b.id")
         List<EventoDto> findAllOrcamentos(@Param("id") Integer id);
 
-        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, " +
-                "GROUP_CONCAT(DISTINCT ts.servico.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) " +
-                "FROM Buffet b " +
-                "JOIN Evento e ON e.buffet.id = b.id " +
-                "JOIN Usuario u ON e.contratante.id = u.id " +
-                "JOIN b.endereco en " +
-                "JOIN b.faixaEtarias fe " +
-                "JOIN b.tiposEventos te " +
-                "JOIN b.servicos ts " +
-                "WHERE e.id = :idEvento " +
-                "GROUP BY u.nome, b.nome, b.id, e.data, e.preco")
+        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, "
+                        +
+                        "GROUP_CONCAT(DISTINCT ts.servico.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) "
+                        +
+                        "FROM Buffet b " +
+                        "JOIN Evento e ON e.buffet.id = b.id " +
+                        "JOIN Usuario u ON e.contratante.id = u.id " +
+                        "JOIN b.endereco en " +
+                        "JOIN b.faixaEtarias fe " +
+                        "JOIN b.tiposEventos te " +
+                        "JOIN b.servicos ts " +
+                        "WHERE e.id = :idEvento " +
+                        "GROUP BY u.nome, b.nome, b.id, e.data, e.preco")
         OrcamentoDto findOrcamentoById(@Param("idEvento") Integer idEvento);
-
 
         @Query("SELECT e.status FROM Evento e WHERE e.id = :idEvento")
         Integer findStatusByEvento(@Param("idEvento") Integer idEvento);
 
-        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)" +
-            "FROM Evento e " +
-            "JOIN Usuario u on e.contratante = u " +
-            "JOIN Buffet b on e.buffet = b " +
-            "WHERE b.id = :idBuffet AND " +
-            "e.status != '6' " +
-            "ORDER BY e.status")
+        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoPropDto(e.id, u.nome, e.data, e.preco, e.status)"
+                        +
+                        "FROM Evento e " +
+                        "JOIN Usuario u on e.contratante = u " +
+                        "JOIN Buffet b on e.buffet = b " +
+                        "WHERE b.id = :idBuffet AND " +
+                        "e.status != '6' " +
+                        "ORDER BY e.status")
         List<OrcamentoPropDto> findAllOrcamentosByBuffet(@Param("idBuffet") Integer idBuffet);
+
+        @Procedure(procedureName = "sp_proximo_evento")
+        @Transactional
+        List<Object[]> spProximoEvento(@Param("idBuffet") Integer idBuffet);
 }

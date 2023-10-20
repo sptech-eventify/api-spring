@@ -3,12 +3,15 @@ package eventify.api_spring.api.controller.evento;
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.dto.evento.EventoCriacaoDto;
 import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
+import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.service.evento.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -105,5 +108,14 @@ public class EventoController {
         eventoService.pagarOrcamento(id);
 
         return ok().build();
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/proximo-evento/{id}")
+    @Transactional
+    public ResponseEntity<List<EventoProximoDto>> consultarProximoEvento(@PathVariable Integer id){
+        List<EventoProximoDto> logs = eventoService.consultarProximoEvento(id);
+
+        return ok(logs);
     }
 }

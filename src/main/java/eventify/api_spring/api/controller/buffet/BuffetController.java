@@ -11,6 +11,7 @@ import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
+import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
@@ -198,4 +199,5 @@ public class BuffetController {
 
         return ok(logs);
     }
+
 }
