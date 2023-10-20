@@ -3,8 +3,6 @@ package eventify.api_spring.dto.evento;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -14,5 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventoProximoDto {
     private String nome;
-    private LocalDateTime data;
+    private String diaSemana;
+    private String data;
 }

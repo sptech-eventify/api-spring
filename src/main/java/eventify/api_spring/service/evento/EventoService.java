@@ -28,10 +28,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
+
 @Service
 public class EventoService {
     @Autowired
@@ -66,10 +66,8 @@ public class EventoService {
         if (buffetOpt.isEmpty() || usuarioOpt.isEmpty()) {
             throw new NotFoundException("Buffet ou usuário não encontrado");
         }
-        
-        Evento eventoCriado = eventoRepository.save(EventoMapper.of(evento, buffetOpt.get(), usuarioOpt.get()));
-        
-        return eventoCriado;
+
+        return eventoRepository.save(EventoMapper.of(evento, buffetOpt.get(), usuarioOpt.get()));
     }
 
     public EventoDto eventoPorId(Integer idEvento) {
@@ -79,9 +77,7 @@ public class EventoService {
             throw new NotFoundException("Evento não encontrado");
         }
 
-        EventoDto eventoDto = EventoMapper.toDto(evento.get());
-
-        return eventoDto;
+        return EventoMapper.toDto(evento.get());
     }
 
     public List<OrcamentoPropDto> buscarOrcamentosDoBuffet(Integer idBuffet) {
@@ -264,8 +260,15 @@ public class EventoService {
             String nome = (String) evento[0];
             Timestamp timestamp = (Timestamp) evento[1];
             LocalDateTime data = timestamp.toLocalDateTime();
-        
-            eventosProximos.add(new EventoProximoDto(nome, data));
+
+            Locale locale = new Locale("pt","BR");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d 'de' MMMM", locale);
+            String diaSemana = data.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
+            String dataFormatada = data.format(formatter);
+            diaSemana = diaSemana.substring(0,1).toUpperCase().concat(diaSemana.substring(1));
+
+            eventosProximos.add(new EventoProximoDto(nome, diaSemana, dataFormatada));
         }
 
         if (eventos.isEmpty()) {
