@@ -22,7 +22,7 @@ public class BucketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bucket> exibirBucketPorId(@PathVariable Integer id) {
+    public ResponseEntity<Bucket> exibirBucketPorId(@PathVariable   Integer id) {
         Bucket bucket = bucketService.exibirBucketPorId(id);
 
         return ResponseEntity.ok(bucket);
