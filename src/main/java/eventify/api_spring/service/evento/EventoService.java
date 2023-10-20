@@ -6,6 +6,7 @@ import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.domain.pagamento.Pagamento;
 import eventify.api_spring.dto.evento.EventoCriacaoDto;
 import eventify.api_spring.dto.evento.EventoDto;
+import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.evento.PagamentoEventoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
@@ -19,11 +20,13 @@ import eventify.api_spring.repository.PagamentoRepository;
 import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -244,6 +247,32 @@ public class EventoService {
         }
 
         return null;
+    }
+
+    @Transactional
+    public List<EventoProximoDto> consultarProximoEvento(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+        List<EventoProximoDto> eventosProximos = new ArrayList<>();
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        List<Object[]> eventos = eventoRepository.spProximoEvento(idBuffet);
+
+        for (Object[] evento : eventos) {
+            String nome = (String) evento[0];
+            Timestamp timestamp = (Timestamp) evento[1];
+            LocalDateTime data = timestamp.toLocalDateTime();
+        
+            eventosProximos.add(new EventoProximoDto(nome, data));
+        }
+
+        if (eventos.isEmpty()) {
+            throw new NoContentException("Não há eventos para este buffet");
+        }
+
+        return eventosProximos;        
     }
 
 }
