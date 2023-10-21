@@ -1,6 +1,7 @@
 package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
+import eventify.api_spring.domain.buffet.Transacao;
 import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.domain.smartsync.File;
@@ -703,5 +704,61 @@ public class BuffetService {
         }
 
         return new VisaoGeralMensalDto(realizadosDto, proximosDto);
+    }
+
+    public Integer consultarQuantidadeEventos(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        query.setParameter("idBuffet", idBuffet);
+        Long quantidade = (Long) query.getSingleResult();
+
+        return quantidade.intValue();
+    }
+
+    public Double consultarRendaMediaEventos(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT AVG(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        query.setParameter("idBuffet", idBuffet);
+        BigDecimal media = (BigDecimal) query.getSingleResult();
+
+        return media.doubleValue();
+    }
+
+    public Double consultarRendaTotal(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT SUM(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        query.setParameter("idBuffet", idBuffet);
+        BigDecimal total = (BigDecimal) query.getSingleResult();
+
+        return total.doubleValue();
+    }
+
+    @Transactional
+    public Double consultarGastoTotal(Integer idBuffet) {
+        List<TransacaoDto> transacoes = this.consultarInfoTransacoes(idBuffet);
+        Double gasto = 0.0;
+
+        for (TransacaoDto transacao : transacoes) {
+            if (transacao.getIsPago() == 1) {
+                gasto += transacao.getValor();
+            }
+        }
+
+        return gasto;
     }
 }

@@ -243,7 +243,6 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/smart-sync/rendas-mes-anterior-atual/{idBuffet}")
-    @Transactional
     public ResponseEntity<RendaRetornoDto> compararRendaMesAnteriorAtual(@PathVariable Integer idBuffet){
         RendaRetornoDto rendas = buffetService.compararRendaMesAnteriorAtual(idBuffet);
 
@@ -252,12 +251,42 @@ public class BuffetController {
 
     @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/smart-sync/visao-geral-mensal/{idBuffet}")
-    @Transactional
     public ResponseEntity<VisaoGeralMensalDto> consultarVisaoGeralMensal(@PathVariable Integer idBuffet){
         VisaoGeralMensalDto visaoGeralMensal = buffetService.consultarVisaoGeralMensal(idBuffet);
 
         return ok(visaoGeralMensal);
     }
 
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/quantidade-eventos/{idBuffet}")
+    public ResponseEntity<Integer> consultarQuantidadeEventos(@PathVariable Integer idBuffet){
+        Integer quantidade = buffetService.consultarQuantidadeEventos(idBuffet);
 
+        return ok(quantidade);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/renda-media-eventos/{idBuffet}")
+    public ResponseEntity<Double> consultarRendaMediaEventos(@PathVariable Integer idBuffet){
+        Double media = buffetService.consultarRendaMediaEventos(idBuffet);
+
+        return ok(media);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/renda-total/{idBuffet}")
+    public ResponseEntity<Double> consultarRendaTotal(@PathVariable Integer idBuffet){
+        Double total = buffetService.consultarRendaTotal(idBuffet);
+
+        return ok(total);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @Transactional
+    @GetMapping("/smart-sync/gasto-total/{idBuffet}")
+    public ResponseEntity<Double> consultarGastoTotal(@PathVariable Integer idBuffet){
+        Double total = buffetService.consultarGastoTotal(idBuffet);
+
+        return ok(total);
+    }
 }
