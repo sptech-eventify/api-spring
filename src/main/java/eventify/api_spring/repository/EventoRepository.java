@@ -87,4 +87,13 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
         @Procedure(procedureName = "sp_proximo_evento")
         @Transactional
         List<Object[]> spProximoEvento(@Param("idBuffet") Integer idBuffet);
+
+        @Query("SELECT e.nota FROM Evento e WHERE e.buffet = :buffet AND e.status = 6")
+        List<Double> findNotaByBuffet(@Param("buffet") Buffet buffet);
+
+        @Query("SELECT e.nota FROM Evento e WHERE e.buffet = :buffet AND e.data BETWEEN :dataInicial AND :dataFinal")
+        List<Double> findNotaMesAtualByBuffet(Buffet buffet, LocalDate dataInicial, LocalDate dataFinal);
+
+        @Query("SELECT e.nota FROM Evento e WHERE e.buffet = :buffet AND e.data BETWEEN :dataInicial AND :dataFinal")
+        List<Evento> findNotaUltimoMesByBuffet(Buffet buffet, LocalDate dataInicial, LocalDate dataFinal);
 }
