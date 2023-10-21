@@ -1,10 +1,7 @@
 package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
-import eventify.api_spring.domain.buffet.Transacao;
 import eventify.api_spring.domain.endereco.Endereco;
-import eventify.api_spring.domain.evento.Evento;
-import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
@@ -25,6 +22,7 @@ import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoFinanceiroEventoDto;
 import eventify.api_spring.dto.smartsync.RendaDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
+import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
 import eventify.api_spring.dto.smartsync.VisaoGeralMensalDto;
 import eventify.api_spring.dto.smartsync.VisualizacaoDto;
@@ -46,7 +44,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -760,5 +757,47 @@ public class BuffetService {
         }
 
         return gasto;
+    }
+
+    public List<TarefaEventoProximoDto> consultarTarefasProximas(Integer idBuffet) {
+        Optional <Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_tarefas_proximas WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> tarefas = query.getResultList();
+
+        List<TarefaEventoProximoDto> tarefasDto = new ArrayList<>();
+        for (Object[] tarefa : tarefas) {
+            Integer idTarefa = (Integer) tarefa[0];
+            String nomeContratante = (String) tarefa[6];
+            Timestamp dataEvento = (Timestamp) tarefa[5];
+            String nomeTarefa = (String) tarefa[2];
+            String descricaoTarefa = (String) tarefa[3];
+            List<String> responsaveisTarefa = new ArrayList<>();
+            Date dataTarefa = (Date) tarefa[4];
+            Timestamp timestampDataTarefa = new Timestamp(dataTarefa.getTime());
+
+            tarefasDto.add(new TarefaEventoProximoDto(idTarefa, nomeContratante, dataEvento, nomeTarefa, descricaoTarefa, responsaveisTarefa, timestampDataTarefa));
+        }
+
+        for (TarefaEventoProximoDto tarefa : tarefasDto) {
+            Integer idTarefa = tarefa.getIdTarefa();
+
+            Query queryResponsaveis = entityManager.createNativeQuery("SELECT id_tarefa, nome_executor FROM vw_tarefas_proximas_responsaveis WHERE id_tarefa = :idTarefa");
+            queryResponsaveis.setParameter("idTarefa", idTarefa);
+            List<Object[]> responsaveis = queryResponsaveis.getResultList();
+
+            for (Object[] responsavel : responsaveis) {
+                String nomeResponsavel = (String) responsavel[1];
+
+                tarefa.getResponsaveisTarefa().add(nomeResponsavel);
+            }
+        }
+
+        return tarefasDto;
     }
 }

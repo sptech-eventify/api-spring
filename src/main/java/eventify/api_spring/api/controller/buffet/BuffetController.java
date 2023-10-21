@@ -18,6 +18,7 @@ import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
+import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
 import eventify.api_spring.dto.smartsync.VisaoGeralMensalDto;
 import eventify.api_spring.dto.utils.DataDto;
@@ -286,6 +287,15 @@ public class BuffetController {
     @GetMapping("/smart-sync/gasto-total/{idBuffet}")
     public ResponseEntity<Double> consultarGastoTotal(@PathVariable Integer idBuffet){
         Double total = buffetService.consultarGastoTotal(idBuffet);
+
+        return ok(total);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @Transactional
+    @GetMapping("/smart-sync/tarefas-proximas/{idBuffet}")
+    public ResponseEntity<List<TarefaEventoProximoDto>> consultarTarefasProximas(@PathVariable Integer idBuffet){
+        List<TarefaEventoProximoDto> total = buffetService.consultarTarefasProximas(idBuffet);
 
         return ok(total);
     }
