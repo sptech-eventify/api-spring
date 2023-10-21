@@ -21,7 +21,11 @@ import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
+import eventify.api_spring.dto.smartsync.InfoFinanceiroEventoDto;
+import eventify.api_spring.dto.smartsync.RendaDto;
+import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
+import eventify.api_spring.dto.smartsync.VisaoGeralMensalDto;
 import eventify.api_spring.dto.smartsync.VisualizacaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
@@ -593,5 +597,111 @@ public class BuffetService {
         }
 
         return ocorrencias;
+    }
+
+    public RendaRetornoDto compararRendaMesAnteriorAtual(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
+        LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+        LocalDate ultimoDiaMesAnterior = mesAtual.minusDays(1);
+        
+        Query queryMesAtual = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+        queryMesAtual.setParameter("idBuffet", idBuffet);
+        queryMesAtual.setParameter("mesAtual", mesAtual);
+        queryMesAtual.setParameter("agora", LocalDateTime.now());
+        List<Object[]> rendasAtual = queryMesAtual.getResultList();
+
+        if(rendasAtual.isEmpty()){
+            throw new NoContentException("Não há rendas no mês atual");
+        }
+    
+        List<RendaDto> rendaAtualDto = new ArrayList<>();
+        for (Object[] rendaAtual : rendasAtual) {
+            String nome = (String) rendaAtual[0];
+            Timestamp data = (Timestamp) rendaAtual[1];
+            BigDecimal precoBigDecimal = (BigDecimal) rendaAtual[2];
+            Double preco = precoBigDecimal.doubleValue();
+
+            rendaAtualDto.add(new RendaDto(nome, data, preco));
+        }
+
+        Query queryMesAnterior = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAnterior AND :ultimoDiaMesAnterior AND status = 6");
+        queryMesAnterior.setParameter("idBuffet", idBuffet);
+        queryMesAnterior.setParameter("mesAnterior", mesAnterior);
+        queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
+        List<Object[]> rendasAnterior = queryMesAnterior.getResultList();
+
+        if(rendasAnterior.isEmpty()){
+            throw new NoContentException("Não há rendas no mês anterior");
+        }
+
+        List<RendaDto> rendaAnteriorDto = new ArrayList<>();
+        for (Object[] rendaAnterior : rendasAnterior) {
+            String nome = (String) rendaAnterior[0];
+            Timestamp data = (Timestamp) rendaAnterior[1];
+            BigDecimal precoBigDecimal = (BigDecimal) rendaAnterior[2];
+            Double preco = precoBigDecimal.doubleValue();
+
+            rendaAnteriorDto.add(new RendaDto(nome, data, preco));
+        }
+
+        return new RendaRetornoDto(rendaAnteriorDto, rendaAtualDto);
+    }
+
+    public VisaoGeralMensalDto consultarVisaoGeralMensal(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
+        LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+        LocalDate ultimoDiaMesAtual = mesAtual.minusDays(1);
+        
+        Query queryRealizados = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+        queryRealizados.setParameter("idBuffet", idBuffet);
+        queryRealizados.setParameter("mesAtual", mesAtual);
+        queryRealizados.setParameter("agora", LocalDateTime.now());
+        List<Object[]> realizados = queryRealizados.getResultList();
+
+        if (realizados.isEmpty()) {
+            throw new NoContentException("Não há eventos realizados no mês atual");
+        }
+    
+        List<InfoFinanceiroEventoDto> realizadosDto = new ArrayList<>();
+        for (Object[] realizado : realizados) {
+            String nome = (String) realizado[0];
+            Timestamp data = (Timestamp) realizado[1];
+            BigDecimal precoBigDecimal = (BigDecimal) realizado[2];
+            Double preco = precoBigDecimal.doubleValue();
+
+            realizadosDto.add(new InfoFinanceiroEventoDto(nome, data, preco));
+        }
+
+        Query queryProximos = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN NOW() AND LAST_DAY(NOW()) AND status = 5");
+        queryProximos.setParameter("idBuffet", idBuffet);
+        List<Object[]> proximos = queryProximos.getResultList();
+
+        if (proximos.isEmpty()) {
+            throw new NoContentException("Não há eventos próximos no mês atual");
+        }
+
+        List<InfoFinanceiroEventoDto> proximosDto = new ArrayList<>();
+        for (Object[] proximo : proximos) {
+            String nome = (String) proximo[0];
+            Timestamp data = (Timestamp) proximo[1];
+            BigDecimal precoBigDecimal = (BigDecimal) proximo[2];
+            Double preco = precoBigDecimal.doubleValue();
+
+            proximosDto.add(new InfoFinanceiroEventoDto(nome, data, preco));
+        }
+
+        return new VisaoGeralMensalDto(realizadosDto, proximosDto);
     }
 }

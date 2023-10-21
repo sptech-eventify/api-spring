@@ -17,7 +17,9 @@ import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
+import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
+import eventify.api_spring.dto.smartsync.VisaoGeralMensalDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
 import eventify.api_spring.service.smartsync.FileService;
@@ -238,5 +240,24 @@ public class BuffetController {
 
         return ok(infos);
     }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/rendas-mes-anterior-atual/{idBuffet}")
+    @Transactional
+    public ResponseEntity<RendaRetornoDto> compararRendaMesAnteriorAtual(@PathVariable Integer idBuffet){
+        RendaRetornoDto rendas = buffetService.compararRendaMesAnteriorAtual(idBuffet);
+
+        return ok(rendas);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/visao-geral-mensal/{idBuffet}")
+    @Transactional
+    public ResponseEntity<VisaoGeralMensalDto> consultarVisaoGeralMensal(@PathVariable Integer idBuffet){
+        VisaoGeralMensalDto visaoGeralMensal = buffetService.consultarVisaoGeralMensal(idBuffet);
+
+        return ok(visaoGeralMensal);
+    }
+
 
 }
