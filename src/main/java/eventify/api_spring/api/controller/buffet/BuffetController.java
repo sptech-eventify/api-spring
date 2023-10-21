@@ -11,10 +11,10 @@ import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
-import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
+import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.service.buffet.BuffetService;
@@ -208,6 +208,15 @@ public class BuffetController {
         ImpressaoDto impressoes = buffetService.consultarImpressoes(id);
 
         return ok(impressoes);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/avaliacao-baseada-eventos/{id}")
+    @Transactional
+    public ResponseEntity<AvaliacaoBaseadoEvento> consultarAvaliacaoBaseadoEventos(@PathVariable Integer id){
+        AvaliacaoBaseadoEvento avaliacao = buffetService.consultarAvaliacaoBaseadoEventos(id);
+
+        return ok(avaliacao);
     }
 
 }

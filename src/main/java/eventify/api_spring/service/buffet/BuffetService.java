@@ -2,6 +2,7 @@ package eventify.api_spring.service.buffet;
 
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.endereco.Endereco;
+import eventify.api_spring.domain.evento.Evento;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
@@ -16,6 +17,7 @@ import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
+import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.VisualizacaoDto;
 import eventify.api_spring.dto.utils.DataDto;
@@ -493,5 +495,43 @@ public class BuffetService {
         Double indiceAvaliacao = calcularTaxaCrescimento(indiceAvaliacoes.get(indiceAvaliacoes.size() - 1),  indiceAvaliacoes.get(indiceAvaliacoes.size() - 2));
 
         return new ImpressaoDto(acessosDto, indiceAcesso, visualizacoesDto, indiceVisualizacao, avaliacoesDto, indiceAvaliacao);     
+    }
+
+    public AvaliacaoBaseadoEvento consultarAvaliacaoBaseadoEventos(Integer id) {
+        Optional<Buffet> buffet = buffetRepository.findById(id);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        List<Double> notas = eventoRepository.findNotaByBuffet(buffet.get());
+
+        if (notas.isEmpty()) {
+            throw new NoContentException("Não há notas");
+        }
+
+        Double notaMedia = notas.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+
+        LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
+        LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
+        LocalDate ultimoDiaMesAnterior = mesAtual.minusDays(1);
+
+        Query queryMesAtual = entityManager.createNativeQuery("SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+        queryMesAtual.setParameter("idBuffet", id);
+        queryMesAtual.setParameter("mesAtual", mesAtual);
+        queryMesAtual.setParameter("agora", LocalDateTime.now());
+        List<Double> notasAtual = queryMesAtual.getResultList();
+
+        Query queryMesAnterior = entityManager.createNativeQuery("SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data < :ultimoDiaMesAnterior AND status = 6");
+        queryMesAnterior.setParameter("idBuffet", id);
+        queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
+        List<Double> notasAnterior = queryMesAnterior.getResultList();
+
+        Double notaMediaMesAtual = notasAtual.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+        Double notaMediaMesAnterior = notasAnterior.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+
+        Double indice = calcularTaxaCrescimento(notaMediaMesAtual, notaMediaMesAnterior);
+
+        return new AvaliacaoBaseadoEvento(notaMedia, indice);
     }
 }
