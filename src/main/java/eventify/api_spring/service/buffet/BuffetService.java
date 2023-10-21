@@ -3,6 +3,7 @@ package eventify.api_spring.service.buffet;
 import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.endereco.Endereco;
 import eventify.api_spring.domain.evento.Evento;
+import eventify.api_spring.domain.smartsync.File;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.dto.buffet.BuffetResumoDto;
@@ -19,6 +20,8 @@ import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
+import eventify.api_spring.dto.smartsync.InfoEventoDto;
+import eventify.api_spring.dto.smartsync.TransacaoDto;
 import eventify.api_spring.dto.smartsync.VisualizacaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
@@ -36,6 +39,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -533,5 +539,59 @@ public class BuffetService {
         Double indice = calcularTaxaCrescimento(notaMediaMesAtual, notaMediaMesAnterior);
 
         return new AvaliacaoBaseadoEvento(notaMedia, indice);
+    }
+
+    public List<InfoEventoDto> consultarInfoEventos(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_info_eventos WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> infos = query.getResultList();
+
+        List<InfoEventoDto> infosDto = new ArrayList<>();
+        for (Object[] info : infos) {
+            String nome = (String) info[1];
+            String cpf = (String) info[2];
+            String email = (String) info[3];
+            Timestamp data = (Timestamp) info[4];
+            String status = (String) info[5];
+            Timestamp dataPedido = (Timestamp) info[6];
+
+            infosDto.add(new InfoEventoDto(nome, cpf, email, data, status, dataPedido));
+        }
+
+        return infosDto;
+    }
+    
+    @Transactional
+    public List<TransacaoDto> consultarInfoTransacoes(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+        
+        List<TransacaoDto> ocorrencias = new ArrayList<>();
+        List<Object[]> transacoes = buffetRepository.spTransacoes(idBuffet);
+
+        for (Object[] transacao : transacoes) {
+            String pagante = (String) transacao[0];
+            String cpf = (String) transacao[1];
+            String email = (String) transacao[2];
+            BigDecimal valor = (BigDecimal) transacao[3];
+            Long isGastoLong = (Long) transacao[4];
+            String motivo = (String) transacao[5];
+            String data = (String) transacao[6];
+
+            Integer is_gasto = isGastoLong.intValue();
+
+            ocorrencias.add(new TransacaoDto(pagante, cpf, email, valor.doubleValue(), is_gasto, motivo, data));
+        }
+
+        return ocorrencias;
     }
 }
