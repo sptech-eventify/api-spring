@@ -19,6 +19,7 @@ import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
+import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.VisualizacaoDto;
 import eventify.api_spring.dto.utils.DataDto;
 import eventify.api_spring.exception.http.ConflictException;
@@ -36,6 +37,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -533,5 +537,31 @@ public class BuffetService {
         Double indice = calcularTaxaCrescimento(notaMediaMesAtual, notaMediaMesAnterior);
 
         return new AvaliacaoBaseadoEvento(notaMedia, indice);
+    }
+
+    public List<InfoEventoDto> consultarInfoEventos(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_info_eventos WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> infos = query.getResultList();
+
+        List<InfoEventoDto> infosDto = new ArrayList<>();
+        for (Object[] info : infos) {
+            String nome = (String) info[1];
+            String cpf = (String) info[2];
+            String email = (String) info[3];
+            Timestamp data = (Timestamp) info[4];
+            String status = (String) info[5];
+            Timestamp dataPedido = (Timestamp) info[6];
+
+            infosDto.add(new InfoEventoDto(nome, cpf, email, data, status, dataPedido));
+        }
+
+        return infosDto;
     }
 }
