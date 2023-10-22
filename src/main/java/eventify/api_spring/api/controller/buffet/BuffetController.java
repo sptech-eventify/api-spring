@@ -17,6 +17,7 @@ import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
+import eventify.api_spring.dto.smartsync.InfoStatusDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
@@ -292,11 +293,19 @@ public class BuffetController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
-    @Transactional
     @GetMapping("/smart-sync/tarefas-proximas/{idBuffet}")
     public ResponseEntity<List<TarefaEventoProximoDto>> consultarTarefasProximas(@PathVariable Integer idBuffet){
         List<TarefaEventoProximoDto> total = buffetService.consultarTarefasProximas(idBuffet);
 
         return ok(total);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @Transactional
+    @GetMapping("/smart-sync/info-status/{idBuffet}")
+    public ResponseEntity<List<InfoStatusDto>> consultarInfoStatus(@PathVariable Integer idBuffet){
+        List<InfoStatusDto> infoStatus = buffetService.consultarInfoStatus(idBuffet);
+
+        return ok(infoStatus);
     }
 }
