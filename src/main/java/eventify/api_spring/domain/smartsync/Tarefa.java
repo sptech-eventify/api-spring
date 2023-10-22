@@ -50,6 +50,10 @@ public class Tarefa {
     @NotNull
     private LocalDate dataCriacao;
 
+    @ManyToOne
+    @JoinTable(name = "id_tarefa")
+    private Tarefa tarefaPai;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "id_bucket")
     private Bucket bucket;
