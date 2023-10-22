@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventoProximoDto {
+    private Integer id;
     private String nome;
     private String diaSemana;
     private String data;

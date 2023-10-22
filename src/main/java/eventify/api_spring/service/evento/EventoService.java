@@ -257,8 +257,9 @@ public class EventoService {
         List<Object[]> eventos = eventoRepository.spProximoEvento(idBuffet);
 
         for (Object[] evento : eventos) {
-            String nome = (String) evento[0];
-            Timestamp timestamp = (Timestamp) evento[1];
+            Integer id = (Integer) evento[0];
+            String nome = (String) evento[1];
+            Timestamp timestamp = (Timestamp) evento[2];
             LocalDateTime data = timestamp.toLocalDateTime();
 
             Locale locale = new Locale("pt","BR");
@@ -268,7 +269,7 @@ public class EventoService {
             String dataFormatada = data.format(formatter);
             diaSemana = diaSemana.substring(0,1).toUpperCase().concat(diaSemana.substring(1));
 
-            eventosProximos.add(new EventoProximoDto(nome, diaSemana, dataFormatada));
+            eventosProximos.add(new EventoProximoDto(id, nome, diaSemana, dataFormatada));
         }
 
         if (eventos.isEmpty()) {
