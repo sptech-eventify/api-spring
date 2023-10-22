@@ -17,6 +17,7 @@ import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
+import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoFinanceiroEventoDto;
@@ -822,5 +823,30 @@ public class BuffetService {
         }
 
         return infos;
+    }
+
+    public List<ContratoDto> consultarContratos(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_contratos WHERE id_buffet = :idBuffet");
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> contratos = query.getResultList();
+
+        List<ContratoDto> contratosDto = new ArrayList<>();
+        for (Object[] contrato : contratos) {
+            String nomeContratante = (String) contrato[1];
+            BigDecimal precoBigDecimal = (BigDecimal) contrato[2];
+            Double preco = precoBigDecimal.doubleValue();
+            Timestamp data = (Timestamp) contrato[3];
+            Integer descricaoTarefa = (Integer) contrato[4];
+ 
+            contratosDto.add(new ContratoDto(nomeContratante, preco, data, descricaoTarefa));
+        }
+
+        return contratosDto;
     }
 }
