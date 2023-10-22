@@ -15,6 +15,7 @@ import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
+import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoStatusDto;
@@ -307,5 +308,13 @@ public class BuffetController {
         List<InfoStatusDto> infoStatus = buffetService.consultarInfoStatus(idBuffet);
 
         return ok(infoStatus);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/contratos/{idBuffet}")
+    public ResponseEntity<List<ContratoDto>> consultarContratos(@PathVariable Integer idBuffet){
+        List<ContratoDto> contratos = buffetService.consultarContratos(idBuffet);
+
+        return ok(contratos);
     }
 }

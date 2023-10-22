@@ -1,4 +1,6 @@
-package eventify.api_spring.dto.evento;
+package eventify.api_spring.dto.smartsync;
+
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventoProximoDto {
-    private Integer id;
+public class ContratoDto {
     private String nome;
-    private String diaSemana;
-    private String data;
+    private Double preco;
+    private Timestamp data;
+    private Integer status;
 }
