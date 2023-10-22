@@ -20,6 +20,7 @@ import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoFinanceiroEventoDto;
+import eventify.api_spring.dto.smartsync.InfoStatusDto;
 import eventify.api_spring.dto.smartsync.RendaDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
@@ -799,5 +800,27 @@ public class BuffetService {
         }
 
         return tarefasDto;
+    }
+
+    @Transactional
+    public List<InfoStatusDto> consultarInfoStatus(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        List<InfoStatusDto> infos = new ArrayList<>();
+        List<Object[]> status = buffetRepository.spInfoStatus(idBuffet);
+
+        for (Object[] info : status) {
+            Integer stat = (Integer) info[0];
+            Long quantidade = (Long) info[1];
+            String statusTraduzido = (String) info[2];
+
+            infos.add(new InfoStatusDto(stat, quantidade.intValue(), statusTraduzido));
+        }
+
+        return infos;
     }
 }
