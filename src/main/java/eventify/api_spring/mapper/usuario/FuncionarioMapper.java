@@ -4,6 +4,7 @@ import eventify.api_spring.domain.usuario.Funcionario;
 import eventify.api_spring.domain.usuario.NivelAcesso;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.usuario.FuncionarioCadastrarDto;
+import eventify.api_spring.dto.usuario.FuncionarioDevolverDto;
 import eventify.api_spring.dto.usuario.SmartSyncUsuarioTokenDto;
 
 public class FuncionarioMapper {
@@ -32,5 +33,19 @@ public class FuncionarioMapper {
         domain.setNivelAcesso(nivelAcesso);
 
         return domain;
+    }
+
+    public static FuncionarioDevolverDto toDevolverDto(Funcionario domain) {
+        FuncionarioDevolverDto dto = new FuncionarioDevolverDto();
+
+        dto.setId(domain.getId());
+        dto.setNome(domain.getNome());
+        dto.setCpf(domain.getCpf());
+        dto.setEmail(domain.getEmail());
+        dto.setTelefone(domain.getTelefone());
+        dto.setNivelAcesso(domain.getNivelAcesso());
+        dto.setSalario(domain.getSalario());
+        
+        return dto;
     }
 }
