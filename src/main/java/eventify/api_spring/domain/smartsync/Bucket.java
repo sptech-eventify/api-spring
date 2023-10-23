@@ -2,7 +2,6 @@ package eventify.api_spring.domain.smartsync;
 
 import eventify.api_spring.domain.buffet.BuffetServico;
 import eventify.api_spring.domain.evento.Evento;
-import eventify.api_spring.service.buffet.BuffetService;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

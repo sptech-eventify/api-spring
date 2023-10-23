@@ -22,6 +22,10 @@ public class Funcionario {
     @NotBlank
     private String nome;
 
+    @Size(max = 256)
+    @NotBlank
+    private String senha;
+
     @Size(min = 11, max = 11)
     @NotBlank
     private String cpf;
@@ -34,10 +38,16 @@ public class Funcionario {
     @NotBlank
     private String telefone;
 
+    @Size(max = 256)
+    @NotBlank
+    private String imagem;
+
     @DecimalMin("0.0")
     @DecimalMax("999999.99")
     @NotNull
     private Double salario;
+
+    private Integer diaPagamento;
 
     @NotNull
     private Boolean isVisivel;
@@ -49,5 +59,4 @@ public class Funcionario {
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Usuario usuario;
-
 }
