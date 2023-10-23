@@ -515,12 +515,19 @@ public class BuffetService {
         }
 
         List<Double> notas = eventoRepository.findNotaByBuffet(buffet.get());
+        notas.removeIf(Objects::isNull);
 
         if (notas.isEmpty()) {
             throw new NoContentException("Não há notas");
         }
 
-        Double notaMedia = notas.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+        Double notaMedia = 0.0;
+
+        for (Double nota : notas) {
+            notaMedia += nota;
+        }
+
+        notaMedia = notaMedia / notas.size();
 
         LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
         LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
@@ -531,14 +538,30 @@ public class BuffetService {
         queryMesAtual.setParameter("mesAtual", mesAtual);
         queryMesAtual.setParameter("agora", LocalDateTime.now());
         List<Double> notasAtual = queryMesAtual.getResultList();
+        notasAtual.removeIf(Objects::isNull);
 
         Query queryMesAnterior = entityManager.createNativeQuery("SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data < :ultimoDiaMesAnterior AND status = 6");
         queryMesAnterior.setParameter("idBuffet", id);
         queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
         List<Double> notasAnterior = queryMesAnterior.getResultList();
+        notasAnterior.removeIf(Objects::isNull);
 
-        Double notaMediaMesAtual = notasAtual.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
-        Double notaMediaMesAnterior = notasAnterior.stream().mapToDouble(Double::doubleValue).average().getAsDouble();
+        Double notaMediaMesAtual = 0.0;
+        Double notaMediaMesAnterior = 0.0;
+
+        for (Double nota : notasAtual) {
+            notaMediaMesAtual += nota;
+        }
+
+        for (Double nota : notasAnterior) {
+            notaMediaMesAnterior += nota;
+        }
+
+        notaMediaMesAtual = notaMediaMesAtual / notasAtual.size();
+        notaMediaMesAnterior = notaMediaMesAnterior / notasAnterior.size();
+
+        // Double notaMediaMesAtual = notasAtual.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        // Double notaMediaMesAnterior = notasAnterior.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
 
         Double indice = calcularTaxaCrescimento(notaMediaMesAtual, notaMediaMesAnterior);
 
