@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller.usuario;
 
 import eventify.api_spring.domain.usuario.Usuario;
+import eventify.api_spring.dto.usuario.SmartSyncUsuarioTokenDto;
 import eventify.api_spring.dto.usuario.UsuarioCadastrarDto;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioInfoDto;
@@ -78,6 +79,13 @@ public class UsuarioController {
         return ok(usuarioToken);
     }
 
+    @PostMapping("/smart-sync/login")
+    public ResponseEntity<SmartSyncUsuarioTokenDto> smartSyncLogin(@RequestBody UsuarioLoginDto usuarioLoginDto) {
+        SmartSyncUsuarioTokenDto usuarioToken = this.usuarioService.autenticarSmartSync(usuarioLoginDto);
+
+        return ok(usuarioToken);
+    }
+
     @SecurityRequirement(name = "requiredAuth")
     @PatchMapping("/logof/{id}")
     public ResponseEntity<Boolean> logof(@PathVariable Integer id) {
@@ -99,5 +107,4 @@ public class UsuarioController {
 
         return ok().build();
     }
-
 }

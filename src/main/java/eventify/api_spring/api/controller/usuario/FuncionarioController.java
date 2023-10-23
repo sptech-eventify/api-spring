@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller.usuario;
 
 import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.dto.usuario.FuncionarioCadastrarDto;
 import eventify.api_spring.service.usuario.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Funcionario> criarFuncionario(@RequestBody Funcionario funcionario) {
+    public ResponseEntity<Funcionario> criarFuncionario(@RequestBody FuncionarioCadastrarDto funcionario) {
         Funcionario funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
 
         return ResponseEntity.ok(funcionarioCriado);

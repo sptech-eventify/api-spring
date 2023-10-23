@@ -3,7 +3,6 @@ package eventify.api_spring.api.controller.pesquisa;
 import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
-import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.service.buffet.PesquisaService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

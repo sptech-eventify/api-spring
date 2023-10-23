@@ -1,14 +1,12 @@
 package eventify.api_spring.mapper.buffet;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import eventify.api_spring.domain.buffet.Buffet;
-import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.buffet.BuffetPublicoDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
