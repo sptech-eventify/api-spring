@@ -17,6 +17,7 @@ import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
+import eventify.api_spring.dto.smartsync.AvaliacaoIndiceDto;
 import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
@@ -484,7 +485,6 @@ public class BuffetService {
         List<Double> indiceVisualizacoes = visualizacoesDto.stream().map(visualizacao -> (double) visualizacao.getQtdVisualizacoes()).collect(Collectors.toList());
         Double indiceVisualizacao = calcularTaxaCrescimento(indiceVisualizacoes.get(indiceVisualizacoes.size() - 1),  indiceVisualizacoes.get(indiceVisualizacoes.size() - 2));
 
-
         List<eventify.api_spring.dto.smartsync.AvaliacaoDto> avaliacoesDto = new ArrayList<>();
         
         Query query = entityManager.createNativeQuery("SELECT * FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
@@ -492,16 +492,14 @@ public class BuffetService {
         List<Object[]> avalicoes = query.getResultList();
 
         for (Object[] avaliacao : avalicoes) {
-            Integer id = (Integer) avaliacao[0];
-            String ano_s = (String) avaliacao[1]; 
-            Integer ano = Integer.parseInt(ano_s);   
+            String ano = (String) avaliacao[1];
             String mes = (String) avaliacao[2];
-            Long qtdAvaliacoes = (Long) avaliacao[4];
+            Long quantidade = (Long) avaliacao[4];
 
-            avaliacoesDto.add(new eventify.api_spring.dto.smartsync.AvaliacaoDto(id, ano, mes, qtdAvaliacoes));
+            avaliacoesDto.add(new eventify.api_spring.dto.smartsync.AvaliacaoDto(ano, mes, quantidade));
         }
 
-        List<Double> indiceAvaliacoes = avaliacoesDto.stream().map(avaliacao -> (double) avaliacao.getQtdAvaliacao()).collect(Collectors.toList());
+        List<Double> indiceAvaliacoes = avaliacoesDto.stream().map(avaliacao -> (double) avaliacao.getQtdAvaliacoes()).collect(Collectors.toList());
         Double indiceAvaliacao = calcularTaxaCrescimento(indiceAvaliacoes.get(indiceAvaliacoes.size() - 1),  indiceAvaliacoes.get(indiceAvaliacoes.size() - 2));
 
         return new ImpressaoDto(acessosDto, indiceAcesso, visualizacoesDto, indiceVisualizacao, avaliacoesDto, indiceAvaliacao);     
