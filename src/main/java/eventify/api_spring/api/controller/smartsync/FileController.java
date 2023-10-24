@@ -28,10 +28,10 @@ public class FileController {
     private FileService fileService;
 
     @Transactional
-    @GetMapping("/{idBuffet}")
-    public ResponseEntity<byte[]> retornarDados(@PathVariable Integer idBuffet) {
-        String dados = fileService.retornarCsv(idBuffet);
-        String nomeBuffet = fileService.retornarNomeBuffet(idBuffet);
+    @GetMapping("/transacoes/{idBuffet}")
+    public ResponseEntity<byte[]> retornarTransacoes(@PathVariable Integer idBuffet) {
+        String dados = fileService.retornarTransacoesCsv(idBuffet);
+        String nomeBuffet = "transacoes-" + fileService.retornarNomeBuffet(idBuffet);
         byte[] csvBytes = dados.getBytes();
 
         HttpHeaders headers = new HttpHeaders();
@@ -40,4 +40,20 @@ public class FileController {
         
         return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
     }
+
+    @Transactional
+    @GetMapping("/eventos/{idBuffet}")
+    public ResponseEntity<byte[]> retornarEventos(@PathVariable Integer idBuffet) {
+        String dados = fileService.retornarEventosCsv(idBuffet);
+        String nomeBuffet = "eventos-" + fileService.retornarNomeBuffet(idBuffet);
+        byte[] csvBytes = dados.getBytes();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.setContentDisposition(ContentDisposition.builder("attachment").filename(nomeBuffet + ".csv").build());
+        
+        return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
+    }
+    
+    
 }

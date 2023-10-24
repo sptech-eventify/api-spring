@@ -17,7 +17,6 @@ import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
-import eventify.api_spring.dto.smartsync.AvaliacaoIndiceDto;
 import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
@@ -466,7 +465,6 @@ public class BuffetService {
 
         List<Double> indiceAcessos = acessosDto.stream().map(acesso -> (double) acesso.getQtdAcessos()).collect(Collectors.toList());
         Double indiceAcesso = calcularTaxaCrescimento(indiceAcessos.get(indiceAcessos.size() - 1),  indiceAcessos.get(indiceAcessos.size() - 2));
-
         List<VisualizacaoDto> visualizacoesDto = new ArrayList<>();
 
         Query queryVisualizacoes = entityManager.createNativeQuery("SELECT * FROM vw_visualizacoes_buffet WHERE id_buffet = :idBuffet");
@@ -577,14 +575,18 @@ public class BuffetService {
 
         List<InfoEventoDto> infosDto = new ArrayList<>();
         for (Object[] info : infos) {
+            Integer id = (Integer) info[0];
             String nome = (String) info[1];
             String cpf = (String) info[2];
             String email = (String) info[3];
             Timestamp data = (Timestamp) info[4];
-            String status = (String) info[5];
-            Timestamp dataPedido = (Timestamp) info[6];
+            BigDecimal precoBigDecimal = (BigDecimal) info[5];
+            Double preco = precoBigDecimal.doubleValue();
 
-            infosDto.add(new InfoEventoDto(nome, cpf, email, data, status, dataPedido));
+            String status = (String) info[6];
+            Timestamp dataPedido = (Timestamp) info[7];
+
+            infosDto.add(new InfoEventoDto(id, nome, cpf, email, data, preco, status, dataPedido));
         }
 
         return infosDto;
