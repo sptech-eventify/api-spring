@@ -7,6 +7,7 @@ import eventify.api_spring.dto.evento.EventoProximoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
+import eventify.api_spring.dto.smartsync.CalendarioDto;
 import eventify.api_spring.service.evento.EventoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -116,5 +117,14 @@ public class EventoController {
         List<EventoProximoDto> logs = eventoService.consultarProximoEvento(id);
 
         return ok(logs);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/calendario/{id}")
+    @Transactional
+    public ResponseEntity<List<CalendarioDto>> consultarCalendario(@PathVariable Integer id){
+        List<CalendarioDto> datas = eventoService.consultarCalendario(id);
+
+        return ok(datas);
     }
 }

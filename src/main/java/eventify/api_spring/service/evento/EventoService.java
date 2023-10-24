@@ -11,6 +11,7 @@ import eventify.api_spring.dto.evento.PagamentoEventoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoContratanteDto;
 import eventify.api_spring.dto.orcamento.OrcamentoDto;
 import eventify.api_spring.dto.orcamento.OrcamentoPropDto;
+import eventify.api_spring.dto.smartsync.CalendarioDto;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.evento.EventoMapper;
@@ -26,6 +27,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -277,6 +279,30 @@ public class EventoService {
         }
 
         return eventosProximos;        
+    }
+
+    public List<CalendarioDto> consultarCalendario(Integer idBuffet) {
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
+
+        if (buffet.isEmpty()) {
+            throw new NotFoundException("Buffet não encontrado");
+        }
+
+        Query query = entityManager.createNativeQuery(String.format("SELECT * FROM vw_calendario WHERE id = :idBuffet ;", idBuffet));
+        query.setParameter("idBuffet", idBuffet);
+        List<Object[]> eventos = query.getResultList();
+
+        List<CalendarioDto> eventosCalendario = new ArrayList<>();
+        for (Object[] evento: eventos) {
+            Timestamp data = (Timestamp) evento[1];
+            BigDecimal precoBigDecimal = (BigDecimal) evento[2];
+            Double preco = precoBigDecimal.doubleValue();
+            String contratante = (String) evento[3];
+
+            eventosCalendario.add(new CalendarioDto(data, preco, contratante));
+        }
+
+        return eventosCalendario;
     }
 
 }
