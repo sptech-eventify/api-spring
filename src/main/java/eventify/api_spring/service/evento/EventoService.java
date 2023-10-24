@@ -305,4 +305,8 @@ public class EventoService {
         return eventosCalendario;
     }
 
+    public Integer consultarQuantidadeEventosRealizados(Integer id) {
+        return eventoRepository.countAllByBuffetId(id);
+    }
+
 }

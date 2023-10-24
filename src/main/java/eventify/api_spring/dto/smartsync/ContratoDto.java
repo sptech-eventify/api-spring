@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ContratoDto {
+    private Integer id;
     private String nome;
     private Double preco;
     private Timestamp data;
     private Integer status;
+    private String more;
 }

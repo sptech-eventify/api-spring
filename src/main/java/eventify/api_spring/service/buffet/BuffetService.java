@@ -79,6 +79,16 @@ public class BuffetService {
     @Autowired
     private BuffetMapper buffetMapper;
 
+    private Usuario findUsuario(Integer idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados"));
+
+        if (usuario.getTipoUsuario() != 2) {
+            throw new UnauthorizedException("Usuário não é um proprietário");
+        }
+
+        return usuario;
+    }
+
     public Buffet buscarBuffetPorId(Integer buffetId) {
         Optional<Buffet> buffet = buffetRepository.findById(buffetId);
 
@@ -291,11 +301,7 @@ public class BuffetService {
     }
 
     public List<BuffetResumoDto> buffetsPorIdUsuario(Integer idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados"));
-
-        if (usuario.getTipoUsuario() != 2) {
-            throw new UnauthorizedException("Usuário não é um proprietário");
-        }
+        Usuario usuario = findUsuario(idUsuario);
 
         List<Buffet> buffets = buffetRepository.findBuffetByUsuario(usuario);
 
@@ -304,6 +310,18 @@ public class BuffetService {
         }
 
         return buffets.stream().map(buffetMapper::toResumoDto).toList();
+    }
+
+    public List<BuffetSmartSyncResumoDto> buffetsPorIdUsuarioSmart(Integer idUsuario) {
+        Usuario usuario = findUsuario(idUsuario);
+
+        List<Buffet> buffets = buffetRepository.findBuffetByUsuario(usuario);
+
+        if (buffets.isEmpty()) {
+            throw new NoContentException("Não há buffets cadastrados");
+        }
+
+        return buffets.stream().map(buffetMapper::toBuffetSmartSyncResumo).toList();
     }
 
     public TaxaAbandonoDto taxaAbandono(Integer idBuffet) {
@@ -434,7 +452,7 @@ public class BuffetService {
             throw new NoContentException("Não há atividades");
         }
 
-        return atividadesDto;
+        return atividadesDto.subList(0,20);
     }
 
     public Double calcularTaxaCrescimento(Double mesAtual, Double mesAnterior) {
@@ -857,13 +875,14 @@ public class BuffetService {
 
         List<ContratoDto> contratosDto = new ArrayList<>();
         for (Object[] contrato : contratos) {
+            Integer id = (Integer) contrato[0];
             String nomeContratante = (String) contrato[1];
             BigDecimal precoBigDecimal = (BigDecimal) contrato[2];
             Double preco = precoBigDecimal.doubleValue();
             Timestamp data = (Timestamp) contrato[3];
             Integer descricaoTarefa = (Integer) contrato[4];
  
-            contratosDto.add(new ContratoDto(nomeContratante, preco, data, descricaoTarefa));
+            contratosDto.add(new ContratoDto(id, nomeContratante, preco, data, descricaoTarefa, ""));
         }
 
         return contratosDto;

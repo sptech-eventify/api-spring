@@ -88,6 +88,8 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
         @Transactional
         List<Object[]> spProximoEvento(@Param("idBuffet") Integer idBuffet);
 
+        Integer countAllByBuffetId(@Param("idBuffet") Integer idBuffet);
+
         @Query("SELECT e.nota FROM Evento e WHERE e.buffet = :buffet AND e.status = 6")
         List<Double> findNotaByBuffet(@Param("buffet") Buffet buffet);
 
