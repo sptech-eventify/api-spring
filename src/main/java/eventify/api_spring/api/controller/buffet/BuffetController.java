@@ -19,6 +19,7 @@ import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoStatusDto;
+import eventify.api_spring.dto.smartsync.KpiUnificadoDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
 import eventify.api_spring.dto.smartsync.TransacaoDto;
@@ -316,5 +317,14 @@ public class BuffetController {
         List<ContratoDto> contratos = buffetService.consultarContratos(idBuffet);
 
         return ok(contratos);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/smart-sync/kpis-unificado/{idBuffet}")
+    @Transactional
+    public ResponseEntity<KpiUnificadoDto> consultarKpis(@PathVariable Integer idBuffet){
+        KpiUnificadoDto kpis = buffetService.consultarKpis(idBuffet);
+
+        return ok(kpis);
     }
 }

@@ -23,6 +23,7 @@ import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.InfoFinanceiroEventoDto;
 import eventify.api_spring.dto.smartsync.InfoStatusDto;
+import eventify.api_spring.dto.smartsync.KpiUnificadoDto;
 import eventify.api_spring.dto.smartsync.RendaDto;
 import eventify.api_spring.dto.smartsync.RendaRetornoDto;
 import eventify.api_spring.dto.smartsync.TarefaEventoProximoDto;
@@ -558,9 +559,6 @@ public class BuffetService {
         notaMediaMesAtual = notaMediaMesAtual / notasAtual.size();
         notaMediaMesAnterior = notaMediaMesAnterior / notasAnterior.size();
 
-        // Double notaMediaMesAtual = notasAtual.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        // Double notaMediaMesAnterior = notasAnterior.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-
         Double indice = calcularTaxaCrescimento(notaMediaMesAtual, notaMediaMesAnterior);
 
         return new AvaliacaoBaseadoEvento(notaMedia, indice);
@@ -869,5 +867,14 @@ public class BuffetService {
         }
 
         return contratosDto;
+    }
+
+    public KpiUnificadoDto consultarKpis(Integer idBuffet) {
+        Integer quantidadeEventos = this.consultarQuantidadeEventos(idBuffet);
+        Double media = this.consultarRendaMediaEventos(idBuffet);
+        Double total = this.consultarRendaTotal(idBuffet);
+        Double gasto = this.consultarGastoTotal(idBuffet);
+
+        return new KpiUnificadoDto(quantidadeEventos, media, total, gasto);
     }
 }
