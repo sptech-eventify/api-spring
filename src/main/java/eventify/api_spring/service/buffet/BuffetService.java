@@ -17,7 +17,6 @@ import eventify.api_spring.dto.imagem.ImagemDto;
 import eventify.api_spring.dto.smartsync.AcessoDto;
 import eventify.api_spring.dto.smartsync.AtividadeDto;
 import eventify.api_spring.dto.smartsync.AvaliacaoBaseadoEvento;
-import eventify.api_spring.dto.smartsync.AvaliacaoIndiceDto;
 import eventify.api_spring.dto.smartsync.ContratoDto;
 import eventify.api_spring.dto.smartsync.ImpressaoDto;
 import eventify.api_spring.dto.smartsync.InfoEventoDto;
@@ -50,6 +49,7 @@ import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -484,7 +484,6 @@ public class BuffetService {
 
         List<Double> indiceAcessos = acessosDto.stream().map(acesso -> (double) acesso.getQtdAcessos()).collect(Collectors.toList());
         Double indiceAcesso = calcularTaxaCrescimento(indiceAcessos.get(indiceAcessos.size() - 1),  indiceAcessos.get(indiceAcessos.size() - 2));
-
         List<VisualizacaoDto> visualizacoesDto = new ArrayList<>();
 
         Query queryVisualizacoes = entityManager.createNativeQuery("SELECT * FROM vw_visualizacoes_buffet WHERE id_buffet = :idBuffet");
@@ -595,14 +594,18 @@ public class BuffetService {
 
         List<InfoEventoDto> infosDto = new ArrayList<>();
         for (Object[] info : infos) {
+            Integer id = (Integer) info[0];
             String nome = (String) info[1];
             String cpf = (String) info[2];
             String email = (String) info[3];
             Timestamp data = (Timestamp) info[4];
-            String status = (String) info[5];
-            Timestamp dataPedido = (Timestamp) info[6];
+            BigDecimal precoBigDecimal = (BigDecimal) info[5];
+            Double preco = precoBigDecimal.doubleValue();
 
-            infosDto.add(new InfoEventoDto(nome, cpf, email, data, status, dataPedido));
+            String status = (String) info[6];
+            Timestamp dataPedido = (Timestamp) info[7];
+
+            infosDto.add(new InfoEventoDto(id, nome, cpf, email, data, preco, status, dataPedido));
         }
 
         return infosDto;
@@ -646,11 +649,12 @@ public class BuffetService {
         LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
         LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate ultimoDiaMesAnterior = mesAtual.minusDays(1);
+        LocalDate ultimoDiaMesCorrente = mesAtual.withDayOfMonth(mesAtual.lengthOfMonth());
         
-        Query queryMesAtual = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+        Query queryMesAtual = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :ultimoDiaMesAtual AND status IN (5, 6) ;");
         queryMesAtual.setParameter("idBuffet", idBuffet);
         queryMesAtual.setParameter("mesAtual", mesAtual);
-        queryMesAtual.setParameter("agora", LocalDateTime.now());
+        queryMesAtual.setParameter("ultimoDiaMesAtual", ultimoDiaMesCorrente);
         List<Object[]> rendasAtual = queryMesAtual.getResultList();
 
         if(rendasAtual.isEmpty()){
@@ -667,7 +671,7 @@ public class BuffetService {
             rendaAtualDto.add(new RendaDto(nome, data, preco));
         }
 
-        Query queryMesAnterior = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAnterior AND :ultimoDiaMesAnterior AND status = 6");
+        Query queryMesAnterior = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAnterior AND :ultimoDiaMesAnterior AND status IN (5, 6) ;");
         queryMesAnterior.setParameter("idBuffet", idBuffet);
         queryMesAnterior.setParameter("mesAnterior", mesAnterior);
         queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
@@ -687,7 +691,64 @@ public class BuffetService {
             rendaAnteriorDto.add(new RendaDto(nome, data, preco));
         }
 
-        return new RendaRetornoDto(rendaAnteriorDto, rendaAtualDto);
+        Calendar calendario = Calendar.getInstance();
+
+        Integer ultimoDiaMesAtual = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        calendario.add(Calendar.MONTH, -1);
+        Integer ultimoDiaMesPassado = calendario.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        List<RendaDto> rendaAtualComDiasVazios = new ArrayList<>();
+
+        for (Integer i = 1; i <= ultimoDiaMesAtual; i++) {
+            LocalDate dataRetorno = LocalDate.now().withDayOfMonth(i);
+            Long data = LocalDate.now().withDayOfMonth(i).atStartOfDay().toLocalDate().toEpochDay();
+            Boolean isUsed = false;            
+
+            for (RendaDto rendaDto : rendaAtualDto) {
+                LocalDate rendaData = Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)).toLocalDateTime().toLocalDate();
+                Long rendaDataEpoch = rendaData.toEpochDay();
+
+                if (data.equals(rendaDataEpoch)) {
+                    rendaDto.setData(Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
+                    rendaAtualComDiasVazios.add(rendaDto);
+                    
+                    isUsed = true;
+                    break;
+                }
+            }
+
+            if (!isUsed) {
+                rendaAtualComDiasVazios.add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
+            }
+        }
+
+        List<RendaDto> rendaAnteriorComDiasVazios = new ArrayList<>();
+
+        for (Integer j = 1; j <= ultimoDiaMesPassado; j++) {
+            LocalDate dataRetorno = LocalDate.now().minusMonths(1).withDayOfMonth(j);
+            Long data = LocalDate.now().minusMonths(1).withDayOfMonth(j).atStartOfDay().toLocalDate().toEpochDay();
+            Boolean isUsed = false;            
+
+            for (RendaDto rendaDto : rendaAnteriorDto) {
+                LocalDate rendaData = Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)).toLocalDateTime().toLocalDate();
+                Long rendaDataEpoch = rendaData.toEpochDay();
+
+                if (data.equals(rendaDataEpoch)) {
+                    rendaDto.setData(Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
+                    rendaAnteriorComDiasVazios.add(rendaDto);
+
+                    isUsed = true;
+                    break;
+                }
+            }
+
+            if (!isUsed) {
+                rendaAnteriorComDiasVazios.add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
+            }    
+        }
+
+        return new RendaRetornoDto(rendaAnteriorComDiasVazios, rendaAtualComDiasVazios);
     }
 
     public VisaoGeralMensalDto consultarVisaoGeralMensal(Integer idBuffet) {
@@ -858,6 +919,8 @@ public class BuffetService {
 
             infos.add(new InfoStatusDto(stat, quantidade.intValue(), statusTraduzido));
         }
+
+        // Continuar aqui
 
         return infos;
     }

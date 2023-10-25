@@ -1,4 +1,4 @@
-package eventify.api_spring.dto.smartsync;
+package eventify.api_spring.domain.smartsync;
 
 import java.sql.Timestamp;
 
@@ -9,9 +9,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class InfoEventoDto {
+@NoArgsConstructor
+public class FileEvento {
     private Integer idEvento;
     private String nome;
     private String cpf;
