@@ -147,6 +147,14 @@ public class BuffetController {
     }
 
     @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/proprietario/{id}/smart-sync")
+    public ResponseEntity<List<BuffetSmartSyncResumoDto>> buffetsPorIdUsuarioSmart(@PathVariable Integer id) {
+        List<BuffetSmartSyncResumoDto> buffets = buffetService.buffetsPorIdUsuarioSmart(id);
+
+        return ok(buffets);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
     @GetMapping("/dashboard/abandono/{id}")
     public ResponseEntity<TaxaAbandonoDto> taxaAbandono(@PathVariable Integer id) {
         TaxaAbandonoDto taxaAbandono = buffetService.taxaAbandono(id);
