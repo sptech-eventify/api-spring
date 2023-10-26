@@ -7,7 +7,9 @@ import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
+import eventify.api_spring.dto.dashboard.KpiEventifyUnificadoDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
+import eventify.api_spring.dto.dashboard.RendaMesDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
@@ -326,5 +328,22 @@ public class BuffetController {
         KpiUnificadoDto kpis = buffetService.consultarKpis(idBuffet);
 
         return ok(kpis);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/eventify/kpis-unificado")
+    public ResponseEntity<KpiEventifyUnificadoDto> consultarKpisEventify(){
+        KpiEventifyUnificadoDto kpis = buffetService.consultarKpisEventify();
+
+        return ok(kpis);
+    }
+
+    @SecurityRequirement(name = "requiredAuth")
+    @GetMapping("/eventify/renda-temporal")
+    @Transactional
+    public ResponseEntity<List<RendaMesDto>> consultarRendaMesEventify(){
+        List<RendaMesDto> rendas = buffetService.consultarRendaMesEventify();
+
+        return ok(rendas);
     }
 }
