@@ -8,7 +8,11 @@ import eventify.api_spring.dto.buffet.BuffetResumoDto;
 import eventify.api_spring.dto.buffet.BuffetSmartSyncResumoDto;
 import eventify.api_spring.dto.dashboard.AvaliacaoDto;
 import eventify.api_spring.dto.dashboard.DadosFinanceiroDto;
+import eventify.api_spring.dto.dashboard.KpiEventifyUnificadoDto;
 import eventify.api_spring.dto.dashboard.MovimentacaoFinanceiraDto;
+import eventify.api_spring.dto.dashboard.RendaMesAnteriorDto;
+import eventify.api_spring.dto.dashboard.RendaMesAtualDto;
+import eventify.api_spring.dto.dashboard.RendaMesDto;
 import eventify.api_spring.dto.dashboard.TaxaAbandonoDto;
 import eventify.api_spring.dto.dashboard.TaxaSatisfacaoDto;
 import eventify.api_spring.dto.evento.EventoOrcamentoDto;
@@ -49,7 +53,6 @@ import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -106,7 +109,8 @@ public class BuffetService {
     }
 
     public List<BuffetRespostaDto> listarBuffetsPublicos() {
-        List<BuffetRespostaDto> buffets = buffetRepository.findByIsVisivelTrue().stream().map(buffetMapper::toRespostaDto).toList();
+        List<BuffetRespostaDto> buffets = buffetRepository.findByIsVisivelTrue().stream()
+                .map(buffetMapper::toRespostaDto).toList();
 
         if (buffets.isEmpty()) {
             throw new NoContentException("Não há buffets disponíveis");
@@ -115,7 +119,7 @@ public class BuffetService {
         return buffets;
     }
 
-    public BuffetRespostaDto buscarBuffetPorIdResposta(Integer id){
+    public BuffetRespostaDto buscarBuffetPorIdResposta(Integer id) {
         Buffet buffet = buscarBuffetPorId(id);
 
         if (Objects.isNull(buffet)) {
@@ -125,7 +129,7 @@ public class BuffetService {
         return buffetMapper.toRespostaDto(buffet);
     }
 
-    public BuffetRespostaDto buscarBuffetPublicoPorIdResposta(Integer id){
+    public BuffetRespostaDto buscarBuffetPublicoPorIdResposta(Integer id) {
         Buffet buffet = buffetRepository.findByIsVisivelTrueAndId(id);
 
         if (Objects.isNull(buffet)) {
@@ -164,7 +168,7 @@ public class BuffetService {
         if (buffetOptional.isPresent()) {
             Buffet buffetBanco = buffetOptional.get();
 
-            if(Objects.isNull(buffetBanco.getEndereco()) && Objects.nonNull(buffet.getEndereco())){
+            if (Objects.isNull(buffetBanco.getEndereco()) && Objects.nonNull(buffet.getEndereco())) {
                 Endereco endereco = buffet.getEndereco();
 
                 endereco.setDataCriacao(LocalDateTime.now());
@@ -188,7 +192,7 @@ public class BuffetService {
         if (buffet.isPresent()) {
             Buffet buffetBanco = buffet.get();
 
-            if (buffetBanco.getAgendas().isEmpty()){
+            if (buffetBanco.getAgendas().isEmpty()) {
                 buffetBanco.setVisivel(false);
                 buffetRepository.save(buffetBanco);
             } else {
@@ -253,15 +257,16 @@ public class BuffetService {
         List<BuffetResumoDto> buffetsResumo = buffetBanco.stream().map(buffetMapper::toResumoDto).toList();
 
         buffetsResumo.stream().map(buffetResumo -> {
-                        buffetResumo.setNotaMediaAvaliacao(avaliacaoBuffet(buffetResumo.getId()));
-                        return buffetResumo;
-                    })
-                    .collect(Collectors.toList());
+            buffetResumo.setNotaMediaAvaliacao(avaliacaoBuffet(buffetResumo.getId()));
+            return buffetResumo;
+        })
+                .collect(Collectors.toList());
 
         Map<String, List<BuffetResumoDto>> buffets = buffetsResumo.stream()
                 .flatMap(buffetResumo -> buffetResumo.getTiposEventos().stream()
                         .map(tipoEvento -> Map.entry(tipoEvento.getDescricao(), buffetResumo)))
-                .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
+                .collect(Collectors.groupingBy(Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())));
 
         return buffets;
     }
@@ -331,11 +336,12 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT id_buffet, abandonos, total FROM vw_kpi_abandono_reserva WHERE id_buffet = :idBuffet");
+        Query query = entityManager.createNativeQuery(
+                "SELECT id_buffet, abandonos, total FROM vw_kpi_abandono_reserva WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         Object[] result = (Object[]) query.getSingleResult();
 
-        return new TaxaAbandonoDto(result[0], result[1],  result[2]);
+        return new TaxaAbandonoDto(result[0], result[1], result[2]);
     }
 
     public TaxaSatisfacaoDto taxaSatisfacao(Integer idBuffet) {
@@ -345,7 +351,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT media, total FROM vw_kpi_satisfacao WHERE id_buffet = :idBuffet");
+        Query query = entityManager
+                .createNativeQuery("SELECT media, total FROM vw_kpi_satisfacao WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         Object[] result = (Object[]) query.getSingleResult();
 
@@ -359,7 +366,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT movimentacao, total FROM vw_kpi_movimentacao_financeira WHERE id_buffet = :idBuffet");
+        Query query = entityManager.createNativeQuery(
+                "SELECT movimentacao, total FROM vw_kpi_movimentacao_financeira WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         Object[] result = (Object[]) query.getSingleResult();
 
@@ -373,7 +381,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT mes, qtd_eventos, faturamento FROM vw_dados_do_buffet WHERE id_buffet = :idBuffet");
+        Query query = entityManager.createNativeQuery(
+                "SELECT mes, qtd_eventos, faturamento FROM vw_dados_do_buffet WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> resultList = query.getResultList();
 
@@ -396,7 +405,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado na base de dados");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT nome, nota, avaliacao, data FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
+        Query query = entityManager.createNativeQuery(
+                "SELECT nome, nota, avaliacao, data FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> resultList = query.getResultList();
 
@@ -434,7 +444,7 @@ public class BuffetService {
         if (buffet.isEmpty()) {
             throw new NotFoundException("Buffet não encontrado");
         }
-        
+
         List<Object[]> atividades = buffetRepository.spAtividades(idBuffet);
 
         List<AtividadeDto> atividadesDto = new ArrayList<>();
@@ -456,7 +466,7 @@ public class BuffetService {
     }
 
     public Double calcularTaxaCrescimento(Double mesAtual, Double mesAnterior) {
-        return (Double)((mesAtual - mesAnterior) / mesAnterior) * 100;
+        return (Double) ((mesAtual - mesAnterior) / mesAnterior) * 100;
     }
 
     public ImpressaoDto consultarImpressoes(Integer idBuffet) {
@@ -467,14 +477,15 @@ public class BuffetService {
         }
 
         List<AcessoDto> acessosDto = new ArrayList<>();
-        
-        Query queryAcessos = entityManager.createNativeQuery("SELECT * FROM vw_acessos_buffet WHERE id_buffet = :idBuffet");
+
+        Query queryAcessos = entityManager
+                .createNativeQuery("SELECT * FROM vw_acessos_buffet WHERE id_buffet = :idBuffet");
         queryAcessos.setParameter("idBuffet", idBuffet);
         List<Object[]> acessos = queryAcessos.getResultList();
 
         for (Object[] acesso : acessos) {
             Integer id = (Integer) acesso[0];
-            String ano_s = (String) acesso[1]; 
+            String ano_s = (String) acesso[1];
             Integer ano = Integer.parseInt(ano_s);
             String mes = (String) acesso[2];
             Long qtdAcessos = (Long) acesso[4];
@@ -482,30 +493,35 @@ public class BuffetService {
             acessosDto.add(new AcessoDto(id, ano, mes, qtdAcessos));
         }
 
-        List<Double> indiceAcessos = acessosDto.stream().map(acesso -> (double) acesso.getQtdAcessos()).collect(Collectors.toList());
-        Double indiceAcesso = calcularTaxaCrescimento(indiceAcessos.get(indiceAcessos.size() - 1),  indiceAcessos.get(indiceAcessos.size() - 2));
+        List<Double> indiceAcessos = acessosDto.stream().map(acesso -> (double) acesso.getQtdAcessos())
+                .collect(Collectors.toList());
+        Double indiceAcesso = calcularTaxaCrescimento(indiceAcessos.get(indiceAcessos.size() - 1),
+                indiceAcessos.get(indiceAcessos.size() - 2));
         List<VisualizacaoDto> visualizacoesDto = new ArrayList<>();
 
-        Query queryVisualizacoes = entityManager.createNativeQuery("SELECT * FROM vw_visualizacoes_buffet WHERE id_buffet = :idBuffet");
+        Query queryVisualizacoes = entityManager
+                .createNativeQuery("SELECT * FROM vw_visualizacoes_buffet WHERE id_buffet = :idBuffet");
         queryVisualizacoes.setParameter("idBuffet", idBuffet);
         List<Object[]> visualizacoes = queryVisualizacoes.getResultList();
 
         for (Object[] visualizacao : visualizacoes) {
             Integer id = (Integer) visualizacao[0];
-            String ano_s = (String) visualizacao[1]; 
-            Integer ano = Integer.parseInt(ano_s);            
+            String ano_s = (String) visualizacao[1];
+            Integer ano = Integer.parseInt(ano_s);
             String mes = (String) visualizacao[2];
             Long qtdVisualizacoes = (Long) visualizacao[4];
 
             visualizacoesDto.add(new VisualizacaoDto(id, ano, mes, qtdVisualizacoes));
         }
 
-        List<Double> indiceVisualizacoes = visualizacoesDto.stream().map(visualizacao -> (double) visualizacao.getQtdVisualizacoes()).collect(Collectors.toList());
-        Double indiceVisualizacao = calcularTaxaCrescimento(indiceVisualizacoes.get(indiceVisualizacoes.size() - 1),  indiceVisualizacoes.get(indiceVisualizacoes.size() - 2));
+        List<Double> indiceVisualizacoes = visualizacoesDto.stream()
+                .map(visualizacao -> (double) visualizacao.getQtdVisualizacoes()).collect(Collectors.toList());
+        Double indiceVisualizacao = calcularTaxaCrescimento(indiceVisualizacoes.get(indiceVisualizacoes.size() - 1),
+                indiceVisualizacoes.get(indiceVisualizacoes.size() - 2));
 
         List<eventify.api_spring.dto.smartsync.AvaliacaoDto> avaliacoesDto = new ArrayList<>();
-        
-        Query query = entityManager.createNativeQuery("SELECT * FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_avaliacoes_buffet_smart_sync WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> avalicoes = query.getResultList();
 
@@ -517,10 +533,13 @@ public class BuffetService {
             avaliacoesDto.add(new eventify.api_spring.dto.smartsync.AvaliacaoDto(ano, mes, quantidade));
         }
 
-        List<Double> indiceAvaliacoes = avaliacoesDto.stream().map(avaliacao -> (double) avaliacao.getQtdAvaliacoes()).collect(Collectors.toList());
-        Double indiceAvaliacao = calcularTaxaCrescimento(indiceAvaliacoes.get(indiceAvaliacoes.size() - 1),  indiceAvaliacoes.get(indiceAvaliacoes.size() - 2));
+        List<Double> indiceAvaliacoes = avaliacoesDto.stream().map(avaliacao -> (double) avaliacao.getQtdAvaliacoes())
+                .collect(Collectors.toList());
+        Double indiceAvaliacao = calcularTaxaCrescimento(indiceAvaliacoes.get(indiceAvaliacoes.size() - 1),
+                indiceAvaliacoes.get(indiceAvaliacoes.size() - 2));
 
-        return new ImpressaoDto(acessosDto, indiceAcesso, visualizacoesDto, indiceVisualizacao, avaliacoesDto, indiceAvaliacao);     
+        return new ImpressaoDto(acessosDto, indiceAcesso, visualizacoesDto, indiceVisualizacao, avaliacoesDto,
+                indiceAvaliacao);
     }
 
     public AvaliacaoBaseadoEvento consultarAvaliacaoBaseadoEventos(Integer id) {
@@ -549,14 +568,16 @@ public class BuffetService {
         LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate ultimoDiaMesAnterior = mesAtual.minusDays(1);
 
-        Query queryMesAtual = entityManager.createNativeQuery("SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+        Query queryMesAtual = entityManager.createNativeQuery(
+                "SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
         queryMesAtual.setParameter("idBuffet", id);
         queryMesAtual.setParameter("mesAtual", mesAtual);
         queryMesAtual.setParameter("agora", LocalDateTime.now());
         List<Double> notasAtual = queryMesAtual.getResultList();
         notasAtual.removeIf(Objects::isNull);
 
-        Query queryMesAnterior = entityManager.createNativeQuery("SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data < :ultimoDiaMesAnterior AND status = 6");
+        Query queryMesAnterior = entityManager.createNativeQuery(
+                "SELECT nota FROM evento WHERE id_buffet = :idBuffet AND data < :ultimoDiaMesAnterior AND status = 6");
         queryMesAnterior.setParameter("idBuffet", id);
         queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
         List<Double> notasAnterior = queryMesAnterior.getResultList();
@@ -610,7 +631,7 @@ public class BuffetService {
 
         return infosDto;
     }
-    
+
     @Transactional
     public List<TransacaoDto> consultarInfoTransacoes(Integer idBuffet) {
         Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
@@ -618,7 +639,7 @@ public class BuffetService {
         if (buffet.isEmpty()) {
             throw new NotFoundException("Buffet não encontrado");
         }
-        
+
         List<TransacaoDto> ocorrencias = new ArrayList<>();
         List<Object[]> transacoes = buffetRepository.spTransacoes(idBuffet);
 
@@ -650,17 +671,18 @@ public class BuffetService {
         LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate ultimoDiaMesAnterior = mesAtual.minusDays(1);
         LocalDate ultimoDiaMesCorrente = mesAtual.withDayOfMonth(mesAtual.lengthOfMonth());
-        
-        Query queryMesAtual = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :ultimoDiaMesAtual AND status IN (5, 6) ;");
+
+        Query queryMesAtual = entityManager.createNativeQuery(
+                "SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :ultimoDiaMesAtual AND status IN (5, 6) ;");
         queryMesAtual.setParameter("idBuffet", idBuffet);
         queryMesAtual.setParameter("mesAtual", mesAtual);
         queryMesAtual.setParameter("ultimoDiaMesAtual", ultimoDiaMesCorrente);
         List<Object[]> rendasAtual = queryMesAtual.getResultList();
 
-        if(rendasAtual.isEmpty()){
+        if (rendasAtual.isEmpty()) {
             throw new NoContentException("Não há rendas no mês atual");
         }
-    
+
         List<RendaDto> rendaAtualDto = new ArrayList<>();
         for (Object[] rendaAtual : rendasAtual) {
             String nome = (String) rendaAtual[0];
@@ -671,13 +693,14 @@ public class BuffetService {
             rendaAtualDto.add(new RendaDto(nome, data, preco));
         }
 
-        Query queryMesAnterior = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAnterior AND :ultimoDiaMesAnterior AND status IN (5, 6) ;");
+        Query queryMesAnterior = entityManager.createNativeQuery(
+                "SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAnterior AND :ultimoDiaMesAnterior AND status IN (5, 6) ;");
         queryMesAnterior.setParameter("idBuffet", idBuffet);
         queryMesAnterior.setParameter("mesAnterior", mesAnterior);
         queryMesAnterior.setParameter("ultimoDiaMesAnterior", ultimoDiaMesAnterior);
         List<Object[]> rendasAnterior = queryMesAnterior.getResultList();
 
-        if(rendasAnterior.isEmpty()){
+        if (rendasAnterior.isEmpty()) {
             throw new NoContentException("Não há rendas no mês anterior");
         }
 
@@ -703,23 +726,27 @@ public class BuffetService {
         for (Integer i = 1; i <= ultimoDiaMesAtual; i++) {
             LocalDate dataRetorno = LocalDate.now().withDayOfMonth(i);
             Long data = LocalDate.now().withDayOfMonth(i).atStartOfDay().toLocalDate().toEpochDay();
-            Boolean isUsed = false;            
+            Boolean isUsed = false;
 
             for (RendaDto rendaDto : rendaAtualDto) {
-                LocalDate rendaData = Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)).toLocalDateTime().toLocalDate();
+                LocalDate rendaData = Timestamp
+                        .valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0))
+                        .toLocalDateTime().toLocalDate();
                 Long rendaDataEpoch = rendaData.toEpochDay();
 
                 if (data.equals(rendaDataEpoch)) {
-                    rendaDto.setData(Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
+                    rendaDto.setData(
+                            Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
                     rendaAtualComDiasVazios.add(rendaDto);
-                    
+
                     isUsed = true;
                     break;
                 }
             }
 
             if (!isUsed) {
-                rendaAtualComDiasVazios.add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
+                rendaAtualComDiasVazios
+                        .add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
             }
         }
 
@@ -728,14 +755,17 @@ public class BuffetService {
         for (Integer j = 1; j <= ultimoDiaMesPassado; j++) {
             LocalDate dataRetorno = LocalDate.now().minusMonths(1).withDayOfMonth(j);
             Long data = LocalDate.now().minusMonths(1).withDayOfMonth(j).atStartOfDay().toLocalDate().toEpochDay();
-            Boolean isUsed = false;            
+            Boolean isUsed = false;
 
             for (RendaDto rendaDto : rendaAnteriorDto) {
-                LocalDate rendaData = Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)).toLocalDateTime().toLocalDate();
+                LocalDate rendaData = Timestamp
+                        .valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0))
+                        .toLocalDateTime().toLocalDate();
                 Long rendaDataEpoch = rendaData.toEpochDay();
 
                 if (data.equals(rendaDataEpoch)) {
-                    rendaDto.setData(Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
+                    rendaDto.setData(
+                            Timestamp.valueOf(rendaDto.getData().toLocalDateTime().toLocalDate().atTime(0, 0, 0, 0)));
                     rendaAnteriorComDiasVazios.add(rendaDto);
 
                     isUsed = true;
@@ -744,8 +774,9 @@ public class BuffetService {
             }
 
             if (!isUsed) {
-                rendaAnteriorComDiasVazios.add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
-            }    
+                rendaAnteriorComDiasVazios
+                        .add(new RendaDto("N/A", Timestamp.valueOf(dataRetorno.atTime(0, 0, 0, 0)), 0.0));
+            }
         }
 
         return new RendaRetornoDto(rendaAnteriorComDiasVazios, rendaAtualComDiasVazios);
@@ -761,8 +792,9 @@ public class BuffetService {
         LocalDate mesAtual = LocalDate.now().withDayOfMonth(1);
         LocalDate mesAnterior = LocalDate.now().minusMonths(1).withDayOfMonth(1);
         LocalDate ultimoDiaMesAtual = mesAtual.minusDays(1);
-        
-        Query queryRealizados = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
+
+        Query queryRealizados = entityManager.createNativeQuery(
+                "SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN :mesAtual AND :agora AND status = 6");
         queryRealizados.setParameter("idBuffet", idBuffet);
         queryRealizados.setParameter("mesAtual", mesAtual);
         queryRealizados.setParameter("agora", LocalDateTime.now());
@@ -771,7 +803,7 @@ public class BuffetService {
         if (realizados.isEmpty()) {
             throw new NoContentException("Não há eventos realizados no mês atual");
         }
-    
+
         List<InfoFinanceiroEventoDto> realizadosDto = new ArrayList<>();
         for (Object[] realizado : realizados) {
             String nome = (String) realizado[0];
@@ -782,7 +814,8 @@ public class BuffetService {
             realizadosDto.add(new InfoFinanceiroEventoDto(nome, data, preco));
         }
 
-        Query queryProximos = entityManager.createNativeQuery("SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN NOW() AND LAST_DAY(NOW()) AND status = 5");
+        Query queryProximos = entityManager.createNativeQuery(
+                "SELECT c.nome, e.data, e.preco FROM evento e JOIN usuario c ON c.id = e.id_contratante WHERE e.id_buffet = :idBuffet AND data BETWEEN NOW() AND LAST_DAY(NOW()) AND status = 5");
         queryProximos.setParameter("idBuffet", idBuffet);
         List<Object[]> proximos = queryProximos.getResultList();
 
@@ -810,7 +843,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        Query query = entityManager
+                .createNativeQuery("SELECT COUNT(*) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
         query.setParameter("idBuffet", idBuffet);
         Long quantidade = (Long) query.getSingleResult();
 
@@ -824,7 +858,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT AVG(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        Query query = entityManager
+                .createNativeQuery("SELECT AVG(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
         query.setParameter("idBuffet", idBuffet);
         BigDecimal media = (BigDecimal) query.getSingleResult();
 
@@ -838,7 +873,8 @@ public class BuffetService {
             throw new NotFoundException("Buffet não encontrado");
         }
 
-        Query query = entityManager.createNativeQuery("SELECT SUM(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
+        Query query = entityManager
+                .createNativeQuery("SELECT SUM(preco) FROM evento WHERE id_buffet = :idBuffet AND status = 6");
         query.setParameter("idBuffet", idBuffet);
         BigDecimal total = (BigDecimal) query.getSingleResult();
 
@@ -860,7 +896,7 @@ public class BuffetService {
     }
 
     public List<TarefaEventoProximoDto> consultarTarefasProximas(Integer idBuffet) {
-        Optional <Buffet> buffet = buffetRepository.findById(idBuffet);
+        Optional<Buffet> buffet = buffetRepository.findById(idBuffet);
 
         if (buffet.isEmpty()) {
             throw new NotFoundException("Buffet não encontrado");
@@ -881,13 +917,15 @@ public class BuffetService {
             Date dataTarefa = (Date) tarefa[4];
             Timestamp timestampDataTarefa = new Timestamp(dataTarefa.getTime());
 
-            tarefasDto.add(new TarefaEventoProximoDto(idTarefa, nomeContratante, dataEvento, nomeTarefa, descricaoTarefa, responsaveisTarefa, timestampDataTarefa));
+            tarefasDto.add(new TarefaEventoProximoDto(idTarefa, nomeContratante, dataEvento, nomeTarefa,
+                    descricaoTarefa, responsaveisTarefa, timestampDataTarefa));
         }
 
         for (TarefaEventoProximoDto tarefa : tarefasDto) {
             Integer idTarefa = tarefa.getIdTarefa();
 
-            Query queryResponsaveis = entityManager.createNativeQuery("SELECT id_tarefa, nome_executor FROM vw_tarefas_proximas_responsaveis WHERE id_tarefa = :idTarefa");
+            Query queryResponsaveis = entityManager.createNativeQuery(
+                    "SELECT id_tarefa, nome_executor FROM vw_tarefas_proximas_responsaveis WHERE id_tarefa = :idTarefa");
             queryResponsaveis.setParameter("idTarefa", idTarefa);
             List<Object[]> responsaveis = queryResponsaveis.getResultList();
 
@@ -959,4 +997,90 @@ public class BuffetService {
 
         return new KpiUnificadoDto(quantidadeEventos, media, total, gasto);
     }
+
+    public KpiEventifyUnificadoDto consultarKpisEventify() {
+        KpiEventifyUnificadoDto kpis = new KpiEventifyUnificadoDto();
+
+        Query QueryRendaAtual = entityManager
+                .createNativeQuery("SELECT SUM(preco) valor, TRADUZ_MES(MONTHNAME(data)) mes\n" + //
+                        "FROM evento \n" + //
+                        "WHERE status = 6 \n" + //
+                        "  AND YEAR(data) = YEAR(CURRENT_DATE()) \n" + //
+                        "  AND MONTH(data) = MONTH(CURRENT_DATE());");
+        List<Object[]> rendaAtual = QueryRendaAtual.getResultList();
+
+        if (rendaAtual.isEmpty()) {
+            throw new NotFoundException("Não há renda para mostrar");
+        } else {
+            Object[] rendaAtualObj = rendaAtual.get(0);
+            String mes = (String) rendaAtualObj[1];
+            BigDecimal rendaAtualBigDecimal = (BigDecimal) rendaAtualObj[0];
+            Double rendaAtualDouble = rendaAtualBigDecimal.doubleValue();
+
+            kpis.setRendaMesAtual(new RendaMesAtualDto(mes, rendaAtualDouble));
+        }
+
+        Query QueryRendaAnterior = entityManager
+                .createNativeQuery("SELECT SUM(preco) valor, TRADUZ_MES(MONTHNAME(data)) mes\n" + //
+                        "FROM evento  \n" + //
+                        "WHERE status = 6 \n" + //
+                        "AND YEAR(data) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) \n" + //
+                        "AND MONTH(data) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);");
+        List<Object[]> rendaAnterior = QueryRendaAnterior.getResultList();
+
+        if (rendaAnterior.isEmpty()) {
+            throw new NotFoundException("Não há renda para mostrar");
+        } else {
+            Object[] rendaAnteriorObj = rendaAnterior.get(0);
+            String mes = (String) rendaAnteriorObj[1];
+            BigDecimal rendaAnteriorBigDecimal = (BigDecimal) rendaAnteriorObj[0];
+            Double rendaAnteriorDouble = rendaAnteriorBigDecimal.doubleValue();
+
+            kpis.setRendaMesAnterior(new RendaMesAnteriorDto(mes, rendaAnteriorDouble));
+        }
+
+        Query queryRendaTotal = entityManager
+                .createNativeQuery("SELECT SUM(preco) FROM eventify.evento WHERE status = 6;");
+        BigDecimal rendaTotalBigDecimal = (BigDecimal) queryRendaTotal.getSingleResult();
+
+        if (rendaTotalBigDecimal == null) {
+            throw new NotFoundException("Não há renda para mostrar");
+        } else {
+            Double rendaTotalDouble = rendaTotalBigDecimal.doubleValue();
+            kpis.setRendaTotal(rendaTotalDouble);
+        }
+
+        return kpis;
+    }
+
+    public List<RendaMesDto> consultarRendaMesEventify() {
+        List<RendaMesDto> rendas = new ArrayList<>();
+
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_comparar_seis_meses;");
+        List<Object[]> rendasObj = query.getResultList();
+
+        if (rendasObj.isEmpty()) {
+            throw new NotFoundException("Não há renda para mostrar");
+        } else {
+            for (Object[] rendaObj : rendasObj) {
+                String mes = (String) rendaObj[0];
+                BigDecimal rendaBigDecimal = (BigDecimal) rendaObj[1];
+                Double rendaDouble = rendaBigDecimal.doubleValue();
+
+                rendas.add(new RendaMesDto(mes, rendaDouble));
+            }
+        }
+
+        // Fazendo dessa maneira pois o Collections.reverse não supre a necesidade e looping consumiria mais memória
+        List<RendaMesDto> rendasOrdenada = new ArrayList<>();
+        rendasOrdenada.add(rendas.get(5));
+        rendasOrdenada.add(rendas.get(4));
+        rendasOrdenada.add(rendas.get(3));
+        rendasOrdenada.add(rendas.get(2));
+        rendasOrdenada.add(rendas.get(1));
+        rendasOrdenada.add(rendas.get(0));
+
+        return rendasOrdenada;
+    }
+
 }
