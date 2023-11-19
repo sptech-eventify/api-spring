@@ -2,6 +2,7 @@ package eventify.api_spring.service.smartsync;
 
 import eventify.api_spring.domain.smartsync.Tarefa;
 import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.repository.BucketRepository;
 import eventify.api_spring.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,18 @@ public class TarefaService {
         return tarefas;
     }
 
-    public Tarefa criarTarefa(Tarefa tarefa) {
+    public Tarefa criarTarefa(Integer id, Tarefa tarefa) {
+        if (tarefaRepository.findById(id).isEmpty()) {
+            throw new NotFoundException("Tarefa não encontrada");
+        }
+
         if (tarefa.getTarefaPai() != null) {
-            Tarefa tarefaPai = tarefaRepository.findById(tarefa.getTarefaPai().getId()).orElseThrow(() -> new NoContentException("Tarefa pai não encontrada"));
+            Tarefa tarefaPai = tarefaRepository.findById(tarefa.getTarefaPai().getId()).orElseThrow(() -> new NotFoundException("Tarefa pai não encontrada"));
             tarefa.setTarefaPai(tarefaPai);
         }
 
         if (bucketRepository.findById(tarefa.getBucket().getId()).isEmpty()) {
-            throw new NoContentException("Bucket não encontrado");
+            throw new NotFoundException("Bucket não encontrado");
         }
 
         tarefa.setNome(tarefa.getNome());
@@ -77,6 +82,10 @@ public class TarefaService {
     }
 
     public void deletarTarefa(Integer id) {
-        tarefaRepository.deleteById(id);
+        Tarefa tarefa = tarefaRepository.findById(id).orElseThrow(() -> new NoContentException("Tarefa não encontrada"));
+
+        tarefa.setDataConclusao(tarefa.getDataConclusao());
+
+        tarefaRepository.save(tarefa);
     }
 }

@@ -37,11 +37,11 @@ public class TarefaController {
         return ResponseEntity.ok(tarefa);
     }
 
-    @PostMapping
-    public ResponseEntity<Tarefa> criarTarefa(@RequestBody @Valid Tarefa tarefa) {
-        Tarefa tarefaCriada = tarefaService.criarTarefa(tarefa);
+    @PostMapping("/{id}")
+    public ResponseEntity<Tarefa> criarTarefa(@PathVariable Integer id, @RequestBody Tarefa tarefa) {
+        Tarefa tarefaAtualizada = tarefaService.criarTarefa(id, tarefa);
 
-        return ResponseEntity.ok(tarefaCriada);
+        return ResponseEntity.ok(tarefaAtualizada);
     }
 
     @PutMapping("/{id}")
