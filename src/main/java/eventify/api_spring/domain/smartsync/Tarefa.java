@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Tarefa {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -49,6 +48,9 @@ public class Tarefa {
 
     @NotNull
     private LocalDate dataCriacao;
+
+    @NotNull
+    private Boolean isVisivel;
 
     @ManyToOne
     @JoinTable(name = "id_tarefa")

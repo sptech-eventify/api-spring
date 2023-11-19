@@ -2,6 +2,7 @@ package eventify.api_spring.service.smartsync;
 
 import eventify.api_spring.domain.smartsync.Tarefa;
 import eventify.api_spring.exception.http.NoContentException;
+import eventify.api_spring.repository.BucketRepository;
 import eventify.api_spring.repository.TarefaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,10 @@ public class TarefaService {
 
     @Autowired
     private TarefaRepository tarefaRepository;
+
+    @Autowired
+    private BucketRepository bucketRepository;
+
 
     public List<Tarefa> exibirTodasTarefas() {
         List<Tarefa> tarefas = tarefaRepository.findAll();
@@ -41,6 +46,27 @@ public class TarefaService {
     }
 
     public Tarefa criarTarefa(Tarefa tarefa) {
+        if (tarefa.getTarefaPai() != null) {
+            Tarefa tarefaPai = tarefaRepository.findById(tarefa.getTarefaPai().getId()).orElseThrow(() -> new NoContentException("Tarefa pai não encontrada"));
+            tarefa.setTarefaPai(tarefaPai);
+        }
+
+        if (bucketRepository.findById(tarefa.getBucket().getId()).isEmpty()) {
+            throw new NoContentException("Bucket não encontrado");
+        }
+
+        tarefa.setNome(tarefa.getNome());
+        tarefa.setDescricao(tarefa.getDescricao());
+        tarefa.setFibonacci(tarefa.getFibonacci());
+        tarefa.setStatus(tarefa.getStatus());
+        tarefa.setHorasEstimada(tarefa.getHorasEstimada());
+        tarefa.setDataEstimada(tarefa.getDataEstimada());
+        tarefa.setDataCriacao(tarefa.getDataCriacao());
+        tarefa.setDataConclusao(tarefa.getDataConclusao());
+        tarefa.setIsVisivel(tarefa.getIsVisivel());
+
+        tarefa.setBucket(tarefa.getBucket());
+
         return tarefaRepository.save(tarefa);
     }
 
