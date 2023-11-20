@@ -1,7 +1,7 @@
 package eventify.api_spring.api.controller.smartsync;
 
-import eventify.api_spring.domain.smartsync.Tarefa;
 import eventify.api_spring.dto.smartsync.TarefaDto;
+import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.service.smartsync.TarefaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -33,6 +33,13 @@ public class TarefaController {
         return ResponseEntity.ok(tarefas);
     }
 
+    @GetMapping("/secoes")
+    public ResponseEntity<List<TarefaSecaoDto>> exibirTodasTarefasPorSecao(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento) {
+        List<TarefaSecaoDto> tarefas = tarefaService.exibirTodasTarefasPorSecao(idBuffet, idEvento);
+
+        return ResponseEntity.ok(tarefas);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<TarefaDto> exibirTarefaPorId(@PathVariable Integer id) {
         TarefaDto tarefa = tarefaService.exibirTarefaPorId(id);
@@ -60,5 +67,4 @@ public class TarefaController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

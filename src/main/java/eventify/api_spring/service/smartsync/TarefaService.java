@@ -1,15 +1,25 @@
 package eventify.api_spring.service.smartsync;
 
 import eventify.api_spring.domain.smartsync.Tarefa;
+import eventify.api_spring.dto.smartsync.InfoEventoDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
+import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.smartsync.TarefaMapper;
 import eventify.api_spring.repository.BucketRepository;
 import eventify.api_spring.repository.TarefaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+
+import org.apache.maven.wagon.TransferFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +32,8 @@ public class TarefaService {
     @Autowired
     private BucketRepository bucketRepository;
 
+    @Autowired
+    private EntityManager entityManager;
 
     public List<TarefaDto> exibirTodasTarefas() {
         List<Tarefa> tarefas = tarefaRepository.findAll();
@@ -50,6 +62,42 @@ public class TarefaService {
         }
 
         List<TarefaDto> tarefasDto = tarefas.stream().map(TarefaMapper::toDto).collect(Collectors.toList());
+
+        return tarefasDto;
+    }
+
+    public List<TarefaSecaoDto> exibirTodasTarefasPorSecao(Integer idBuffet, Integer idEvento) {
+        Query query = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND id_evento = :idEvento");
+        query.setParameter("idBuffet", idBuffet);
+        query.setParameter("idEvento", idEvento);
+        List<Object[]> tarefas = query.getResultList();
+
+        List<TarefaSecaoDto> tarefasDto = new ArrayList<>();
+        for (Object[] tarefa : tarefas) {
+            // id_buffet, id_buffet_servico, id_evento, id, nome, descricao, fibonacci, status, horas_estimada, data_estimada, data_criacao, data_conclusao, is_visivel, id_tarefa, id_bucket
+
+            Integer idBuffetDto = (Integer) tarefa[0];
+            Integer idBuffetServico = (Integer) tarefa[1];
+            Integer idEventoDto = (Integer) tarefa[2];
+            Integer id = (Integer) tarefa[3];
+            String nome = (String) tarefa[4];
+            String descricao = (String) tarefa[5];
+            Integer fibonacci = (Integer) tarefa[6];
+            Integer status = (Integer) tarefa[7];
+            Integer horasEstimada = (Integer) tarefa[8];
+            Date dataEstimada = (Date) tarefa[9];
+            Timestamp dataCriacao = (Timestamp) tarefa[10];
+            Timestamp dataConclusao = (Timestamp) tarefa[11];
+            Byte isVisivel = (Byte) tarefa[12];
+            Integer idTarefa = (Integer) tarefa[13];
+            Integer idBucket = (Integer) tarefa[14];
+
+            tarefasDto.add(new TarefaSecaoDto(idBuffetDto, idBuffetServico, idEventoDto, id, nome, descricao, fibonacci, status, horasEstimada, dataEstimada, dataCriacao, dataConclusao, isVisivel, idTarefa, idBucket));
+        }
+
+        if (tarefasDto.isEmpty()) {
+            throw new NoContentException("Não há tarefas cadastradas");
+        }
 
         return tarefasDto;
     }
