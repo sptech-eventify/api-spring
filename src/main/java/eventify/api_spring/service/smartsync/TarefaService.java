@@ -1,7 +1,7 @@
 package eventify.api_spring.service.smartsync;
 
 import eventify.api_spring.domain.smartsync.Tarefa;
-import eventify.api_spring.dto.smartsync.InfoEventoDto;
+import eventify.api_spring.dto.smartsync.SecaoDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.exception.http.NoContentException;
@@ -12,7 +12,6 @@ import eventify.api_spring.repository.TarefaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
-import org.apache.maven.wagon.TransferFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +73,6 @@ public class TarefaService {
 
         List<TarefaSecaoDto> tarefasDto = new ArrayList<>();
         for (Object[] tarefa : tarefas) {
-            // id_buffet, id_buffet_servico, id_evento, id, nome, descricao, fibonacci, status, horas_estimada, data_estimada, data_criacao, data_conclusao, is_visivel, id_tarefa, id_bucket
-
             Integer idBuffetDto = (Integer) tarefa[0];
             Integer idBuffetServico = (Integer) tarefa[1];
             Integer idEventoDto = (Integer) tarefa[2];
@@ -178,5 +175,26 @@ public class TarefaService {
         tarefa.setIsVisivel(false);
 
         tarefaRepository.save(tarefa);
+    }
+
+    public List<SecaoDto> exibirDadosDaSecao(Integer idBuffet, Integer idEvento) {
+        Query query = entityManager.createNativeQuery("SELECT DISTINCT nome_servico, id_servico  FROM vw_secoes WHERE id_buffet = :idBuffet AND id_evento = :idEvento");
+        query.setParameter("idBuffet", idBuffet);
+        query.setParameter("idEvento", idEvento);
+        List<Object[]> secoes = query.getResultList();
+
+        List<SecaoDto> secoesDto = new ArrayList<>();
+        for (Object[] secao : secoes) {
+            Integer idServico = (Integer) secao[1];
+            String nomeServico = (String) secao[0];
+           
+            secoesDto.add(new SecaoDto(idServico, nomeServico));
+        }
+
+        if (secoesDto.isEmpty()) {
+            throw new NoContentException("Não há seções disponíveis");
+        }
+
+        return secoesDto;
     }
 }
