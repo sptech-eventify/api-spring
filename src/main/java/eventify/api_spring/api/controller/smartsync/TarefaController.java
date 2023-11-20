@@ -27,7 +27,7 @@ public class TarefaController {
     }
 
     @GetMapping("/bucket/{idBucket}")
-    public ResponseEntity<List<TarefaDto>> exibirTodasTarefasPorBucketId(@RequestBody Integer idBucket) {
+    public ResponseEntity<List<TarefaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
         List<TarefaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
 
         return ResponseEntity.ok(tarefas);
@@ -40,9 +40,9 @@ public class TarefaController {
         return ResponseEntity.ok(tarefa);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<TarefaDto> criarTarefa(@PathVariable Integer id, @RequestBody Tarefa tarefa) {
-        TarefaDto tarefaAtualizada = tarefaService.criarTarefa(id, tarefa);
+    @PostMapping
+    public ResponseEntity<TarefaDto> criarTarefa(@RequestBody TarefaDto tarefa) {
+        TarefaDto tarefaAtualizada = tarefaService.criarTarefa(tarefa);
 
         return ResponseEntity.ok(tarefaAtualizada);
     }
