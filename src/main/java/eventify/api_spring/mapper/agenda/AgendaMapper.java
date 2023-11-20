@@ -4,14 +4,22 @@ import eventify.api_spring.domain.agenda.Agenda;
 import eventify.api_spring.dto.agenda.AgendaCriacaoDto;
 import eventify.api_spring.dto.agenda.AgendaDto;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-@Mapper(componentModel = "spring")
 public interface AgendaMapper {
-  @Mapping(source = "buffet.id", target = "idBuffet")
-  AgendaDto toDto(Agenda domain);
+  public static AgendaDto toDto(Agenda domain) {
+    AgendaDto dto = new AgendaDto();
 
-  @Mapping(source = "idBuffet", target = "buffet.id")
-  Agenda toDomain(AgendaCriacaoDto dto);
+    dto.setId(domain.getId());
+    dto.setData(domain.getData());
+    dto.setIdBuffet(domain.getBuffet().getId());
+
+    return dto;
+  }
+
+  public static Agenda toDomain(AgendaCriacaoDto dto) {
+    Agenda domain = new Agenda();
+    
+    domain.setData(dto.getData());
+
+    return domain;
+  }
 }

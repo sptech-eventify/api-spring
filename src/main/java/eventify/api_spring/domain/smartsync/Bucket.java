@@ -30,10 +30,10 @@ public class Bucket {
     private Boolean isVisivel;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_buffet_servico")
+    @JoinColumn(name = "id_buffet_servico")
     private BuffetServico buffetServico;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_evento")
+    @JoinColumn(name = "id_evento")
     private Evento evento;
 }

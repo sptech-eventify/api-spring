@@ -1,5 +1,6 @@
 package eventify.api_spring.domain.smartsync;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Tarefa {
     @Id
@@ -43,7 +43,7 @@ public class Tarefa {
     @NotNull
     private LocalDate dataEstimada;
 
-    @NotNull
+    @Nullable
     private LocalDateTime dataConclusao;
 
     @NotNull
@@ -52,11 +52,11 @@ public class Tarefa {
     @NotNull
     private Boolean isVisivel;
 
-    @ManyToOne
-    @JoinTable(name = "id_tarefa")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_tarefa", nullable = true)
     private Tarefa tarefaPai;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "id_bucket")
+    @JoinColumn(name = "id_bucket", nullable = false)
     private Bucket bucket;
 }
