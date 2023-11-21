@@ -42,4 +42,18 @@ public class ExecutorTarefaController {
 
         return ResponseEntity.created(location).body(null);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ExecutorTarefaCriacaoDto> atualizarExecutorTarefa(@PathVariable Integer id, @Valid @RequestBody ExecutorTarefaCriacaoDto executorTarefaAtualizado) {
+        ExecutorTarefaCriacaoDto executorTarefaAtualizadoSalvo = executorTarefaService.atualizarExecutorTarefa(id, executorTarefaAtualizado);
+
+        return ResponseEntity.ok(executorTarefaAtualizadoSalvo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerExecutorTarefa(@PathVariable Integer id) {
+        executorTarefaService.removerExecutorTarefa(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

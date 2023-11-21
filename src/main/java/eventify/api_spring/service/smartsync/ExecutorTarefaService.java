@@ -113,4 +113,40 @@ public class ExecutorTarefaService {
 
         return executorTarefaRepository.save(executorTarefa);
     }
+
+    public ExecutorTarefaCriacaoDto atualizarExecutorTarefa(Integer id, ExecutorTarefaCriacaoDto executorTarefaAtualizado) {
+        Optional<ExecutorTarefa> executorTarefa = executorTarefaRepository.findById(id);
+
+        if (executorTarefa.isEmpty()){
+            throw new NotFoundException("Executor não encontrado");
+        }
+
+        executorTarefa.get().setTempoExecutado(executorTarefaAtualizado.getTempoExecutado());
+        executorTarefa.get().setDataCriacao(executorTarefaAtualizado.getDataCriacao());
+
+        ExecutorTarefa executorTarefaSalvo = executorTarefaRepository.save(executorTarefa.get());
+
+        ExecutorTarefaCriacaoDto executorTarefaCriacaoDto = new ExecutorTarefaCriacaoDto();
+        executorTarefaCriacaoDto.setTempoExecutado(executorTarefaSalvo.getTempoExecutado());
+        executorTarefaCriacaoDto.setDataCriacao(executorTarefaSalvo.getDataCriacao());
+        executorTarefaCriacaoDto.setIdTarefa(executorTarefaSalvo.getTarefa().getId());
+
+        if (executorTarefaSalvo.getFuncionario() != null) {
+            executorTarefaCriacaoDto.setIdFuncionario(executorTarefaSalvo.getFuncionario().getId());
+        } else {
+            executorTarefaCriacaoDto.setIdUsuario(executorTarefaSalvo.getUsuario().getId());
+        }
+
+        return executorTarefaCriacaoDto;
+    }
+
+    public void removerExecutorTarefa(Integer idExecutorTarefa) {
+        Optional<ExecutorTarefa> executorTarefa = executorTarefaRepository.findById(idExecutorTarefa);
+
+        if (executorTarefa.isEmpty()){
+            throw new NotFoundException("Executor não encontrado");
+        }
+
+        executorTarefaRepository.delete(executorTarefa.get());
+    }
 }
