@@ -1,6 +1,7 @@
 package eventify.api_spring.api.controller.smartsync;
 
 import eventify.api_spring.dto.smartsync.TarefaDto;
+import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.service.smartsync.TarefaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,15 +21,15 @@ public class TarefaController {
     private TarefaService tarefaService;
 
     @GetMapping
-    public ResponseEntity<List<TarefaDto>> exibirTodasTarefas() {
-        List<TarefaDto> tarefas = tarefaService.exibirTodasTarefas();
+    public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefas() {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefas();
 
         return ResponseEntity.ok(tarefas);
     }
 
     @GetMapping("/bucket/{idBucket}")
-    public ResponseEntity<List<TarefaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
-        List<TarefaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
+    public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
 
         return ResponseEntity.ok(tarefas);
     }
@@ -41,8 +42,8 @@ public class TarefaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TarefaDto> exibirTarefaPorId(@PathVariable Integer id) {
-        TarefaDto tarefa = tarefaService.exibirTarefaPorId(id);
+    public ResponseEntity<TarefaRespostaDto> exibirTarefaPorId(@PathVariable Integer id) {
+        TarefaRespostaDto tarefa = tarefaService.exibirTarefaPorId(id);
 
         return ResponseEntity.ok(tarefa);
     }

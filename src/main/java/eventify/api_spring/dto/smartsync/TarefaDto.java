@@ -2,6 +2,7 @@ package eventify.api_spring.dto.smartsync;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,4 +26,6 @@ public class TarefaDto {
     private Boolean isVisivel;
     private Integer idTarefaPai;
     private Integer idBucket;
+    private List<ComentarioRespostaDto> comentarios;
+    private List<ExecutorDto> responsaveis;
 }

@@ -26,5 +26,6 @@ public class TarefaRespostaDto {
     private Boolean isVisivel;
     private Integer idTarefaPai;
     private Integer idBucket;
-    private List<ExecutorDto> executores;
+    private List<ExecutorDto> responsaveis;
+    private List<ComentarioRespostaDto> comentarios;
 }
