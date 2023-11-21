@@ -5,7 +5,6 @@ import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.ExecutorTarefaCriacaoDto;
 import eventify.api_spring.service.smartsync.ExecutorTarefaService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
