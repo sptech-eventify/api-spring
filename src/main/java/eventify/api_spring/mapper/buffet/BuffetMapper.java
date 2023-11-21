@@ -3,7 +3,6 @@ package eventify.api_spring.mapper.buffet;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import eventify.api_spring.domain.buffet.Buffet;
@@ -20,15 +19,6 @@ import eventify.api_spring.mapper.endereco.EnderecoMapper;
 
 @Component
 public class BuffetMapper {
-    @Autowired
-    private EnderecoMapper enderecoMapper;
-
-    @Autowired
-    private AgendaMapper agendaMapper;
-
-    @Autowired 
-    private ImagemMapper imagemMapper;
-
     public BuffetRespostaDto toRespostaDto(Buffet domain){
         BuffetRespostaDto dto = new BuffetRespostaDto();
         
@@ -36,7 +26,7 @@ public class BuffetMapper {
         dto.setNome(domain.getNome());
         dto.setDescricao(domain.getDescricao());
         dto.setPrecoMedioDiaria(domain.getPrecoMedioDiaria());
-        dto.setEndereco(enderecoMapper.toDto(domain.getEndereco()));
+        dto.setEndereco(EnderecoMapper.toDto(domain.getEndereco()));
         dto.setTamanho(domain.getTamanho());
         dto.setQtdPessoas(domain.getQtdPessoas());
         dto.setCaminhoComprovante(domain.getCaminhoComprovante());
@@ -45,8 +35,8 @@ public class BuffetMapper {
         dto.setTiposEventos(domain.getTiposEventos());
         dto.setServicos(BuffetServicoMapper.toSetServico(domain.getServicos()));
         dto.setUsuario(UsuarioMapper.toDevolverDto(domain.getUsuario()));
-        dto.setAgendas(domain.getAgendas().stream().map(agendaMapper::toDto).collect(Collectors.toList()));
-        dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
+        dto.setAgendas(domain.getAgendas().stream().map(AgendaMapper::toDto).collect(Collectors.toList()));
+        dto.setImagens(domain.getImagens().stream().map(ImagemMapper::toDto).collect(Collectors.toList()));
 
         return dto;
     }
@@ -57,7 +47,7 @@ public class BuffetMapper {
         dto.setNome(domain.getNome());
         dto.setNomeProprietario(domain.getUsuario().getNome());
         dto.setDescricao(domain.getDescricao());
-        dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
+        dto.setImagens(domain.getImagens().stream().map(ImagemMapper::toDto).collect(Collectors.toList()));
         dto.setPrecoMedioDiaria(domain.getPrecoMedioDiaria());
         dto.setNotaMediaAvaliacao(null);
         dto.setServicos(BuffetServicoMapper.toListServico(domain.getServicos()).stream().collect(Collectors.toList()));
@@ -85,7 +75,7 @@ public class BuffetMapper {
         dto.setTamanho(domain.getTamanho());
         dto.setQtdPessoas(domain.getQtdPessoas());
         dto.setNotaMediaAvaliacao(null);
-        dto.setImagens(domain.getImagens().stream().map(imagemMapper::toDto).collect(Collectors.toList()));
+        dto.setImagens(domain.getImagens().stream().map(ImagemMapper::toDto).collect(Collectors.toList()));
 
         return dto;
     }

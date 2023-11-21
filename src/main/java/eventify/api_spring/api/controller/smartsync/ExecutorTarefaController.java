@@ -1,12 +1,16 @@
 package eventify.api_spring.api.controller.smartsync;
 
 import eventify.api_spring.domain.smartsync.ExecutorTarefa;
+import eventify.api_spring.dto.smartsync.ExecutorDto;
+import eventify.api_spring.dto.smartsync.ExecutorTarefaCriacaoDto;
 import eventify.api_spring.service.smartsync.ExecutorTarefaService;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,43 +21,37 @@ public class ExecutorTarefaController {
     private ExecutorTarefaService executorTarefaService;
 
     @GetMapping
-    public ResponseEntity<List<ExecutorTarefa>> exibirTodosExecutoresTarefas() {
-        List<ExecutorTarefa> executorTarefas = executorTarefaService.exibirTodosExecutoresTarefas();
+    public ResponseEntity<List<ExecutorDto>> exibirTodosExecutoresTarefas() {
+        List<ExecutorDto> executores = executorTarefaService.exibirTodosExecutoresTarefas();
 
-        return ResponseEntity.ok(executorTarefas);
+        return ResponseEntity.ok(executores);
     }
 
-    @GetMapping("/funcionario/{idFuncionario}")
-    public ResponseEntity<List<ExecutorTarefa>> exibirTodosExecutoresTarefasPorFuncionarioId(@PathVariable Integer idFuncionario) {
-        List<ExecutorTarefa> executorTarefas = executorTarefaService.exibirTodosExecutoresTarefasPorFuncionarioId(idFuncionario);
+    @GetMapping("/{idTarefa}")
+    public ResponseEntity<List<ExecutorDto>> executoresPorIdTarefa(@PathVariable Integer idTarefa) {
+        List<ExecutorDto> executores = executorTarefaService.executoresPorIdTarefa(idTarefa);
 
-        return ResponseEntity.ok(executorTarefas);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ExecutorTarefa> exibirExecutorTarefaPorId(@PathVariable Integer id) {
-        ExecutorTarefa executorTarefa = executorTarefaService.exibirExecutorTarefaPorId(id);
-
-        return ResponseEntity.ok(executorTarefa);
+        return ResponseEntity.ok(executores);
     }
 
     @PostMapping
-    public ResponseEntity<ExecutorTarefa> criarExecutorTarefa(@RequestBody @Valid ExecutorTarefa executorTarefa) {
-        ExecutorTarefa executorTarefaCriado = executorTarefaService.criarExecutorTarefa(executorTarefa);
+    public ResponseEntity<ExecutorTarefa> adicionarExecutorTarefa(@RequestBody ExecutorTarefaCriacaoDto novoExecutor) {
+        ExecutorTarefa executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
+        URI location = URI.create(String.format("/executor-tarefas/%d", executorTarefaSalvo.getId()));
 
-        return ResponseEntity.ok(executorTarefaCriado);
+        return ResponseEntity.created(location).body(null);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExecutorTarefa> atualizarExecutorTarefa(@PathVariable Integer id) {
-        ExecutorTarefa executorTarefaAtualizado = executorTarefaService.atualizarExecutorTarefa(id);
+    public ResponseEntity<ExecutorTarefaCriacaoDto> atualizarExecutorTarefa(@PathVariable Integer id, @Valid @RequestBody ExecutorTarefaCriacaoDto executorTarefaAtualizado) {
+        ExecutorTarefaCriacaoDto executorTarefaAtualizadoSalvo = executorTarefaService.atualizarExecutorTarefa(id, executorTarefaAtualizado);
 
-        return ResponseEntity.ok(executorTarefaAtualizado);
+        return ResponseEntity.ok(executorTarefaAtualizadoSalvo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarExecutorTarefa(@PathVariable Integer id) {
-        executorTarefaService.deletarExecutorTarefa(id);
+    public ResponseEntity<Void> removerExecutorTarefa(@PathVariable Integer id) {
+        executorTarefaService.removerExecutorTarefa(id);
 
         return ResponseEntity.noContent().build();
     }

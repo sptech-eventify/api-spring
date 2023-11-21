@@ -71,9 +71,6 @@ public class BuffetService {
     private ImagemRepository imagemRepository;
 
     @Autowired
-    private ImagemMapper imagemMapper;
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
@@ -226,7 +223,7 @@ public class BuffetService {
 
         if (Objects.nonNull(buffet)) {
             List<ImagemDto> caminhos = imagemRepository.findByBuffet(buffet)
-                    .stream().map(imagemMapper::toDto).toList();
+                    .stream().map(ImagemMapper::toDto).toList();
 
             return caminhos;
         }

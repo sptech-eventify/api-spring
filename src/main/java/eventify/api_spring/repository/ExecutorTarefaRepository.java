@@ -1,14 +1,14 @@
 package eventify.api_spring.repository;
 
-import eventify.api_spring.domain.smartsync.ExecutorTarefa;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import eventify.api_spring.domain.smartsync.ExecutorTarefa;
+import eventify.api_spring.domain.smartsync.Tarefa;
+
 public interface ExecutorTarefaRepository extends JpaRepository<ExecutorTarefa, Integer> {
+    List<ExecutorTarefa> findAllByFuncionarioId(Integer idFuncionario);
 
-    @Query("SELECT e FROM ExecutorTarefa e WHERE e.funcionario.id = :id")
-    List<ExecutorTarefa> findAllByFuncionarioId(Integer id);
-
+    List<ExecutorTarefa> findAllByTarefa(Tarefa tarefa);
 }

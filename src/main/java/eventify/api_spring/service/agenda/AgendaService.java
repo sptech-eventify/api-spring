@@ -31,9 +31,6 @@ public class AgendaService {
     private BuffetService buffetService;
 
     @Autowired
-    private AgendaMapper agendaMapper;
-
-    @Autowired
     private BuffetRepository buffetRepository;
 
     public List<AgendaDto> listarAgendas() {
@@ -43,7 +40,7 @@ public class AgendaService {
             throw new NoContentException("Não há eventos cadastrados na base de dados");
         }
 
-        return agendas.stream().map(agendaMapper::toDto).collect(Collectors.toList());
+        return agendas.stream().map(AgendaMapper::toDto).collect(Collectors.toList());
     }
 
     public Agenda criarAgenda(AgendaCriacaoDto agendaCriacao) {
@@ -57,7 +54,7 @@ public class AgendaService {
             throw new ConflictException("A data solicitada já está ocupada");
         }
 
-        Agenda agenda = agendaMapper.toDomain(agendaCriacao);
+        Agenda agenda = AgendaMapper.toDomain(agendaCriacao);
         agendaRepository.save(agenda);
 
         return agenda;
@@ -70,7 +67,7 @@ public class AgendaService {
             throw new NotFoundException("Evento não encontrado na base de dados");
         }
 
-        return agendaMapper.toDto(agenda.get());
+        return AgendaMapper.toDto(agenda.get());
     }
 
     public List<AgendaDto> buscarAgendaPorBuffet(Integer idBuffet) {
@@ -86,7 +83,7 @@ public class AgendaService {
             throw new NoContentException("Não há eventos cadastrados para este buffet");
         }
 
-        return agendas.stream().map(agendaMapper::toDto).collect(Collectors.toList());
+        return agendas.stream().map(AgendaMapper::toDto).collect(Collectors.toList());
     }
 
     public void deletarAgenda(Integer idAgenda) {

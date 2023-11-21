@@ -1,8 +1,11 @@
 package eventify.api_spring.api.controller.smartsync;
 
-import eventify.api_spring.domain.smartsync.Tarefa;
+import eventify.api_spring.dto.smartsync.TarefaDto;
+import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
+import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.service.smartsync.TarefaService;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,42 +14,50 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tarefas")
+@SecurityRequirement(name = "requiredAuth")
 public class TarefaController {
 
     @Autowired
     private TarefaService tarefaService;
 
     @GetMapping
-    public ResponseEntity<List<Tarefa>> exibirTodasTarefas() {
-        List<Tarefa> tarefas = tarefaService.exibirTodasTarefas();
+    public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefas() {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefas();
 
         return ResponseEntity.ok(tarefas);
     }
 
     @GetMapping("/bucket/{idBucket}")
-    public ResponseEntity<List<Tarefa>> exibirTodasTarefasPorBucketId(@RequestBody Integer idBucket) {
-        List<Tarefa> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
+    public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
+
+        return ResponseEntity.ok(tarefas);
+    }
+
+    @GetMapping("/secoes")
+    public ResponseEntity<List<TarefaSecaoDto>> exibirTodasTarefasPorSecao(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento) {
+        List<TarefaSecaoDto> tarefas = tarefaService.exibirTodasTarefasPorSecao(idBuffet, idEvento);
 
         return ResponseEntity.ok(tarefas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> exibirTarefaPorId(@PathVariable Integer id) {
-        Tarefa tarefa = tarefaService.exibirTarefaPorId(id);
+    public ResponseEntity<TarefaRespostaDto> exibirTarefaPorId(@PathVariable Integer id) {
+        TarefaRespostaDto tarefa = tarefaService.exibirTarefaPorId(id);
 
         return ResponseEntity.ok(tarefa);
     }
 
     @PostMapping
-    public ResponseEntity<Tarefa> criarTarefa(@RequestBody @Valid Tarefa tarefa) {
-        Tarefa tarefaCriada = tarefaService.criarTarefa(tarefa);
+    public ResponseEntity<TarefaDto> criarTarefa(@RequestBody TarefaDto tarefa) {
+        TarefaDto tarefaAtualizada = tarefaService.criarTarefa(tarefa);
 
-        return ResponseEntity.ok(tarefaCriada);
+        return ResponseEntity.ok(tarefaAtualizada);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> atualizarTarefa(@PathVariable Integer id) {
-        Tarefa tarefaAtualizada = tarefaService.atualizarTarefa(id);
+    public ResponseEntity<TarefaDto> atualizarTarefa(@PathVariable Integer id, @RequestBody TarefaDto tarefa) {
+        TarefaDto tarefaAtualizada = tarefaService.atualizarTarefa(id, tarefa);
 
         return ResponseEntity.ok(tarefaAtualizada);
     }
@@ -57,5 +68,4 @@ public class TarefaController {
 
         return ResponseEntity.noContent().build();
     }
-
 }

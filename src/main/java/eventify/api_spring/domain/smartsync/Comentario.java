@@ -36,11 +36,11 @@ public class Comentario {
     private Boolean isVisivel;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "id_funcionario")
     private Funcionario funcionario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
