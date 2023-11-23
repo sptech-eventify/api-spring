@@ -1,5 +1,7 @@
 package eventify.api_spring.domain.smartsync;
 
+import java.util.List;
+
 import eventify.api_spring.domain.buffet.BuffetServico;
 import eventify.api_spring.domain.evento.Evento;
 import jakarta.persistence.*;
@@ -36,4 +38,7 @@ public class Bucket {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_evento")
     private Evento evento;
+
+    @OneToMany(mappedBy = "bucket", cascade = CascadeType.ALL)
+    private List<Tarefa> tarefas;
 }
