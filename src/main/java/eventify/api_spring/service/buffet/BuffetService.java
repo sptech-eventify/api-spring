@@ -406,7 +406,7 @@ public class BuffetService {
         }
 
         Query query = entityManager.createNativeQuery(
-                "SELECT nome, nota, avaliacao, data FROM vw_avaliacoes_buffet WHERE id_buffet = :idBuffet");
+                "SELECT nome, nota, avaliacao, data FROM vw_avaliacoes_buffet_usuario WHERE id_buffet = :idBuffet");
         query.setParameter("idBuffet", idBuffet);
         List<Object[]> resultList = query.getResultList();
 

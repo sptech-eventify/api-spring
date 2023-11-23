@@ -56,7 +56,7 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
                         "b.id")
         List<EventoDto> findAllOrcamentos(@Param("id") Integer id);
 
-        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, "
+        @Query("SELECT new eventify.api_spring.dto.orcamento.OrcamentoDto(b.nome, u.nome AS nomeContratante, u.cpf As cpfContratante, u.email AS emailContratante, CONCAT(en.logradouro, ',', en.numero, ',', en.cidade, ' - ', en.uf), e.data, "
                         +
                         "GROUP_CONCAT(DISTINCT ts.servico.descricao), GROUP_CONCAT(DISTINCT fe.descricao), GROUP_CONCAT(DISTINCT te.descricao), e.preco) "
                         +
