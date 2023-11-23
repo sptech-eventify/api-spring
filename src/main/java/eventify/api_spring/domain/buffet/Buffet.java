@@ -26,7 +26,6 @@ import eventify.api_spring.dto.imagem.ImagemDto;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Entity
 public class Buffet {
     @Id

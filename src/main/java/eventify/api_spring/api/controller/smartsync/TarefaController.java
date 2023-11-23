@@ -1,5 +1,6 @@
 package eventify.api_spring.api.controller.smartsync;
 
+import eventify.api_spring.dto.smartsync.SecaoTarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 
 import java.util.List;
 
@@ -39,6 +42,13 @@ public class TarefaController {
         List<TarefaSecaoDto> tarefas = tarefaService.exibirTodasTarefasPorSecao(idBuffet, idEvento);
 
         return ResponseEntity.ok(tarefas);
+    }
+
+    @GetMapping("/secoes/{idSecao}")
+    public ResponseEntity<SecaoTarefaDto> exibirTodasTarefasPorSecaoIndividual(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento, @PathVariable Integer idSecao) {
+        SecaoTarefaDto secao = tarefaService.exibirTodasTarefasPorSecaoIndividual(idBuffet, idEvento, idSecao);
+
+        return ResponseEntity.ok(secao);
     }
 
     @GetMapping("/{id}")
