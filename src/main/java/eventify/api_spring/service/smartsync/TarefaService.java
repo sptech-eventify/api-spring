@@ -6,6 +6,7 @@ import eventify.api_spring.domain.smartsync.Tarefa;
 import eventify.api_spring.dto.smartsync.ComentarioRespostaDto;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.SecaoDto;
+import eventify.api_spring.dto.smartsync.SecaoTarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
@@ -278,6 +279,54 @@ public class TarefaService {
         });
 
         return tarefasDto;
+    }
+
+    public SecaoTarefaDto exibirTodasTarefasPorSecaoIndividual(Integer idBuffet, Integer idEvento, Integer idSecao) {
+        Query query = entityManager.createNativeQuery("SELECT descricao FROM buffet_servico JOIN servico ON servico.id = buffet_servico.id_servico WHERE id_buffet = :idBuffet AND buffet_servico.id = :idSecao ");
+        query.setParameter("idBuffet", idBuffet);
+        query.setParameter("idSecao", idSecao);
+        Object secaoNome = query.getSingleResult();
+
+        Query queryTarefas = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND id_evento = :idEvento AND id_buffet_servico = :idSecao AND is_visivel = 1");
+        queryTarefas.setParameter("idBuffet", idBuffet);
+        queryTarefas.setParameter("idEvento", idEvento);
+        queryTarefas.setParameter("idSecao", idSecao);
+        List<Object[]> tarefas = queryTarefas.getResultList();
+
+        List<TarefaSecaoDto> tarefasDto = new ArrayList<>();
+        for (Object[] tarefa : tarefas) {
+            Integer idBuffetDto = (Integer) tarefa[0];
+            Integer idBuffetServico = (Integer) tarefa[1];
+            Integer idEventoDto = (Integer) tarefa[2];
+            Integer id = (Integer) tarefa[3];
+            String nome = (String) tarefa[4];
+            String descricao = (String) tarefa[5];
+            Integer fibonacci = (Integer) tarefa[6];
+            Integer status = (Integer) tarefa[7];
+            Integer horasEstimada = (Integer) tarefa[8];
+            Date dataEstimada = (Date) tarefa[9];
+            Timestamp dataCriacao = (Timestamp) tarefa[10];
+            Timestamp dataConclusao = (Timestamp) tarefa[11];
+            Byte isVisivel = (Byte) tarefa[12];
+            Integer idTarefa = (Integer) tarefa[13];
+            Integer idBucket = (Integer) tarefa[14];
+
+            List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(id);
+            List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(id);
+
+            tarefasDto.add(new TarefaSecaoDto(idBuffetDto, idBuffetServico, idEventoDto, id, nome, descricao, fibonacci, status, horasEstimada, dataEstimada, dataCriacao, dataConclusao, isVisivel, idTarefa, idBucket, comentarios, executores));
+        }
+
+        if (tarefasDto.isEmpty()) {
+            throw new NoContentException("Não há tarefas cadastradas");
+        }
+
+        SecaoTarefaDto secaoTarefaDto = new SecaoTarefaDto();
+
+        secaoTarefaDto.setNomeSecao((String) secaoNome);
+        secaoTarefaDto.setTarefas(tarefasDto);
+
+        return secaoTarefaDto;
     }
 
     public TarefaDto criarTarefa(TarefaDto tarefaCriacao) {
