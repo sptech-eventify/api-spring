@@ -4,7 +4,6 @@ import eventify.api_spring.domain.buffet.Pesquisa;
 import eventify.api_spring.dto.buffet.BuffetConsultaDto;
 import eventify.api_spring.dto.buffet.BuffetRespostaDto;
 import eventify.api_spring.service.buffet.PesquisaService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -18,8 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pesquisa")
-@Tag(name = "Pesquisa", description = "Controller com os endpoints de pesquisas do sistema")
-@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
 public class PesquisaController {
     @Autowired
     private PesquisaService pesquisaService;

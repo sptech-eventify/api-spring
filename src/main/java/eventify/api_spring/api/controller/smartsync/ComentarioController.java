@@ -4,6 +4,8 @@ import eventify.api_spring.domain.smartsync.Comentario;
 import eventify.api_spring.dto.smartsync.ComentarioCriacaoDto;
 import eventify.api_spring.dto.smartsync.ComentarioRespostaDto;
 import eventify.api_spring.service.smartsync.ComentarioService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/comentarios")
 public class ComentarioController {

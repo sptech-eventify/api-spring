@@ -5,7 +5,6 @@ import eventify.api_spring.dto.agenda.AgendaCriacaoDto;
 import eventify.api_spring.dto.agenda.AgendaDto;
 import eventify.api_spring.service.agenda.AgendaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,6 @@ import java.util.List;
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/agendas")
-@CrossOrigin(origins = {"http://localhost:5173", "http://26.69.189.151:5173"})
-@Tag(name="Agenda", description="Controller com os endpoints de reserva dos buffets")
 public class AgendaController {
     @Autowired
     private AgendaService agendaService;

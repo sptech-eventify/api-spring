@@ -4,6 +4,7 @@ import eventify.api_spring.domain.smartsync.ExecutorTarefa;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.ExecutorTarefaCriacaoDto;
 import eventify.api_spring.service.smartsync.ExecutorTarefaService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+@SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/executor-tarefas")
 public class ExecutorTarefaController {
