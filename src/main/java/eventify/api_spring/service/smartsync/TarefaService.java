@@ -3,10 +3,11 @@ package eventify.api_spring.service.smartsync;
 import eventify.api_spring.domain.smartsync.Comentario;
 import eventify.api_spring.domain.smartsync.ExecutorTarefa;
 import eventify.api_spring.domain.smartsync.Tarefa;
+import eventify.api_spring.dto.smartsync.BucketTarefaDto;
 import eventify.api_spring.dto.smartsync.ComentarioRespostaDto;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.SecaoDto;
-import eventify.api_spring.dto.smartsync.SecaoTarefaDto;
+import eventify.api_spring.dto.smartsync.SecaoBucketDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -281,52 +284,85 @@ public class TarefaService {
         return tarefasDto;
     }
 
-    public SecaoTarefaDto exibirTodasTarefasPorSecaoIndividual(Integer idBuffet, Integer idEvento, Integer idSecao) {
-        Query query = entityManager.createNativeQuery("SELECT descricao FROM buffet_servico JOIN servico ON servico.id = buffet_servico.id_servico WHERE id_buffet = :idBuffet AND buffet_servico.id = :idSecao ");
-        query.setParameter("idBuffet", idBuffet);
-        query.setParameter("idSecao", idSecao);
-        Object secaoNome = query.getSingleResult();
+    public SecaoBucketDto exibirTodasTarefasPorSecaoIndividual(Integer idBuffet, Integer idEvento, Integer idSecao) {
+        Query querySecao = entityManager.createNativeQuery("SELECT bs.id, s.descricao FROM buffet_servico bs JOIN servico s ON s.id = bs.id_servico WHERE bs.id_buffet = :idBuffet AND bs.id = :idSecao ");
+        querySecao.setParameter("idBuffet", idBuffet);
+        querySecao.setParameter("idSecao", idSecao);
+        Object[] secao = (Object[]) querySecao.getSingleResult();
+        Integer secaoId = (Integer) secao[0];
+        String secaoNome = (String) secao[1];
 
-        Query queryTarefas = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND id_evento = :idEvento AND id_buffet_servico = :idSecao AND is_visivel = 1");
-        queryTarefas.setParameter("idBuffet", idBuffet);
-        queryTarefas.setParameter("idEvento", idEvento);
-        queryTarefas.setParameter("idSecao", idSecao);
-        List<Object[]> tarefas = queryTarefas.getResultList();
+        SecaoBucketDto secaoDto = new SecaoBucketDto();
+        secaoDto.setIdSecao(secaoId);
+        secaoDto.setNomeSecao(secaoNome);
+        secaoDto.setBuckets(new ArrayList<>());
 
-        List<TarefaSecaoDto> tarefasDto = new ArrayList<>();
-        for (Object[] tarefa : tarefas) {
-            Integer idBuffetDto = (Integer) tarefa[0];
-            Integer idBuffetServico = (Integer) tarefa[1];
-            Integer idEventoDto = (Integer) tarefa[2];
-            Integer id = (Integer) tarefa[3];
-            String nome = (String) tarefa[4];
-            String descricao = (String) tarefa[5];
-            Integer fibonacci = (Integer) tarefa[6];
-            Integer status = (Integer) tarefa[7];
-            Integer horasEstimada = (Integer) tarefa[8];
-            Date dataEstimada = (Date) tarefa[9];
-            Timestamp dataCriacao = (Timestamp) tarefa[10];
-            Timestamp dataConclusao = (Timestamp) tarefa[11];
-            Byte isVisivel = (Byte) tarefa[12];
-            Integer idTarefa = (Integer) tarefa[13];
-            Integer idBucket = (Integer) tarefa[14];
+        Query queryBuckets = entityManager.createNativeQuery("SELECT bck.id, bck.nome FROM bucket bck WHERE bck.id_buffet_servico = :secaoId AND is_visivel = 1");
+        queryBuckets.setParameter("secaoId", secaoId);        
+        
+        List<Object[]> buckets = queryBuckets.getResultList();
+        for (Object[] bucket : buckets) {
+            Integer idBucket = (Integer) bucket[0];
+            String nomeBucket = (String) bucket[1];
 
-            List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(id);
-            List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(id);
+            Query queryTarefas = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND id_evento = :idEvento AND id_buffet_servico = :idSecao AND id_bucket = :idBucket AND is_visivel = 1");
+            queryTarefas.setParameter("idBuffet", idBuffet);
+            queryTarefas.setParameter("idEvento", idEvento);
+            queryTarefas.setParameter("idSecao", idSecao);
+            queryTarefas.setParameter("idBucket", idBucket);
+            List<Object[]> tarefas = queryTarefas.getResultList();
 
-            tarefasDto.add(new TarefaSecaoDto(idBuffetDto, idBuffetServico, idEventoDto, id, nome, descricao, fibonacci, status, horasEstimada, dataEstimada, dataCriacao, dataConclusao, isVisivel, idTarefa, idBucket, comentarios, executores));
+            List<TarefaDto> tarefasDto = new ArrayList<>();
+            for (Object[] tarefa : tarefas) {
+                Integer id = (Integer) tarefa[3];
+                String nome = (String) tarefa[4];
+                String descricao = (String) tarefa[5];
+                Integer fibonacci = (Integer) tarefa[6];
+                Integer status = (Integer) tarefa[7];
+                Integer horasEstimada = (Integer) tarefa[8];
+
+                Date dataEstimada = (Date) tarefa[9];
+
+                LocalDate dataEstimadaLocalDate = null;
+                if (dataEstimada != null) {
+                    dataEstimadaLocalDate = dataEstimada.toLocalDate();
+                }
+                
+                Timestamp dataCriacao = (Timestamp) tarefa[10];
+
+                LocalDate dataCriacaoLocalDate = null;
+                if (dataCriacao != null) {
+                    dataCriacaoLocalDate = dataCriacao.toLocalDateTime().toLocalDate();
+                }
+
+                Timestamp dataConclusao = (Timestamp) tarefa[11];
+
+                LocalDateTime dataConclusaoLocalDateTime = null;
+                if (dataConclusao != null) {
+                    dataConclusaoLocalDateTime = dataConclusao.toLocalDateTime();
+                }
+
+                Byte isVisivel = (Byte) tarefa[12];
+                Boolean isVisivelBoolean = isVisivel == 1 ? true : false;
+
+                Integer idTarefa = (Integer) tarefa[13];
+                Integer idBucketDto = (Integer) tarefa[14];
+
+                List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(id);
+                List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(id);
+
+                tarefasDto.add(new TarefaDto(id, nome, descricao, fibonacci, status, horasEstimada, dataEstimadaLocalDate, dataConclusaoLocalDateTime, dataCriacaoLocalDate, isVisivelBoolean, idTarefa, idBucketDto, comentarios, executores));
+            }
+
+            BucketTarefaDto bucketDto = new BucketTarefaDto();
+            bucketDto.setIdBucket(idBucket);
+            bucketDto.setNomeBucket(nomeBucket);
+            bucketDto.setTarefas(tarefasDto);
+
+            secaoDto.getBuckets().add(bucketDto);
         }
 
-        if (tarefasDto.isEmpty()) {
-            throw new NoContentException("Não há tarefas cadastradas");
-        }
-
-        SecaoTarefaDto secaoTarefaDto = new SecaoTarefaDto();
-
-        secaoTarefaDto.setNomeSecao((String) secaoNome);
-        secaoTarefaDto.setTarefas(tarefasDto);
-
-        return secaoTarefaDto;
+        return secaoDto;
     }
 
     public TarefaDto criarTarefa(TarefaDto tarefaCriacao) {
