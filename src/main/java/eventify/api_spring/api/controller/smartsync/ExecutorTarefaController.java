@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.*;
+
 import java.net.URI;
 import java.util.List;
 
@@ -26,14 +28,14 @@ public class ExecutorTarefaController {
     public ResponseEntity<List<ExecutorDto>> exibirTodosExecutoresTarefas() {
         List<ExecutorDto> executores = executorTarefaService.exibirTodosExecutoresTarefas();
 
-        return ResponseEntity.ok(executores);
+        return ok(executores);
     }
 
     @GetMapping("/{idTarefa}")
     public ResponseEntity<List<ExecutorDto>> executoresPorIdTarefa(@PathVariable Integer idTarefa) {
         List<ExecutorDto> executores = executorTarefaService.executoresPorIdTarefa(idTarefa);
 
-        return ResponseEntity.ok(executores);
+        return ok(executores);
     }
 
     @PostMapping
@@ -41,20 +43,20 @@ public class ExecutorTarefaController {
         ExecutorTarefa executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
         URI location = URI.create(String.format("/executor-tarefas/%d", executorTarefaSalvo.getId()));
 
-        return ResponseEntity.created(location).body(null);
+        return created(location).body(null);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ExecutorTarefaCriacaoDto> atualizarExecutorTarefa(@PathVariable Integer id, @Valid @RequestBody ExecutorTarefaCriacaoDto executorTarefaAtualizado) {
         ExecutorTarefaCriacaoDto executorTarefaAtualizadoSalvo = executorTarefaService.atualizarExecutorTarefa(id, executorTarefaAtualizado);
 
-        return ResponseEntity.ok(executorTarefaAtualizadoSalvo);
+        return ok(executorTarefaAtualizadoSalvo);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerExecutorTarefa(@PathVariable Integer id) {
         executorTarefaService.removerExecutorTarefa(id);
 
-        return ResponseEntity.noContent().build();
+        return noContent().build();
     }
 }
