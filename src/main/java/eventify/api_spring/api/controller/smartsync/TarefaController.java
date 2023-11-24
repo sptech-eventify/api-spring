@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import static org.springframework.http.ResponseEntity.*;
 
 import java.util.List;
 
@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/tarefas")
 @SecurityRequirement(name = "requiredAuth")
 public class TarefaController {
-
     @Autowired
     private TarefaService tarefaService;
 
@@ -27,55 +26,55 @@ public class TarefaController {
     public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefas() {
         List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefas();
 
-        return ResponseEntity.ok(tarefas);
+        return ok(tarefas);
     }
 
     @GetMapping("/bucket/{idBucket}")
     public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
         List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
 
-        return ResponseEntity.ok(tarefas);
+        return ok(tarefas);
     }
 
     @GetMapping("/secoes")
     public ResponseEntity<List<TarefaSecaoDto>> exibirTodasTarefasPorSecao(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento) {
         List<TarefaSecaoDto> tarefas = tarefaService.exibirTodasTarefasPorSecao(idBuffet, idEvento);
 
-        return ResponseEntity.ok(tarefas);
+        return ok(tarefas);
     }
 
     @GetMapping("/secoes/{idSecao}")
     public ResponseEntity<SecaoBucketDto> exibirTodasTarefasPorSecaoIndividual(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento, @PathVariable Integer idSecao) {
         SecaoBucketDto secao = tarefaService.exibirTodasTarefasPorSecaoIndividual(idBuffet, idEvento, idSecao);
 
-        return ResponseEntity.ok(secao);
+        return ok(secao);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TarefaRespostaDto> exibirTarefaPorId(@PathVariable Integer id) {
         TarefaRespostaDto tarefa = tarefaService.exibirTarefaPorId(id);
 
-        return ResponseEntity.ok(tarefa);
+        return ok(tarefa);
     }
 
     @PostMapping
     public ResponseEntity<TarefaDto> criarTarefa(@RequestBody TarefaDto tarefa) {
         TarefaDto tarefaAtualizada = tarefaService.criarTarefa(tarefa);
 
-        return ResponseEntity.ok(tarefaAtualizada);
+        return ok(tarefaAtualizada);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<TarefaDto> atualizarTarefa(@PathVariable Integer id, @RequestBody TarefaDto tarefa) {
         TarefaDto tarefaAtualizada = tarefaService.atualizarTarefa(id, tarefa);
 
-        return ResponseEntity.ok(tarefaAtualizada);
+        return ok(tarefaAtualizada);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarTarefa(@PathVariable Integer id) {
         tarefaService.deletarTarefa(id);
 
-        return ResponseEntity.noContent().build();
+        return noContent().build();
     }
 }

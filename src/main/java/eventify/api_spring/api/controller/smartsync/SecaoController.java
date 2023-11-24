@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.*;
+
 @RestController
 @RequestMapping("/secoes")
 @SecurityRequirement(name = "requiredAuth")
@@ -24,7 +26,7 @@ public class SecaoController {
     public ResponseEntity<List<SecaoDto>> exibirDadosDaSecao(@RequestParam("idBuffet") Integer idBuffet, @RequestParam("idEvento") Integer idEvento) {
         List<SecaoDto> secoes = tarefaService.exibirDadosDaSecao(idBuffet, idEvento);
 
-        return ResponseEntity.ok(secoes);
+        return ok(secoes);
     }
 
 }
