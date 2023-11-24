@@ -11,6 +11,7 @@ import eventify.api_spring.domain.usuario.Funcionario;
 import eventify.api_spring.domain.usuario.Usuario;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
