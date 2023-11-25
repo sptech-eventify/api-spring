@@ -39,7 +39,7 @@ public class FlagLogController {
     @GetMapping("/secao/{idExecutor}")
     public ResponseEntity<List<FlagLogDto>> retornarFlagLogPorSecao(@PathVariable Integer idExecutor, @RequestParam("isFuncionario") Boolean isFuncionario, @RequestParam("idSecao") Integer idSecao) {
         List<FlagLogDto> flagLogDto = flagLogService.retornarFlagLogPorSecao(idExecutor, isFuncionario, idSecao);
-
+        
         return ok(flagLogDto);
     }
 

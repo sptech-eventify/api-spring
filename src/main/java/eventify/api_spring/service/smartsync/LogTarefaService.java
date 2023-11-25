@@ -67,13 +67,8 @@ public class LogTarefaService {
             throw new NotFoundException("É necessário informar o id do usuário ou do funcionário");
         }
 
-        if (logTarefaDto.getIdTarefa() != null) {
-            logTarefa.setTarefa(tarefaRepository.findById(logTarefaDto.getIdTarefa()).get());
-        } else if (logTarefaDto.getIdAcao() != null) {
-            logTarefa.setAcao(acaoRepository.findById(logTarefaDto.getIdAcao()).get());
-        } else {
-            throw new NotFoundException("É necessário informar o id da tarefa e da ação");
-        }
+        logTarefa.setTarefa(tarefaRepository.findById(logTarefaDto.getIdTarefa()).get());
+        logTarefa.setAcao(acaoRepository.findById(logTarefaDto.getIdAcao()).get());
 
         logTarefa.setValor(logTarefaDto.getValor());
         logTarefa.setDataCriacao(logTarefaDto.getDataCriacao());

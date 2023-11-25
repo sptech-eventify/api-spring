@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import eventify.api_spring.domain.buffet.Servico;
 import eventify.api_spring.domain.smartsync.Acao;
+import eventify.api_spring.dto.buffet.ServicoDto;
 import eventify.api_spring.dto.usuario.FuncionarioDevolverDto;
 import eventify.api_spring.dto.usuario.UsuarioDevolverDto;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,6 @@ public class LogTarefaDto {
     private TarefaDto tarefa;
     private UsuarioDevolverDto usuario;
     private FuncionarioDevolverDto funcionario;
-    private Acao acao;
-    private Servico servico;
+    private AcaoDto acao;
+    private ServicoDto  servico;
 }

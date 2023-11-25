@@ -31,7 +31,7 @@ public class LogTarefaController {
     @GetMapping
     public ResponseEntity<List<LogTarefaDto>> listarLogTarefa() {
         List<LogTarefaDto> logsTarefaDto = logTarefaService.listarLogTarefa();
-
+        
         return ok(logsTarefaDto);
     }
 
