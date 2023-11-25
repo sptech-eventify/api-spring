@@ -3,6 +3,8 @@ package eventify.api_spring.service.smartsync;
 import eventify.api_spring.domain.smartsync.Comentario;
 import eventify.api_spring.domain.smartsync.ExecutorTarefa;
 import eventify.api_spring.domain.smartsync.Tarefa;
+import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.smartsync.BucketTarefaDto;
 import eventify.api_spring.dto.smartsync.ComentarioRespostaDto;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
@@ -17,7 +19,9 @@ import eventify.api_spring.mapper.smartsync.TarefaMapper;
 import eventify.api_spring.repository.BucketRepository;
 import eventify.api_spring.repository.ComentarioRepository;
 import eventify.api_spring.repository.ExecutorTarefaRepository;
+import eventify.api_spring.repository.FuncionarioRepository;
 import eventify.api_spring.repository.TarefaRepository;
+import eventify.api_spring.repository.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 
@@ -44,6 +48,12 @@ public class TarefaService {
 
     @Autowired
     private ComentarioRepository comentarioRepository;
+
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -85,6 +95,72 @@ public class TarefaService {
             tarefaRespostaDto.setResponsaveis(executores);
 
             List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(tarefa.getId());
+            tarefaRespostaDto.setComentarios(comentarios);
+
+            tarefasRespostaDto.add(tarefaRespostaDto);
+        }
+
+        return tarefasRespostaDto;
+    }
+
+    public List<TarefaRespostaDto> exibirTodasTarefasPorUsuarioId(Integer idUsuario, Boolean isFuncionario) {
+        List<Object[]> tarefas = new ArrayList<>();
+
+        if (isFuncionario) {
+            Funcionario funcionario = funcionarioRepository.findById(idUsuario).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
+
+            Query query = entityManager.createNativeQuery("SELECT * FROM vw_tarefas_por_usuario WHERE id_funcionario = :idFuncionario AND is_visivel = 1");
+            query.setParameter("idFuncionario", funcionario.getId());
+            tarefas = query.getResultList();
+        } else {
+            Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+
+            Query query = entityManager.createNativeQuery("SELECT * FROM vw_tarefas_por_usuario WHERE id_usuario = :idUsuario AND is_visivel = 1");
+            query.setParameter("idUsuario", usuario.getId());
+            tarefas = query.getResultList();
+        }
+
+        if (tarefas.isEmpty()) {
+            throw new NoContentException("Não há tarefas cadastradas");
+        }
+
+        List<TarefaRespostaDto> tarefasRespostaDto = new ArrayList<>();
+
+        for (Object[] tarefa : tarefas) {
+            TarefaRespostaDto tarefaRespostaDto = new TarefaRespostaDto();
+
+            tarefaRespostaDto.setId((Integer) tarefa[2]);
+            tarefaRespostaDto.setNome((String) tarefa[3]);
+            tarefaRespostaDto.setDescricao((String) tarefa[4]);
+            tarefaRespostaDto.setFibonacci((Integer) tarefa[5]);
+            tarefaRespostaDto.setStatus((Integer) tarefa[6]);
+            tarefaRespostaDto.setHorasEstimada((Integer) tarefa[7]);
+            tarefaRespostaDto.setDataEstimada(((Date) tarefa[8]).toLocalDate());
+            tarefaRespostaDto.setDataCriacao(((Timestamp) tarefa[9]).toLocalDateTime().toLocalDate());
+
+            if (tarefa[10] != null) {
+                tarefaRespostaDto.setDataConclusao(((Timestamp) tarefa[10]).toLocalDateTime());
+            } else {
+                tarefaRespostaDto.setDataConclusao(null);
+            }
+
+            
+            if (tarefa[12] != null) {
+                tarefaRespostaDto.setIdTarefaPai((Integer) tarefa[12]);
+            } else {
+                tarefaRespostaDto.setIdTarefaPai(null);
+            }
+
+            if (tarefa[13] != null) {
+                tarefaRespostaDto.setIdBucket((Integer) tarefa[13]);
+            } else {
+                tarefaRespostaDto.setIdBucket(null);
+            }
+
+            List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId((Integer) tarefa[2]);
+            tarefaRespostaDto.setResponsaveis(executores);
+
+            List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId((Integer) tarefa[2]);
             tarefaRespostaDto.setComentarios(comentarios);
 
             tarefasRespostaDto.add(tarefaRespostaDto);

@@ -31,7 +31,7 @@ public class LogTarefaController {
     @GetMapping
     public ResponseEntity<List<LogTarefaDto>> listarLogTarefa() {
         List<LogTarefaDto> logsTarefaDto = logTarefaService.listarLogTarefa();
-        
+
         return ok(logsTarefaDto);
     }
 
@@ -41,6 +41,13 @@ public class LogTarefaController {
 
         return ok(logTarefaDto);
     }
+
+    // @GetMapping("/secao/{idSecao}")
+    // public ResponseEntity<List<LogTarefaDto>> retornarLogTarefa(@PathVariable Integer idExecutor) {
+    //     List<LogTarefaDto> logTarefaDto = logTarefaService.listarLogTarefaSecao(idExecutor, isFuncionario);
+
+    //     return ok(logTarefaDto);
+    // }
 
     @PostMapping
     public ResponseEntity<LogTarefa> criarLogTarefa(@RequestBody LogTarefaCriacaoDto logTarefaCriacaoDto) {

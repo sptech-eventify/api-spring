@@ -29,6 +29,13 @@ public class TarefaController {
         return ok(tarefas);
     }
 
+    @GetMapping("/individual/{idUsuario}")
+    public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefasPorUsuarioId(@PathVariable Integer idUsuario, @RequestParam("isFuncionario") Boolean isFuncionario) {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefasPorUsuarioId(idUsuario, isFuncionario);
+
+        return ok(tarefas);
+    }
+
     @GetMapping("/bucket/{idBucket}")
     public ResponseEntity<List<TarefaRespostaDto>> exibirTodasTarefasPorBucketId(@PathVariable Integer idBucket) {
         List<TarefaRespostaDto> tarefas = tarefaService.exibirTodasTarefasPorBucketId(idBucket);
