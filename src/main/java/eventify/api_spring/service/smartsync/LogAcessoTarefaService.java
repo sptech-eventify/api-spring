@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import eventify.api_spring.domain.smartsync.LogAcessoTarefa;
@@ -21,7 +20,6 @@ import eventify.api_spring.repository.FuncionarioRepository;
 import eventify.api_spring.repository.LogAcessoTarefaRepository;
 import eventify.api_spring.repository.TarefaRepository;
 import eventify.api_spring.repository.UsuarioRepository;
-import eventify.api_spring.service.usuario.FuncionarioService;
 
 @Service
 public class LogAcessoTarefaService {
@@ -65,7 +63,6 @@ public class LogAcessoTarefaService {
     public LogAcessoTarefa salvarLogAcessoTarefa(LogAcessoTarefaCriacaoDto logAcessoTarefaDto) {
         LogAcessoTarefa logAcessoTarefa = new LogAcessoTarefa();
 
-        System.out.println(logAcessoTarefaDto.getIdTarefa());
         Tarefa tarefa = tarefaRepository.findById(logAcessoTarefaDto.getIdTarefa()).orElseThrow(() -> new NotFoundException("Tarefa não encontrada"));
         
         logAcessoTarefa.setTarefa(tarefa);
