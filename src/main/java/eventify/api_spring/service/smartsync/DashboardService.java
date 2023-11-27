@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
+import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import jakarta.persistence.EntityManager;
 
 @Service
@@ -41,4 +42,9 @@ public class DashboardService {
 
         return eventosDto;
     }
+
+    // public List<KanbanStatusDto> retornarListagemDadosProximosEventos(Integer idBuffet) {
+    
+    //     return kanbansDto;
+    // }
 }
