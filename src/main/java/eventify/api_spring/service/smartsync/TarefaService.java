@@ -373,8 +373,10 @@ public class TarefaService {
         secaoDto.setNomeSecao(secaoNome);
         secaoDto.setBuckets(new ArrayList<>());
 
-        Query queryBuckets = entityManager.createNativeQuery("SELECT bck.id, bck.nome FROM bucket bck WHERE bck.id_buffet_servico = :secaoId AND is_visivel = 1");
-        queryBuckets.setParameter("secaoId", secaoId);        
+        Query queryBuckets = entityManager.createNativeQuery("SELECT bck.id, bck.nome FROM bucket bck WHERE bck.id_buffet_servico = :secaoId AND bck.id_evento = :idEvento AND is_visivel = 1");
+        queryBuckets.setParameter("secaoId", secaoId);
+        queryBuckets.setParameter("idEvento", idEvento);
+
         
         List<Object[]> buckets = queryBuckets.getResultList();
         for (Object[] bucket : buckets) {
