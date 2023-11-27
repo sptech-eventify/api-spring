@@ -30,10 +30,10 @@ public class DashboardController {
         return ok(eventos);
     }
 
-    // @GetMapping("/listagem-dados-proximos-eventos/{idBuffet}")
-    // public ResponseEntity<List<KanbanStatusDto>> retornarListagemDadosProximosEventos(@PathVariable Integer idBuffet) {
-    //     List<KanbanStatusDto> kanbans = dashboardService.retornarListagemDadosProximosEventos(idBuffet);
+    @GetMapping("/listagem-dados-proximos-eventos/{idBuffet}")
+    public ResponseEntity<List<KanbanStatusDto>> retornarListagemDadosProximosEventos(@PathVariable Integer idBuffet) {
+        List<KanbanStatusDto> kanbans = dashboardService.retornarListagemDadosProximosEventos(idBuffet);
 
-    //     return ok(kanbans);
-    // }
+        return ok(kanbans);
+    }
 }
