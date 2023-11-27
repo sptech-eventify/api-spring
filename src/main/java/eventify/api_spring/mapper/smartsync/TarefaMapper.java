@@ -17,6 +17,7 @@ public class TarefaMapper {
         dto.setDataCriacao(domain.getDataCriacao());
         dto.setDataConclusao(domain.getDataConclusao());
         dto.setIsVisivel(domain.getIsVisivel());
+        dto.setIdServico(domain.getBucket().getBuffetServico().getServico().getId());
 
         if (domain.getTarefaPai() != null) {
             dto.setIdTarefaPai(domain.getTarefaPai().getId());

@@ -13,7 +13,6 @@ import eventify.api_spring.dto.smartsync.SecaoBucketDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
-import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.smartsync.TarefaMapper;
@@ -426,11 +425,12 @@ public class TarefaService {
 
                 Integer idTarefa = (Integer) tarefa[13];
                 Integer idBucketDto = (Integer) tarefa[14];
+                Integer idServico = (Integer) tarefa[15];
 
                 List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(id);
                 List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(id);
 
-                tarefasDto.add(new TarefaDto(id, nome, descricao, fibonacci, status, horasEstimada, dataEstimadaLocalDate, dataConclusaoLocalDateTime, dataCriacaoLocalDate, isVisivelBoolean, idTarefa, idBucketDto, comentarios, executores));
+                tarefasDto.add(new TarefaDto(id, nome, descricao, fibonacci, status, horasEstimada, dataEstimadaLocalDate, dataConclusaoLocalDateTime, dataCriacaoLocalDate, isVisivelBoolean, idTarefa, idBucketDto, idServico,  comentarios, executores));
             }
 
             BucketTarefaDto bucketDto = new BucketTarefaDto();
