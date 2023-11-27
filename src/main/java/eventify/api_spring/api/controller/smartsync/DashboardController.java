@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
+import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.service.smartsync.DashboardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -29,4 +30,10 @@ public class DashboardController {
         return ok(eventos);
     }
 
+    // @GetMapping("/listagem-dados-proximos-eventos/{idBuffet}")
+    // public ResponseEntity<List<KanbanStatusDto>> retornarListagemDadosProximosEventos(@PathVariable Integer idBuffet) {
+    //     List<KanbanStatusDto> kanbans = dashboardService.retornarListagemDadosProximosEventos(idBuffet);
+
+    //     return ok(kanbans);
+    // }
 }
