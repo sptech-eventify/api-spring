@@ -13,6 +13,7 @@ import eventify.api_spring.dto.smartsync.SecaoBucketDto;
 import eventify.api_spring.dto.smartsync.TarefaDto;
 import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
+import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.mapper.smartsync.TarefaMapper;
