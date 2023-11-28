@@ -19,4 +19,5 @@ public class KanbanStatusDto {
     private Integer tarefasEmAndamento;
     private Integer tarefasPendentes;
     private Integer tarefasRealizadas;
+    private Integer idServico;
 }
