@@ -28,4 +28,5 @@ public class TarefaRespostaDto {
     private Integer idBucket;
     private List<ExecutorDto> responsaveis;
     private List<ComentarioRespostaDto> comentarios;
+    private Integer idServico;
 }
