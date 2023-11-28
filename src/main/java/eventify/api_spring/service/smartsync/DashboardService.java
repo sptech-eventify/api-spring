@@ -62,8 +62,9 @@ public class DashboardService {
             Integer tarefasRealizadas = ((Long) evento[5]).intValue();
             Integer tarefasPendentes = ((Long) evento[6]).intValue();
             Integer tarefasEmAndamento = ((Long) evento[7]).intValue();
+            Integer idServico = (Integer) evento[8];
 
-            kanbans.add(new KanbanStatusDto(idEvento, nomeCliente, dataEvento, dataEstimada, tarefasEmAndamento, tarefasPendentes, tarefasRealizadas));
+            kanbans.add(new KanbanStatusDto(idEvento, nomeCliente, dataEvento, dataEstimada, tarefasEmAndamento, tarefasPendentes, tarefasRealizadas, idServico));
         }
 
         if (kanbans.isEmpty()) {
