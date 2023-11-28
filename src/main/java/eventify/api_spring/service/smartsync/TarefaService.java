@@ -157,6 +157,8 @@ public class TarefaService {
                 tarefaRespostaDto.setIdBucket(null);
             }
 
+            tarefaRespostaDto.setIdServico((Integer) tarefa[14]);
+
             List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId((Integer) tarefa[2]);
             tarefaRespostaDto.setResponsaveis(executores);
 
