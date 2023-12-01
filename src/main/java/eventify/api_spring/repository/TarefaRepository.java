@@ -10,4 +10,6 @@ import java.util.List;
 public interface TarefaRepository extends JpaRepository<Tarefa, Integer> {
     @Query("SELECT t FROM Tarefa t WHERE t.bucket.id = :id AND t.isVisivel = 1")
     List<Tarefa> findAllByBucketIdAndIsVisivelFalse(Integer id);
+
+    List<Tarefa> findAllByTarefaPai(Tarefa tarefa);
 }

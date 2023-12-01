@@ -5,6 +5,7 @@ import eventify.api_spring.exception.http.ConflictException;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
 import eventify.api_spring.exception.http.UnauthorizedException;
+import eventify.api_spring.exception.http.UnprocessableEntityException;
 import eventify.api_spring.exception.http.UnsupportedMediaException;
 
 import org.springframework.http.HttpStatus;
@@ -49,5 +50,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleUnsupportedMediaException(UnsupportedMediaException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ErrorResponse> handleUnprocessableEntityException(UnprocessableEntityException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

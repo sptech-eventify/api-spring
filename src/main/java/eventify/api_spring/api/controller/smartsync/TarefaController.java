@@ -64,6 +64,20 @@ public class TarefaController {
         return ok(tarefa);
     }
 
+    @GetMapping("/subtarefa/{id}")
+    public ResponseEntity<TarefaRespostaDto> exibirSubtarefaPorId(@PathVariable Integer id) {
+        TarefaRespostaDto tarefa = tarefaService.exibirSubtarefaPorId(id);
+
+        return ok(tarefa);
+    }
+
+    @GetMapping("/subtarefas/{id}")
+    public ResponseEntity<List<TarefaRespostaDto>> exibirSubtarefaPorIdTarefa(@PathVariable Integer id) {
+        List<TarefaRespostaDto> tarefas = tarefaService.exibirSubtarefaPorIdTarefa(id);
+
+        return ok(tarefas);
+    }    
+
     @PostMapping
     public ResponseEntity<TarefaDto> criarTarefa(@RequestBody TarefaDto tarefa) {
         TarefaDto tarefaAtualizada = tarefaService.criarTarefa(tarefa);
