@@ -469,7 +469,8 @@ public class TarefaService {
             Integer idBucket = (Integer) bucket[0];
             String nomeBucket = (String) bucket[1];
 
-            Query queryTarefas = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND id_evento = :idEvento AND id_buffet_servico = :idSecao AND id_bucket = :idBucket AND is_visivel = 1");
+            Query queryTarefas = entityManager.createNativeQuery("SELECT * FROM vw_eventos_por_secao WHERE id_buffet = :idBuffet AND "
+            + "id_evento = :idEvento AND id_buffet_servico = :idSecao AND id_bucket = :idBucket AND is_visivel = 1 AND id_tarefa IS NULL");
             queryTarefas.setParameter("idBuffet", idBuffet);
             queryTarefas.setParameter("idEvento", idEvento);
             queryTarefas.setParameter("idSecao", idSecao);
