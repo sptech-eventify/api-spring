@@ -15,6 +15,7 @@ import eventify.api_spring.dto.smartsync.TarefaRespostaDto;
 import eventify.api_spring.dto.smartsync.TarefaSecaoDto;
 import eventify.api_spring.exception.http.NoContentException;
 import eventify.api_spring.exception.http.NotFoundException;
+import eventify.api_spring.exception.http.UnprocessableEntityException;
 import eventify.api_spring.mapper.smartsync.TarefaMapper;
 import eventify.api_spring.repository.BucketRepository;
 import eventify.api_spring.repository.ComentarioRepository;
@@ -205,6 +206,89 @@ public class TarefaService {
         tarefaDto.setComentarios(comentarios);
 
         return tarefaDto;
+    }
+
+    public TarefaRespostaDto exibirSubtarefaPorId(Integer id) {
+        Tarefa tarefa = tarefaRepository.findById(id).orElseThrow(() -> new NoContentException("Tarefa não encontrada"));
+        TarefaRespostaDto tarefaDto = new TarefaRespostaDto();
+
+        tarefaDto.setId(tarefa.getId());
+        tarefaDto.setNome(tarefa.getNome());
+        tarefaDto.setDescricao(tarefa.getDescricao());
+        tarefaDto.setFibonacci(tarefa.getFibonacci());
+        tarefaDto.setStatus(tarefa.getStatus());
+        tarefaDto.setHorasEstimada(tarefa.getHorasEstimada());
+        tarefaDto.setDataEstimada(tarefa.getDataEstimada());
+        tarefaDto.setDataCriacao(tarefa.getDataCriacao());
+        tarefaDto.setDataConclusao(tarefa.getDataConclusao());
+        tarefaDto.setIsVisivel(tarefa.getIsVisivel());
+        
+        if (tarefa.getTarefaPai() != null) {
+            tarefaDto.setIdTarefaPai(tarefa.getTarefaPai().getId());
+        } else {
+            throw new UnprocessableEntityException("Tarefa não é uma subtarefa");
+        }
+
+        if (tarefa.getBucket() != null) {
+            tarefaDto.setIdBucket(tarefa.getBucket().getId());
+        } else {
+            tarefaDto.setIdBucket(null);
+        }
+
+        List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(tarefa.getId());
+        tarefaDto.setResponsaveis(executores);
+
+        List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(tarefa.getId());
+        tarefaDto.setComentarios(comentarios);
+
+        return tarefaDto;
+    }
+
+    public List<TarefaRespostaDto> exibirSubtarefaPorIdTarefa(Integer idTarefa) {
+        Tarefa tarefa = tarefaRepository.findById(idTarefa).orElseThrow(() -> new NoContentException("Tarefa não encontrada"));
+        List<Tarefa> tarefas = tarefaRepository.findAllByTarefaPai(tarefa);
+
+        if (tarefas.isEmpty()) {
+            throw new NoContentException("Não há subtarefas cadastradas");
+        }
+
+        List<TarefaRespostaDto> tarefasDto = new ArrayList<>();
+        for (Tarefa subtarefa : tarefas) {
+            TarefaRespostaDto tarefaDto = new TarefaRespostaDto();
+
+            tarefaDto.setId(subtarefa.getId());
+            tarefaDto.setNome(subtarefa.getNome());
+            tarefaDto.setDescricao(subtarefa.getDescricao());
+            tarefaDto.setFibonacci(subtarefa.getFibonacci());
+            tarefaDto.setStatus(subtarefa.getStatus());
+            tarefaDto.setHorasEstimada(subtarefa.getHorasEstimada());
+            tarefaDto.setDataEstimada(subtarefa.getDataEstimada());
+            tarefaDto.setDataCriacao(subtarefa.getDataCriacao());
+            tarefaDto.setDataConclusao(subtarefa.getDataConclusao());
+            tarefaDto.setIsVisivel(subtarefa.getIsVisivel());
+            
+            if (subtarefa.getTarefaPai() != null) {
+                tarefaDto.setIdTarefaPai(subtarefa.getTarefaPai().getId());
+            } else {
+                tarefaDto.setIdTarefaPai(null);
+            }
+
+            if (subtarefa.getBucket() != null) {
+                tarefaDto.setIdBucket(subtarefa.getBucket().getId());
+            } else {
+                tarefaDto.setIdBucket(null);
+            }
+
+            List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(subtarefa.getId());
+            tarefaDto.setResponsaveis(executores);
+
+            List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(subtarefa.getId());
+            tarefaDto.setComentarios(comentarios);
+
+            tarefasDto.add(tarefaDto);
+        }
+
+        return tarefasDto;  
     }
 
     public List<TarefaRespostaDto> exibirTodasTarefasPorBucketId(Integer idBucket) {
