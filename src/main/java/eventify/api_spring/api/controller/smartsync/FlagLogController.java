@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -57,6 +58,8 @@ public class FlagLogController {
         System.out.println(flagLogCriacaoDto.getIdTarefa());
         FlagLog flagLog = flagLogService.criarFlagLog(flagLogCriacaoDto);
         URI location = URI.create(String.format("/flag-log/individual/%d", flagLog.getId()));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Expose-Headers", "Location");
 
         return created(location).build();
     }
