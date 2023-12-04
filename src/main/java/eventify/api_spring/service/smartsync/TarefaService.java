@@ -558,7 +558,11 @@ public class TarefaService {
         if (tarefaCriacao.getIdBucket() != null) {
             tarefa.setBucket(bucketRepository.findById(tarefaCriacao.getIdBucket()).orElseThrow(() -> new NotFoundException("Bucket não encontrado")));
         } else {
-            tarefa.setBucket(null);
+            if (tarefa.getTarefaPai() != null) {
+                tarefa.setBucket(tarefa.getTarefaPai().getBucket());
+            } else {
+                throw new UnprocessableEntityException("Impossível encontrar bucket. Tarefa pai e bucket não informados");
+            }
         }
 
         tarefaRepository.save(tarefa);
