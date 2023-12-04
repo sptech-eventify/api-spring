@@ -25,5 +25,4 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
             "JOIN Evento e on e.contratante = u " +
             "GROUP BY u.nome")
     List<UsuarioAdminDto> findAllUsuarioLista();
-
 }

@@ -38,6 +38,13 @@ public class ExecutorTarefaController {
         return ok(executores);
     }
 
+    @GetMapping("/executores-disponiveis/{idBuffet}")
+    public ResponseEntity<List<ExecutorDto>> executoresDisponiveis(@PathVariable("idBuffet") Integer idBuffet) {
+        List<ExecutorDto> executores = executorTarefaService.executoresDisponiveis(idBuffet);
+
+        return ok(executores);
+    }
+
     @PostMapping
     public ResponseEntity<ExecutorTarefa> adicionarExecutorTarefa(@RequestBody ExecutorTarefaCriacaoDto novoExecutor) {
         ExecutorTarefa executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
