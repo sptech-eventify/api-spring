@@ -40,13 +40,13 @@ public class ComentarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Comentario> criarComentario(@RequestBody ComentarioCriacaoDto comentario) {
-        Comentario comentarioCriado = comentarioService.criarComentario(comentario);
+    public ResponseEntity<ComentarioRespostaDto> criarComentario(@RequestBody ComentarioCriacaoDto comentario) {
+        ComentarioRespostaDto comentarioCriado = comentarioService.criarComentario(comentario);
         URI location = URI.create(String.format("/comentarios/%d", comentarioCriado.getId()));
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Expose-Headers", "Location");
 
-        return created(location).body(null);
+        return created(location).body(comentarioCriado);
     }
 
     @PutMapping("/{id}")

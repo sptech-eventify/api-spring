@@ -100,7 +100,7 @@ public class ComentarioService {
     }
 
 
-    public Comentario criarComentario(ComentarioCriacaoDto comentarioCriacao) {
+    public ComentarioRespostaDto criarComentario(ComentarioCriacaoDto comentarioCriacao) {
         Tarefa tarefa = tarefaRepository.findById(comentarioCriacao.getIdTarefa()).orElseThrow(() -> new NotFoundException("Tarefa não encontrada"));
 
         Comentario comentario = new Comentario();
@@ -116,7 +116,31 @@ public class ComentarioService {
             comentario.setUsuario(usuarioRepository.findById(comentarioCriacao.getIdUsuario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado")));
         }
 
-        return comentarioRepository.save(comentario);
+        Comentario comentarioSalvo = comentarioRepository.save(comentario);
+
+        ComentarioRespostaDto comentarioRespostaDto = new ComentarioRespostaDto();
+        comentarioRespostaDto.setId(comentarioSalvo.getId());
+        comentarioRespostaDto.setMensagem(comentarioSalvo.getMensagem());
+        comentarioRespostaDto.setDataCriacao(comentarioSalvo.getDataCriacao());
+        comentarioRespostaDto.setIsVisivel(comentarioSalvo.getIsVisivel());
+
+        ComentarioRespostaDto.Remetente remetente = comentarioRespostaDto.new Remetente();
+
+        if (comentarioSalvo.getFuncionario() != null) {
+            remetente.setId(comentarioSalvo.getFuncionario().getId());
+            remetente.setNome(comentarioSalvo.getFuncionario().getNome());
+            remetente.setFoto(comentarioSalvo.getFuncionario().getImagem());
+            remetente.setIsFuncionario(true);
+        } else {
+            remetente.setId(comentarioSalvo.getUsuario().getId());
+            remetente.setNome(comentarioSalvo.getUsuario().getNome());
+            remetente.setFoto(comentarioSalvo.getUsuario().getImagem());
+            remetente.setIsFuncionario(false);
+        }
+
+        comentarioRespostaDto.setRemetente(remetente);
+
+        return comentarioRespostaDto;
     }
 
     public ComentarioRespostaDto atualizarComentario(Integer id, ComentarioCriacaoDto comentarioCriacao) {
