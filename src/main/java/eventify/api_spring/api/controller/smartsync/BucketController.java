@@ -15,6 +15,7 @@ import java.util.List;
 @SecurityRequirement(name = "requiredAuth")
 @RestController
 @RequestMapping("/buckets")
+@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
 public class BucketController {
     @Autowired
     private BucketService bucketService;

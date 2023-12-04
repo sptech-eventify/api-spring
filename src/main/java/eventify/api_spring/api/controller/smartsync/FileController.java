@@ -2,6 +2,7 @@ package eventify.api_spring.api.controller.smartsync;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 @RequestMapping("/file")
 @SecurityRequirement(name = "requiredAuth")
 @RestController
+@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
 @Tag(name="Dados", description="Controller com os para exportação de dados")
 public class FileController {
     @Autowired
