@@ -607,6 +607,12 @@ public class TarefaService {
 
     public void deletarTarefa(Integer id) {
         Tarefa tarefa = tarefaRepository.findById(id).orElseThrow(() -> new NoContentException("Tarefa não encontrada"));
+        List<Tarefa> subtarefas = tarefaRepository.findAllByTarefaPai(tarefa);
+
+        for (Tarefa subtarefa : subtarefas) {
+            subtarefa.setIsVisivel(false);
+            tarefaRepository.save(subtarefa);
+        }
 
         tarefa.setIsVisivel(false);
 
