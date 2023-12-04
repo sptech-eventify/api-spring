@@ -18,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/tarefas")
 @SecurityRequirement(name = "requiredAuth")
+@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
 public class TarefaController {
     @Autowired
     private TarefaService tarefaService;

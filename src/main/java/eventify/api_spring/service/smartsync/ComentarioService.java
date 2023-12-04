@@ -10,7 +10,6 @@ import eventify.api_spring.repository.ComentarioRepository;
 import eventify.api_spring.repository.FuncionarioRepository;
 import eventify.api_spring.repository.TarefaRepository;
 import eventify.api_spring.repository.UsuarioRepository;
-import eventify.api_spring.service.usuario.FuncionarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
