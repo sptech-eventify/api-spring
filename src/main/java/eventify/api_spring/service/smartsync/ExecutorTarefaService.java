@@ -1,10 +1,14 @@
 package eventify.api_spring.service.smartsync;
 
+import eventify.api_spring.domain.buffet.Buffet;
 import eventify.api_spring.domain.smartsync.ExecutorTarefa;
 import eventify.api_spring.domain.smartsync.Tarefa;
+import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.ExecutorTarefaCriacaoDto;
 import eventify.api_spring.exception.http.NotFoundException;
+import eventify.api_spring.repository.BuffetRepository;
 import eventify.api_spring.repository.ExecutorTarefaRepository;
 import eventify.api_spring.repository.FuncionarioRepository;
 import eventify.api_spring.repository.TarefaRepository;
@@ -30,6 +34,9 @@ public class ExecutorTarefaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private BuffetRepository buffetRepository;
 
     public List<ExecutorDto> exibirTodosExecutoresTarefas() {
         List<ExecutorTarefa> executorTarefas = executorTarefaRepository.findAll();
@@ -91,6 +98,27 @@ public class ExecutorTarefaService {
         }
 
         return executores;
+    }
+
+    public List<ExecutorDto> executoresDisponiveis(Integer idBuffet) {
+        Buffet buffet = buffetRepository.findById(idBuffet).orElseThrow(() -> new NotFoundException("Buffet não encontrado"));
+        List<Funcionario> funcionarios = funcionarioRepository.findAllByEmpregador(buffet.getUsuario());
+        List<ExecutorDto> executorTarefas = new ArrayList();
+
+        for (Funcionario funcionario : funcionarios) {
+            ExecutorDto executorDto = new ExecutorDto();
+            executorDto.setId(funcionario.getId());
+            executorDto.setNome(funcionario.getNome());
+            executorDto.setUrlFoto(funcionario.getImagem());
+            executorDto.setIdFuncionario(funcionario.getId());
+
+            executorTarefas.add(executorDto);
+        }
+
+        Usuario usuario = buffet.getUsuario();
+        executorTarefas.add(new ExecutorDto(usuario.getId(), usuario.getNome(), usuario.getImagem(), null, usuario.getId(), null));
+
+        return executorTarefas;
     }
 
     public ExecutorTarefa adicionarExecutorTarefa(ExecutorTarefaCriacaoDto novoExecutor) {

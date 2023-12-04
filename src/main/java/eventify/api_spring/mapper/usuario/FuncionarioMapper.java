@@ -29,7 +29,7 @@ public class FuncionarioMapper {
         domain.setTelefone(dto.getTelefone());
         domain.setSalario(dto.getSalario());
         domain.setDiaPagamento(dto.getDiaPagamento());
-        domain.setUsuario(empregador);
+        domain.setEmpregador(empregador);
         domain.setNivelAcesso(nivelAcesso);
 
         return domain;

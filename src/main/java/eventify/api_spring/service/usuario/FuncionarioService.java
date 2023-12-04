@@ -100,7 +100,7 @@ public class FuncionarioService {
     public FuncionarioDevolverDto atualizarFuncionario(Integer id) {
         Funcionario funcionario = funcionarioRepository.findById(id).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
         
-        Optional<Usuario> empregador = usuarioRepository.findById(funcionario.getUsuario().getId());
+        Optional<Usuario> empregador = usuarioRepository.findById(funcionario.getEmpregador().getId());
 
         if (empregador.isEmpty()) {
             throw new NotFoundException("Empregador não encontrado");
