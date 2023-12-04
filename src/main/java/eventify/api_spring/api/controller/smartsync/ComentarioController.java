@@ -7,6 +7,7 @@ import eventify.api_spring.service.smartsync.ComentarioService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,8 @@ public class ComentarioController {
     public ResponseEntity<Comentario> criarComentario(@RequestBody ComentarioCriacaoDto comentario) {
         Comentario comentarioCriado = comentarioService.criarComentario(comentario);
         URI location = URI.create(String.format("/comentarios/%d", comentarioCriado.getId()));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Expose-Headers", "Location");
 
         return created(location).body(null);
     }

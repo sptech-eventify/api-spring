@@ -10,15 +10,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
 
 import static org.springframework.http.ResponseEntity.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/tarefas")
 @SecurityRequirement(name = "requiredAuth")
-@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
+@CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Location"})
 public class TarefaController {
     @Autowired
     private TarefaService tarefaService;
@@ -82,8 +84,11 @@ public class TarefaController {
     @PostMapping
     public ResponseEntity<TarefaDto> criarTarefa(@RequestBody TarefaDto tarefa) {
         TarefaDto tarefaAtualizada = tarefaService.criarTarefa(tarefa);
+        URI location = URI.create(String.format("/tarefas/%d", tarefaAtualizada.getId()));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.LOCATION, "/tarefas/" + tarefaAtualizada.getId()); 
 
-        return ok(tarefaAtualizada);
+        return created(location).headers(headers).body(tarefaAtualizada);
     }
 
     @PutMapping("/{id}")
