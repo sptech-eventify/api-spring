@@ -1,6 +1,5 @@
 package eventify.api_spring.api.controller.usuario;
 
-import eventify.api_spring.domain.usuario.Funcionario;
 import eventify.api_spring.dto.usuario.FuncionarioCadastrarDto;
 import eventify.api_spring.dto.usuario.FuncionarioDevolverDto;
 import eventify.api_spring.service.usuario.FuncionarioService;
@@ -33,11 +32,11 @@ public class FuncionarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> criarFuncionario(@RequestBody FuncionarioCadastrarDto funcionario) {
-        Funcionario funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
+    public ResponseEntity<FuncionarioDevolverDto> criarFuncionario(@RequestBody FuncionarioCadastrarDto funcionario) {
+        FuncionarioDevolverDto funcionarioCriado = funcionarioService.criarFuncionario(funcionario);
         URI location = URI.create(String.format("/funcionarios/%s", funcionarioCriado.getId()));
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(funcionarioCriado);
     }
 
     @PutMapping("/{id}")
