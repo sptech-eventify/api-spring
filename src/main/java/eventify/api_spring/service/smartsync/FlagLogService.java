@@ -1,19 +1,14 @@
 package eventify.api_spring.service.smartsync;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 import eventify.api_spring.domain.smartsync.FlagLog;
 import eventify.api_spring.domain.smartsync.Tarefa;
-import eventify.api_spring.domain.usuario.Funcionario;
-import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.smartsync.FlagLogCriacaoDto;
 import eventify.api_spring.dto.smartsync.FlagLogDto;
 import eventify.api_spring.exception.http.BadRequestException;

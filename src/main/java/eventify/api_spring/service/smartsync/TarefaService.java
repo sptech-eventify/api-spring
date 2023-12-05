@@ -266,6 +266,10 @@ public class TarefaService {
             tarefaDto.setDataCriacao(subtarefa.getDataCriacao());
             tarefaDto.setDataConclusao(subtarefa.getDataConclusao());
             tarefaDto.setIsVisivel(subtarefa.getIsVisivel());
+
+            if (tarefaDto.getIsVisivel() == false) {
+                continue;
+            }
             
             if (subtarefa.getTarefaPai() != null) {
                 tarefaDto.setIdTarefaPai(subtarefa.getTarefaPai().getId());
@@ -286,6 +290,10 @@ public class TarefaService {
             tarefaDto.setComentarios(comentarios);
 
             tarefasDto.add(tarefaDto);
+        }
+
+        if (tarefasDto.isEmpty()) {
+            throw new NoContentException("Não há subtarefas cadastradas");
         }
 
         return tarefasDto;  
@@ -517,7 +525,7 @@ public class TarefaService {
                 List<ComentarioRespostaDto> comentarios = exibirTodosComentariosPorTarefaId(id);
                 List<ExecutorDto> executores = exibirTodosExecutoresPorTarefaId(id);
 
-                tarefasDto.add(new TarefaDto(id, nome, descricao, fibonacci, status, horasEstimada, dataEstimadaLocalDate, dataConclusaoLocalDateTime, dataCriacaoLocalDate, isVisivelBoolean, idTarefa, idBucketDto, idServico,  comentarios, executores));
+                tarefasDto.add(new TarefaDto(id, nome, descricao, fibonacci, status, horasEstimada, dataEstimadaLocalDate, dataConclusaoLocalDateTime, dataCriacaoLocalDate, isVisivelBoolean, idTarefa, idBucketDto, idServico, comentarios, executores));
             }
 
             BucketTarefaDto bucketDto = new BucketTarefaDto();
@@ -596,6 +604,11 @@ public class TarefaService {
             tarefa.setBucket(bucketRepository.findById(tarefaAtualizada.getIdBucket()).orElseThrow(() -> new NotFoundException("Bucket não encontrado")));
         } else {
             tarefa.setBucket(null);
+        }
+
+        if (tarefa.getDataConclusao() != null) {
+            tarefa.setStatus(3);
+            tarefa.setIsVisivel(false);
         }
 
         tarefaRepository.save(tarefa);
