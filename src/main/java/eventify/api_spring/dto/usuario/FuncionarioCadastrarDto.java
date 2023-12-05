@@ -19,4 +19,5 @@ public class FuncionarioCadastrarDto {
     private Integer diaPagamento;
     private Integer idEmpregador;
     private Integer idNivelAcesso;
+    private String urlFoto;;
 }

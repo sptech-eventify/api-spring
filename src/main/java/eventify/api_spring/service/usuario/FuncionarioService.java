@@ -58,7 +58,7 @@ public class FuncionarioService {
         return funcionarioDevolverDto;
     }
 
-    public Funcionario criarFuncionario(FuncionarioCadastrarDto funcionario) {
+    public FuncionarioDevolverDto criarFuncionario(FuncionarioCadastrarDto funcionario) {
         Optional<Usuario> empregador = usuarioRepository.findById(funcionario.getIdEmpregador());
 
         if (empregador.isEmpty()) {
@@ -76,14 +76,6 @@ public class FuncionarioService {
             throw new ConflictException("Funcionário já cadastrado");
         }
 
-        if (usuario.get().getCpf().equals(funcionario.getCpf())) {
-            throw new ConflictException("CPF já cadastrado");
-        }
-
-        if (funcionarioOpt.get().getCpf().equals(funcionario.getCpf())) {
-            throw new ConflictException("CPF já cadastrado");
-        }
-
         Optional<NivelAcesso> nivelAcesso = nivelAcessoRepository.findById(funcionario.getIdNivelAcesso());
 
         if (nivelAcesso.isEmpty()) {
@@ -93,8 +85,12 @@ public class FuncionarioService {
         funcionario.setSenha(passwordEncoder.encode(funcionario.getSenha()));
 
         Funcionario funcionarioCriado = FuncionarioMapper.toDomain(funcionario, empregador.get(), nivelAcesso.get());
+        funcionarioCriado.setIsVisivel(true);
+        funcionarioCriado.setImagem(funcionario.getUrlFoto());
 
-        return funcionarioRepository.save(funcionarioCriado);
+        Funcionario funcionarioSalvo = funcionarioRepository.save(funcionarioCriado);
+
+        return FuncionarioMapper.toDevolverDto(funcionarioSalvo);
     }
 
     public FuncionarioDevolverDto atualizarFuncionario(Integer id) {
