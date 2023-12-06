@@ -25,7 +25,7 @@ public class BuffetServico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "id_buffet", referencedColumnName = "id")

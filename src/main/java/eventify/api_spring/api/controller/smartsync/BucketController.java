@@ -1,6 +1,8 @@
 package eventify.api_spring.api.controller.smartsync;
 
 import eventify.api_spring.domain.smartsync.Bucket;
+import eventify.api_spring.dto.smartsync.BucketCriacaoDto;
+import eventify.api_spring.dto.smartsync.BucketDto;
 import eventify.api_spring.service.smartsync.BucketService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.*;
 
+import java.net.URI;
 import java.util.List;
 
 @SecurityRequirement(name = "requiredAuth")
@@ -28,15 +31,23 @@ public class BucketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bucket> exibirBucketPorId(@PathVariable   Integer id) {
+    public ResponseEntity<Bucket> exibirBucketPorId(@PathVariable Integer id) {
         Bucket bucket = bucketService.exibirBucketPorId(id);
 
         return ok(bucket);
     }
 
+    @PostMapping
+    public ResponseEntity<BucketDto> criarBucket(@RequestBody BucketCriacaoDto bucket) {
+        BucketDto bucketCriado = bucketService.criarBucket(bucket);
+        URI location = URI.create(String.format("/buckets/%s", bucketCriado.getId()));
+
+        return created(location).body(bucketCriado);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Bucket> atualizarBucket(@PathVariable Integer id){
-        Bucket bucketAtualizado = bucketService.atualizarBucket(id);
+    public ResponseEntity<BucketDto> atualizarBucket(@PathVariable Integer id, @RequestBody BucketCriacaoDto bucket){
+        BucketDto bucketAtualizado = bucketService.atualizarBucket(id, bucket);
 
         return ok(bucketAtualizado);
     }
