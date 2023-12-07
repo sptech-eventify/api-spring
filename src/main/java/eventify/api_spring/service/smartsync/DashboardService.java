@@ -173,22 +173,15 @@ public class DashboardService {
 
         proprietarioDto.setBuffetsVisitasEventos(conversaoVisitasDto);
 
-        sql = "SELECT * FROM vw_fracao_evento_cancelado_acesso";
-        List<Object> fracaoEventoCanceladoAcesso = entityManager.createNativeQuery(sql).getResultList();
+        sql = "SELECT COUNT(*) FROM evento WHERE status IN (2, 4, 7)";
+        Object qtdEventosCancelados = entityManager.createNativeQuery(sql).getSingleResult();
 
-        List<EventoCanceladoDto> eventoCanceladoDto = new ArrayList();
-        for (Object fracao : fracaoEventoCanceladoAcesso) {
-            EventoCanceladoDto eventoCancelado = new EventoCanceladoDto();
+        proprietarioDto.setQtdEventosCancelados((Long) qtdEventosCancelados);
 
-            eventoCancelado.setId((Integer) ((Object[]) fracao)[0]);
-            eventoCancelado.setNome((String) ((Object[]) fracao)[1]);
-            eventoCancelado.setQuantidadeEventosRecusados((Long) ((Object[]) fracao)[2]);
-            eventoCancelado.setQuantidadeEventosConfirmados((Long) ((Object[]) fracao)[3]);
+        sql = "SELECT COUNT(*) FROM evento";
+        Object qtdEventosTotal = entityManager.createNativeQuery(sql).getSingleResult();
 
-            eventoCanceladoDto.add(eventoCancelado);
-        }
-
-        proprietarioDto.setBuffetsCancelamentosEventos(eventoCanceladoDto);
+        proprietarioDto.setQtdEventosTotal((Long) qtdEventosTotal);
 
         sql = "SELECT * FROM vw_categorias_qtd ORDER BY quantidade DESC";
         List<Object> categorias = entityManager.createNativeQuery(sql).getResultList();
@@ -278,11 +271,11 @@ public class DashboardService {
         return (BigDecimal) faturamento;
     }
 
-    public BigDecimal retornarAvaliacaoMedia() {
+    public Double retornarAvaliacaoMedia() {
         String sql = "SELECT AVG(nota) FROM evento WHERE status IN (6)";
         Object avaliacao = entityManager.createNativeQuery(sql).getSingleResult();
 
-        return (BigDecimal) avaliacao;
+        return (Double) avaliacao;
     }
 
     public BigDecimal retornarGastosTotal() {

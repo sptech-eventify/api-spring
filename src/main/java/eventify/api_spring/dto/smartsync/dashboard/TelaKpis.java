@@ -14,5 +14,5 @@ import lombok.Setter;
 public class TelaKpis {
     private BigDecimal faturamentoTotal;
     private BigDecimal gastosTotal;
-    private BigDecimal AvaliacaoMedia;
+    private Double avaliacaoMedia;
 }

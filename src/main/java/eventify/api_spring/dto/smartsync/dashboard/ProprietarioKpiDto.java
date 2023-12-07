@@ -15,6 +15,7 @@ import lombok.Setter;
 public class ProprietarioKpiDto {
     private List<BuffetInativoDto> buffetsInativos;
     private List<ConversaoVisitasDto> buffetsVisitasEventos;
-    private List<EventoCanceladoDto> buffetsCancelamentosEventos;
+    private Long qtdEventosCancelados;
+    private Long qtdEventosTotal;
     private List<CategoriaKpiDto> categorias;
 }
