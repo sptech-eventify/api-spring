@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
 import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
+import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
+import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
 import eventify.api_spring.service.smartsync.DashboardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
@@ -36,5 +38,19 @@ public class DashboardController {
         List<KanbanStatusDto> kanbans = dashboardService.retornarListagemDadosProximosEventos(idBuffet);
 
         return ok(kanbans);
+    }
+
+    @GetMapping("/retencao-usuarios")
+    public ResponseEntity<List<RegistroDto>> retornarRetencaoUsuarios() {
+        List<RegistroDto> registros = dashboardService.retornarRetencaoUsuarios();
+
+        return ok(registros);
+    }
+
+    @GetMapping("/retencao-usuarios/kpis")
+    public ResponseEntity<RegistroKpiDto> retornarRetencaoUsuariosKpis() {
+        RegistroKpiDto registro = dashboardService.retornarRetencaoUsuariosKpis();
+
+        return ok(registro);
     }
 }

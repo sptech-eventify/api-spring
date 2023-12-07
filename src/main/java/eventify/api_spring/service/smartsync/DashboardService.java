@@ -1,6 +1,7 @@
 package eventify.api_spring.service.smartsync;
 
 import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
 import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
+import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
+import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
 import eventify.api_spring.exception.http.NoContentException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -72,5 +75,59 @@ public class DashboardService {
         }
 
         return kanbans;
+    }
+
+    public List<RegistroDto> retornarRetencaoUsuarios() {
+        String sql = "SELECT * FROM vw_grafico";
+        List<Object[]> registros = entityManager.createNativeQuery(sql).getResultList();
+
+        List<RegistroDto> registrosDto = new ArrayList();
+        for (Object[] registro : registros) {
+            RegistroDto registroDto = new RegistroDto();
+
+            registroDto.setAno((Integer) registro[0]);
+            registroDto.setMes((String) registro[2]);
+            registroDto.setEntraram((Long) registro[3]);
+            registroDto.setSairam((Long) registro[4]);
+
+            registrosDto.add(registroDto);
+        }
+
+        return registrosDto;
+    }
+
+    public RegistroKpiDto retornarRetencaoUsuariosKpis() {
+        RegistroKpiDto registroDto = new RegistroKpiDto();
+
+        String sql = "SELECT * FROM vw_ultimas_7_dias";
+        Object ultimos7dias = entityManager.createNativeQuery(sql).getSingleResult();
+
+        sql = "SELECT * FROM vw_ultimas_90_dias";
+        Object ultimos90dias = entityManager.createNativeQuery(sql).getSingleResult();
+
+        sql = "SELECT * FROM vw_retencao_usuario";
+        Object retencao = entityManager.createNativeQuery(sql).getSingleResult();
+
+        sql = "SELECT * FROM vw_curiosidades_usuario";
+        List<Object[]> curiosidades = entityManager.createNativeQuery(sql).getResultList();
+
+        registroDto.setUltimaSemana((Long) ultimos7dias);
+        registroDto.setUltimosTresMeses((Long) ultimos90dias);
+        registroDto.setTotal((Long) retencao);
+
+        for (Object[] curiosidade : curiosidades) {
+            Integer idTipoUsuario = (Integer) curiosidade[0];
+            BigDecimal porcentagem = (BigDecimal) curiosidade[2];
+
+            if (idTipoUsuario == 1) {
+                registroDto.setPercentualContratantes(porcentagem);
+            } else if (idTipoUsuario == 2) {
+                registroDto.setPercentualProprietarios(porcentagem);
+            }
+        }
+
+
+
+        return registroDto;
     }
 }
