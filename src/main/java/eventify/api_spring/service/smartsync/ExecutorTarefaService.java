@@ -121,7 +121,7 @@ public class ExecutorTarefaService {
         return executorTarefas;
     }
 
-    public ExecutorTarefa adicionarExecutorTarefa(ExecutorTarefaCriacaoDto novoExecutor) {
+    public ExecutorDto adicionarExecutorTarefa(ExecutorTarefaCriacaoDto novoExecutor) {
         Optional<Tarefa> tarefa = tarefaRepository.findById(novoExecutor.getIdTarefa());
 
         if (tarefa.isEmpty()){
@@ -139,7 +139,25 @@ public class ExecutorTarefaService {
             executorTarefa.setUsuario(usuarioRepository.findById(novoExecutor.getIdUsuario()).get());
         }
 
-        return executorTarefaRepository.save(executorTarefa);
+        ExecutorTarefa salvo = executorTarefaRepository.save(executorTarefa);
+
+        ExecutorDto executorDto = new ExecutorDto();
+        executorDto.setId(salvo.getId());
+        executorDto.setTempoExecutado(salvo.getTempoExecutado());
+
+        if (salvo.getFuncionario() != null) {
+            executorDto.setId(salvo.getFuncionario().getId());
+            executorDto.setNome(salvo.getFuncionario().getNome());
+            executorDto.setUrlFoto(salvo.getFuncionario().getImagem());
+            executorDto.setIdFuncionario(salvo.getFuncionario().getId());
+        } else {
+            executorDto.setId(salvo.getUsuario().getId());
+            executorDto.setNome(salvo.getUsuario().getNome());
+            executorDto.setUrlFoto(salvo.getUsuario().getImagem());
+            executorDto.setIdUsuario(salvo.getUsuario().getId());
+        }
+
+        return executorDto;
     }
 
     public ExecutorTarefaCriacaoDto atualizarExecutorTarefa(Integer id, ExecutorTarefaCriacaoDto executorTarefaAtualizado) {

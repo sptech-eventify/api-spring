@@ -30,12 +30,6 @@ public class ExecutorTarefaController {
     @Autowired
     private ExecutorTarefaService executorTarefaService;
 
-    @Autowired
-    private FuncionarioRepository funcionarioRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
     @GetMapping
     public ResponseEntity<List<ExecutorDto>> exibirTodosExecutoresTarefas() {
         List<ExecutorDto> executores = executorTarefaService.exibirTodosExecutoresTarefas();
@@ -58,26 +52,11 @@ public class ExecutorTarefaController {
     }
 
     @PostMapping
-    public ResponseEntity<ExecutorTarefa> adicionarExecutorTarefa(@RequestBody ExecutorTarefaCriacaoDto novoExecutor) {
-        ExecutorTarefa executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
+    public ResponseEntity<ExecutorDto> adicionarExecutorTarefa(@RequestBody ExecutorTarefaCriacaoDto novoExecutor) {
+        ExecutorDto executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
         URI location = URI.create(String.format("/executor-tarefas/%d", executorTarefaSalvo.getId()));
         
-        // ExecutorDto executorTarefaCriado = new ExecutorDto();
-
-        // if (executorTarefaCriado.getIdUsuario() != null) {
-        //     Usuario usuario = usuarioRepository.findById(executorTarefaCriado.getIdUsuario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
-        //     executorTarefaCriado.setNome(usuario.getNome());
-        //     executorTarefaCriado.setUrlFoto(usuario.getImagem());
-        // } else {
-        //     Funcionario funcionario = funcionarioRepository.findById(executorTarefaCriado.getIdFuncionario()).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
-        //     executorTarefaCriado.setNome(funcionario.getNome());
-        //     executorTarefaCriado.setUrlFoto(funcionario.getImagem());
-        // }
-
-        // executorTarefaCriado.setNome(executorTarefaSalvo.getTarefa().getNome());
-        // executorTarefaCriado.setTempoExecutado(executorTarefaSalvo.getTempoExecutado());
-        
-        return created(location).body(null);
+        return created(location).body(executorTarefaSalvo);
     }
 
     @PutMapping("/{id}")
