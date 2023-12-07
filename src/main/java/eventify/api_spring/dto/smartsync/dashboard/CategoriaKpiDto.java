@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoriaKpiDto {
     private String categoria;
-    private Integer quantidade;
+    private Long quantidade;
 }

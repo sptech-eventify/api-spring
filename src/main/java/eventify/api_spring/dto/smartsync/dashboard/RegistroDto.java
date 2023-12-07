@@ -10,7 +10,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistroDto {
+    private Integer ano;
     private String mes;
-    private Integer entraram;
-    private Integer sairam;
+    private Long entraram;
+    private Long sairam;
 }

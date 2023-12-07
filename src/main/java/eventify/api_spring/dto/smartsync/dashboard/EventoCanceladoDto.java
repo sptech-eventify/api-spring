@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UtlizacaoFormularioMensalDto {
-    private String mes;
-    private Long quantidadeUtilizacao;
+public class EventoCanceladoDto {
+    private Integer id;
+    private String nome;
+    private Long quantidadeEventosRecusados;
+    private Long quantidadeEventosConfirmados;
 }
