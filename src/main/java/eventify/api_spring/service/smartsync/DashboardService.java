@@ -20,6 +20,7 @@ import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.dto.smartsync.dashboard.ProprietarioKpiDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
+import eventify.api_spring.dto.smartsync.dashboard.TelaKpis;
 import eventify.api_spring.dto.smartsync.dashboard.UtlizacaoFormularioMensalDto;
 import eventify.api_spring.exception.http.NoContentException;
 import jakarta.persistence.EntityManager;
@@ -269,4 +270,37 @@ public class DashboardService {
 
         return formularioDto;
     }
+
+    public BigDecimal retornarFaturamentoTotal() {
+        String sql = "SELECT SUM(preco) FROM evento WHERE status IN (5, 6)";
+        Object faturamento = entityManager.createNativeQuery(sql).getSingleResult();
+
+        return (BigDecimal) faturamento;
+    }
+
+    public BigDecimal retornarAvaliacaoMedia() {
+        String sql = "SELECT AVG(nota) FROM evento WHERE status IN (6)";
+        Object avaliacao = entityManager.createNativeQuery(sql).getSingleResult();
+
+        return (BigDecimal) avaliacao;
+    }
+
+    public BigDecimal retornarGastosTotal() {
+        String sql = "SELECT SUM(valor) FROM transacao WHERE is_gasto = 1";
+        Object gastos = entityManager.createNativeQuery(sql).getSingleResult();
+
+        return (BigDecimal) gastos;
+    }
+
+    public TelaKpis retornarTelaKpis() {
+        TelaKpis telaKpis = new TelaKpis();
+
+        telaKpis.setFaturamentoTotal(retornarFaturamentoTotal());
+        telaKpis.setGastosTotal(retornarGastosTotal());
+        telaKpis.setAvaliacaoMedia(retornarAvaliacaoMedia());
+
+        return telaKpis;
+    }
+
+    
 }

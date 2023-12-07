@@ -1,8 +1,13 @@
 package eventify.api_spring.api.controller.smartsync;
 
 import eventify.api_spring.domain.smartsync.ExecutorTarefa;
+import eventify.api_spring.domain.usuario.Funcionario;
+import eventify.api_spring.domain.usuario.Usuario;
 import eventify.api_spring.dto.smartsync.ExecutorDto;
 import eventify.api_spring.dto.smartsync.ExecutorTarefaCriacaoDto;
+import eventify.api_spring.exception.http.NotFoundException;
+import eventify.api_spring.repository.FuncionarioRepository;
+import eventify.api_spring.repository.UsuarioRepository;
 import eventify.api_spring.service.smartsync.ExecutorTarefaService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -24,6 +29,12 @@ public class ExecutorTarefaController {
 
     @Autowired
     private ExecutorTarefaService executorTarefaService;
+
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping
     public ResponseEntity<List<ExecutorDto>> exibirTodosExecutoresTarefas() {
@@ -50,7 +61,22 @@ public class ExecutorTarefaController {
     public ResponseEntity<ExecutorTarefa> adicionarExecutorTarefa(@RequestBody ExecutorTarefaCriacaoDto novoExecutor) {
         ExecutorTarefa executorTarefaSalvo = executorTarefaService.adicionarExecutorTarefa(novoExecutor);
         URI location = URI.create(String.format("/executor-tarefas/%d", executorTarefaSalvo.getId()));
+        
+        // ExecutorDto executorTarefaCriado = new ExecutorDto();
 
+        // if (executorTarefaCriado.getIdUsuario() != null) {
+        //     Usuario usuario = usuarioRepository.findById(executorTarefaCriado.getIdUsuario()).orElseThrow(() -> new NotFoundException("Usuário não encontrado"));
+        //     executorTarefaCriado.setNome(usuario.getNome());
+        //     executorTarefaCriado.setUrlFoto(usuario.getImagem());
+        // } else {
+        //     Funcionario funcionario = funcionarioRepository.findById(executorTarefaCriado.getIdFuncionario()).orElseThrow(() -> new NotFoundException("Funcionário não encontrado"));
+        //     executorTarefaCriado.setNome(funcionario.getNome());
+        //     executorTarefaCriado.setUrlFoto(funcionario.getImagem());
+        // }
+
+        // executorTarefaCriado.setNome(executorTarefaSalvo.getTarefa().getNome());
+        // executorTarefaCriado.setTempoExecutado(executorTarefaSalvo.getTempoExecutado());
+        
         return created(location).body(null);
     }
 

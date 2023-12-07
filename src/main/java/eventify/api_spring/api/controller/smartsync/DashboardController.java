@@ -15,13 +15,13 @@ import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.dto.smartsync.dashboard.ProprietarioKpiDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
+import eventify.api_spring.dto.smartsync.dashboard.TelaKpis;
 import eventify.api_spring.service.smartsync.DashboardService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import static org.springframework.http.ResponseEntity.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
 @SecurityRequirement(name = "requiredAuth")
@@ -78,6 +78,13 @@ public class DashboardController {
         FormularioDinamicoDto formulario = dashboardService.retornarFormularioDinamico();
 
         return ok(formulario);
+    }
+
+    @GetMapping("/tela-kpis")
+    public ResponseEntity<TelaKpis> retornarTelaKpis() {
+        TelaKpis contratante = dashboardService.retornarTelaKpis();
+
+        return ok(contratante);
     }
     
 }
