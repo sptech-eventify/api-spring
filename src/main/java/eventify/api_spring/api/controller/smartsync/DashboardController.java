@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import eventify.api_spring.dto.smartsync.dashboard.ContratanteKpi;
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
+import eventify.api_spring.dto.smartsync.dashboard.FormularioDinamicoDto;
 import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
+import eventify.api_spring.dto.smartsync.dashboard.ProprietarioKpiDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
 import eventify.api_spring.service.smartsync.DashboardService;
@@ -18,6 +21,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import static org.springframework.http.ResponseEntity.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @CrossOrigin(origins = "http://localhost:3000", exposedHeaders = {"Access-Control-Expose-Headers", "Access-Token", "Uid"})
 @SecurityRequirement(name = "requiredAuth")
 @RestController
@@ -53,4 +58,26 @@ public class DashboardController {
 
         return ok(registro);
     }
+
+    @GetMapping("/prorietarios/kpis")
+    public ResponseEntity<ProprietarioKpiDto> retornarProprietariosKpis() {
+        ProprietarioKpiDto proprietario = dashboardService.retornarProprietariosKpis();
+
+        return ok(proprietario);
+    }
+
+    @GetMapping("/contratantes/kpis")
+    public ResponseEntity<ContratanteKpi> retornarContratanteKpi() {
+        ContratanteKpi contratante = dashboardService.retornarContratanteKpi();
+
+        return ok(contratante);
+    }
+
+    @GetMapping("/formulario-dinamico")
+    public ResponseEntity<FormularioDinamicoDto> retornarFormularioDinamico() {
+        FormularioDinamicoDto formulario = dashboardService.retornarFormularioDinamico();
+
+        return ok(formulario);
+    }
+    
 }

@@ -2,6 +2,7 @@ package eventify.api_spring.dto.smartsync.dashboard;
 
 import java.util.List;
 
+import eventify.api_spring.service.smartsync.ConversaoVisitasDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProprietarioKpiDto {
-    private Integer buffetsInativos;
-    private Integer conversaoReservaPorCem;
-    private Integer fechamentoContratoPorCem;
+    private List<BuffetInativoDto> buffetsInativos;
+    private List<ConversaoVisitasDto> buffetsVisitasEventos;
+    private List<EventoCanceladoDto> buffetsCancelamentosEventos;
     private List<CategoriaKpiDto> categorias;
 }

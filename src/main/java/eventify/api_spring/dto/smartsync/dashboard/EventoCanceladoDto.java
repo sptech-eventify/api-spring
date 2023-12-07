@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoriaKpiDto {
-    private String categoria;
-    private Long quantidade;
+public class EventoCanceladoDto {
+    private Integer id;
+    private String nome;
+    private Long quantidadeEventosRecusados;
+    private Long quantidadeEventosConfirmados;
 }
