@@ -612,7 +612,7 @@ public class BuffetService {
 
         List<InfoEventoDto> infosDto = new ArrayList<>();
         for (Object[] info : infos) {
-            Integer id = (Integer) info[0];
+            Integer id = (Integer) info[8];
             String nome = (String) info[1];
             String cpf = (String) info[2];
             String email = (String) info[3];
