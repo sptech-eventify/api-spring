@@ -1,5 +1,6 @@
 package eventify.api_spring.dto.smartsync.dashboard;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FormularioDinamicoDto {
-    private Integer precisaoFormulario;
-    private Integer utilizacaoFormulario;
+    private BigDecimal precisaoFormulario;
+    private BigDecimal utilizacaoFormulario;
     private List<UtlizacaoFormularioMensalDto> utilizacaoFormularioMensal;
 }

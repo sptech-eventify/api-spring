@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UtlizacaoFormularioMensalDto {
     private String mes;
-    private Integer quantidadeUtilizacao;
+    private Long quantidadeUtilizacao;
 }

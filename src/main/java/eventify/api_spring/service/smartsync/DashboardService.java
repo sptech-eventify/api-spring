@@ -1,8 +1,8 @@
 package eventify.api_spring.service.smartsync;
 
-import java.sql.Timestamp;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,12 @@ import eventify.api_spring.dto.smartsync.dashboard.CategoriaKpiDto;
 import eventify.api_spring.dto.smartsync.dashboard.ContratanteKpi;
 import eventify.api_spring.dto.smartsync.dashboard.EventoCanceladoDto;
 import eventify.api_spring.dto.smartsync.dashboard.EventoProximoDto;
+import eventify.api_spring.dto.smartsync.dashboard.FormularioDinamicoDto;
 import eventify.api_spring.dto.smartsync.dashboard.KanbanStatusDto;
 import eventify.api_spring.dto.smartsync.dashboard.ProprietarioKpiDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroDto;
 import eventify.api_spring.dto.smartsync.dashboard.RegistroKpiDto;
+import eventify.api_spring.dto.smartsync.dashboard.UtlizacaoFormularioMensalDto;
 import eventify.api_spring.exception.http.NoContentException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -235,5 +237,36 @@ public class DashboardService {
         contratanteKpi.setDoisContratosOuMais((int) quantidadeContratantes);
 
         return contratanteKpi;
+    }
+
+    public FormularioDinamicoDto retornarFormularioDinamico() {
+        FormularioDinamicoDto formularioDto = new FormularioDinamicoDto();
+
+        String sql = "SELECT * FROM vw_utilizacao_formulario";
+        Object formulario = entityManager.createNativeQuery(sql).getSingleResult();
+
+        formularioDto.setUtilizacaoFormulario((BigDecimal) ((Object[]) formulario)[3]);
+
+        sql = "SELECT * FROM vw_uso_formulario_dinamico";
+        Object usoFormulario = entityManager.createNativeQuery(sql).getSingleResult();
+
+        formularioDto.setPrecisaoFormulario((BigDecimal) ((Object[]) usoFormulario)[3]);
+
+        sql = "SELECT * FROM vw_formulario_dinamico_consumo";
+        List<Object> utilizacaoFormularioMensal = entityManager.createNativeQuery(sql).getResultList();
+
+        List<UtlizacaoFormularioMensalDto> utilizacaoFormularioMensalDto = new ArrayList();
+        for (Object utilizacao : utilizacaoFormularioMensal) {
+            UtlizacaoFormularioMensalDto utilizacaoDto = new UtlizacaoFormularioMensalDto();
+
+            utilizacaoDto.setMes((String) ((Object[]) utilizacao)[0]);
+            utilizacaoDto.setQuantidadeUtilizacao((Long) ((Object[]) utilizacao)[1]);
+
+            utilizacaoFormularioMensalDto.add(utilizacaoDto);
+        }
+
+        formularioDto.setUtilizacaoFormularioMensal(utilizacaoFormularioMensalDto);
+
+        return formularioDto;
     }
 }
